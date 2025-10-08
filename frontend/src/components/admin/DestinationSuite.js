@@ -139,6 +139,48 @@ export const DestinationFormDialog = ({ open, onOpenChange, destination, onSave 
     handleChange('slug', slug);
   };
 
+  // AI Auto-fill destination content
+  const handleAIAutofill = async () => {
+    if (!formData.name || !formData.country) {
+      toast.error('Please enter destination name and country first');
+      return;
+    }
+
+    setAiGenerating(true);
+    try {
+      const token = localStorage.getItem('auth_token');
+      const response = await axios.post(
+        `${API}/ai/generate-destination`,
+        {
+          course_name: formData.name,
+          location: `${formData.country}${formData.region ? ', ' + formData.region : ''}`,
+          additional_info: formData.short_desc || null
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      const aiContent = response.data;
+      
+      // Auto-populate fields with AI-generated content
+      setFormData(prev => ({
+        ...prev,
+        short_desc: aiContent.short_desc || prev.short_desc,
+        long_desc: aiContent.long_desc || prev.long_desc,
+        highlights: [...new Set([...prev.highlights, ...(aiContent.highlights || [])])],
+        climate: aiContent.climate || prev.climate,
+        best_time_to_visit: aiContent.best_time_to_visit || prev.best_time_to_visit,
+        transfer_time: aiContent.transfer_info || prev.transfer_time
+      }));
+
+      toast.success('AI content generated successfully! Review and adjust as needed.');
+    } catch (error) {
+      console.error('AI generation error:', error);
+      toast.error(error.response?.data?.detail || 'Failed to generate content. Please try again.');
+    } finally {
+      setAiGenerating(false);
+    }
+  };
+
   const handleSubmit = async () => {
     // Validation
     if (!formData.name || !formData.slug || !formData.country) {
