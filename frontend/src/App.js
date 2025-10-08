@@ -35,6 +35,7 @@ function App() {
             <Route path="articles/:slug" element={<ArticleDetail />} />
             <Route path="contact" element={<Contact />} />
             <Route path="about" element={<About />} />
+            <Route path="profile" element={<ProfileKYC />} />
             <Route path="admin" element={<AdminDashboard />} />
           </Route>
         </Routes>
