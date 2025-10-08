@@ -179,11 +179,22 @@ export default function PrivacySettings() {
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Marketing Emails */}
-            <div className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-emerald-200 transition-colors">
-              <div className="flex items-start gap-3 flex-1">
-                <Mail className="h-5 w-5 text-gray-600 mt-1" />
+            <div 
+              className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-emerald-300 hover:bg-emerald-50/30 transition-all cursor-pointer group"
+              onClick={() => handleSettingChange('marketing_emails', !settings.marketing_emails)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleSettingChange('marketing_emails', !settings.marketing_emails);
+                }
+              }}
+            >
+              <div className="flex items-start gap-3 flex-1 pointer-events-none">
+                <Mail className="h-5 w-5 text-emerald-600 mt-1 group-hover:scale-110 transition-transform" />
                 <div>
-                  <Label className="text-base font-medium">Marketing Emails</Label>
+                  <Label className="text-base font-medium cursor-pointer">Marketing Emails</Label>
                   <p className="text-sm text-gray-600 mt-1">
                     Receive promotional emails, special offers, and travel inspiration
                   </p>
@@ -192,15 +203,28 @@ export default function PrivacySettings() {
               <Switch
                 checked={settings.marketing_emails}
                 onCheckedChange={(checked) => handleSettingChange('marketing_emails', checked)}
+                onClick={(e) => e.stopPropagation()}
+                className="pointer-events-auto"
               />
             </div>
 
             {/* Analytics Tracking */}
-            <div className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-emerald-200 transition-colors">
-              <div className="flex items-start gap-3 flex-1">
-                <BarChart className="h-5 w-5 text-gray-600 mt-1" />
+            <div 
+              className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-emerald-300 hover:bg-emerald-50/30 transition-all cursor-pointer group"
+              onClick={() => handleSettingChange('analytics_tracking', !settings.analytics_tracking)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleSettingChange('analytics_tracking', !settings.analytics_tracking);
+                }
+              }}
+            >
+              <div className="flex items-start gap-3 flex-1 pointer-events-none">
+                <BarChart className="h-5 w-5 text-emerald-600 mt-1 group-hover:scale-110 transition-transform" />
                 <div>
-                  <Label className="text-base font-medium">Analytics Tracking</Label>
+                  <Label className="text-base font-medium cursor-pointer">Analytics Tracking</Label>
                   <p className="text-sm text-gray-600 mt-1">
                     Help us improve by allowing anonymous usage analytics
                   </p>
@@ -209,15 +233,28 @@ export default function PrivacySettings() {
               <Switch
                 checked={settings.analytics_tracking}
                 onCheckedChange={(checked) => handleSettingChange('analytics_tracking', checked)}
+                onClick={(e) => e.stopPropagation()}
+                className="pointer-events-auto"
               />
             </div>
 
             {/* Cookie Consent */}
-            <div className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-emerald-200 transition-colors">
-              <div className="flex items-start gap-3 flex-1">
-                <Cookie className="h-5 w-5 text-gray-600 mt-1" />
+            <div 
+              className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-emerald-300 hover:bg-emerald-50/30 transition-all cursor-pointer group"
+              onClick={() => handleSettingChange('cookie_consent', !settings.cookie_consent)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleSettingChange('cookie_consent', !settings.cookie_consent);
+                }
+              }}
+            >
+              <div className="flex items-start gap-3 flex-1 pointer-events-none">
+                <Cookie className="h-5 w-5 text-emerald-600 mt-1 group-hover:scale-110 transition-transform" />
                 <div>
-                  <Label className="text-base font-medium">Cookie Consent</Label>
+                  <Label className="text-base font-medium cursor-pointer">Cookie Consent</Label>
                   <p className="text-sm text-gray-600 mt-1">
                     Allow non-essential cookies for enhanced functionality
                   </p>
@@ -226,15 +263,28 @@ export default function PrivacySettings() {
               <Switch
                 checked={settings.cookie_consent}
                 onCheckedChange={(checked) => handleSettingChange('cookie_consent', checked)}
+                onClick={(e) => e.stopPropagation()}
+                className="pointer-events-auto"
               />
             </div>
 
             {/* Data Sharing */}
-            <div className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-emerald-200 transition-colors">
-              <div className="flex items-start gap-3 flex-1">
-                <Users className="h-5 w-5 text-gray-600 mt-1" />
+            <div 
+              className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-emerald-300 hover:bg-emerald-50/30 transition-all cursor-pointer group"
+              onClick={() => handleSettingChange('data_sharing', !settings.data_sharing)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleSettingChange('data_sharing', !settings.data_sharing);
+                }
+              }}
+            >
+              <div className="flex items-start gap-3 flex-1 pointer-events-none">
+                <Users className="h-5 w-5 text-emerald-600 mt-1 group-hover:scale-110 transition-transform" />
                 <div>
-                  <Label className="text-base font-medium">Data Sharing with Partners</Label>
+                  <Label className="text-base font-medium cursor-pointer">Data Sharing with Partners</Label>
                   <p className="text-sm text-gray-600 mt-1">
                     Share data with trusted golf course and hotel partners for bookings
                   </p>
@@ -243,6 +293,8 @@ export default function PrivacySettings() {
               <Switch
                 checked={settings.data_sharing}
                 onCheckedChange={(checked) => handleSettingChange('data_sharing', checked)}
+                onClick={(e) => e.stopPropagation()}
+                className="pointer-events-auto"
               />
             </div>
 
