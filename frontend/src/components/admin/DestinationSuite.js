@@ -60,6 +60,7 @@ export const DestinationFormDialog = ({ open, onOpenChange, destination, onSave 
   const [newHighlight, setNewHighlight] = useState('');
   const [newAmenity, setNewAmenity] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [aiGenerating, setAiGenerating] = useState(false);
 
   const handleChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
