@@ -1,11 +1,11 @@
 [
   {
     "content": "Install OpenAI SDK and configure GPT-5 integration with Emergent LLM key",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Create User authentication backend: User model, JWT auth, register/login endpoints",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Create UserProfile model with AI portfolio storage (preferences, KYC data, conversation summaries)",
