@@ -653,8 +653,15 @@ async def root():
 
 # Authentication Routes
 @api_router.post("/auth/register", response_model=TokenResponse)
-async def register(user_data: UserCreate):
-    """Register a new user"""
+async def register(user_data: UserCreate, request: Request = None):
+    """Register a new user with rate limiting"""
+    
+    # Apply rate limiting
+    client_ip = request.client.host if request and request.client else "unknown"
+    rate_key = f"register:{client_ip}"
+    if not rate_limiter.is_allowed(rate_key):
+        raise HTTPException(status_code=429, detail="Too many registration attempts. Please try again later.")
+    
     # Check if user already exists
     existing_user = await db.users.find_one({"email": user_data.email})
     if existing_user:
