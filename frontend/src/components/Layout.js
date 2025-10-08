@@ -121,9 +121,16 @@ export const Layout = () => {
                       </Button>
                     </Link>
                   )}
-                  <span className="text-sm text-gray-600 hidden sm:inline px-2">
-                    {user?.full_name}
-                  </span>
+                  <Link to="/dashboard">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="hidden sm:inline-flex text-gray-700 hover:text-emerald-600 hover:bg-emerald-50 transition-all duration-300 font-medium"
+                      data-testid="dashboard-link"
+                    >
+                      {user?.full_name}
+                    </Button>
+                  </Link>
                   <Button 
                     variant="ghost" 
                     size="sm" 
