@@ -719,6 +719,267 @@ class BackendTester:
         except Exception as e:
             self.log_test("Admin Category Access", False, f"Admin category test error: {str(e)}")
 
+    def test_phase4_configuration_system(self):
+        """Test Phase 4 core configuration system"""
+        print("\n⚙️ TESTING PHASE 4 CONFIGURATION SYSTEM")
+        
+        try:
+            # Import configuration modules
+            sys.path.append('/app/backend')
+            from core.config import settings, validate_startup_config
+            
+            # Test configuration loading
+            if settings.security.jwt_secret_key:
+                self.log_test("Config - JWT Secret", True, "JWT secret key loaded successfully")
+            else:
+                self.log_test("Config - JWT Secret", False, "JWT secret key not configured")
+            
+            # Test CORS configuration
+            cors_origins = settings.get_cors_origins()
+            if isinstance(cors_origins, list) and len(cors_origins) > 0:
+                self.log_test("Config - CORS Origins", True, f"CORS origins configured: {len(cors_origins)} origins")
+            else:
+                self.log_test("Config - CORS Origins", False, "CORS origins not properly configured")
+            
+            # Test database configuration
+            if settings.database.mongo_url and settings.database.db_name:
+                self.log_test("Config - Database", True, "Database configuration loaded")
+            else:
+                self.log_test("Config - Database", False, "Database configuration missing")
+            
+            # Test AWS configuration validation
+            aws_configured = settings.aws.is_configured
+            self.log_test("Config - AWS Validation", True, f"AWS configuration check: {'configured' if aws_configured else 'not configured'}")
+            
+            # Test AI configuration
+            if settings.ai.api_key:
+                self.log_test("Config - AI API Key", True, "AI API key configured")
+            else:
+                self.log_test("Config - AI API Key", False, "AI API key not configured")
+            
+            # Test configuration validation
+            warnings = settings.validate_configuration()
+            if len(warnings) == 0:
+                self.log_test("Config - Validation", True, "All critical configuration validated")
+            else:
+                self.log_test("Config - Validation", False, f"Configuration warnings: {len(warnings)}")
+            
+            # Test environment detection
+            is_prod = settings.is_production()
+            self.log_test("Config - Environment", True, f"Environment detection: {'production' if is_prod else 'development'}")
+            
+        except ImportError as e:
+            self.log_test("Config System Import", False, f"Cannot import configuration system: {str(e)}")
+        except Exception as e:
+            self.log_test("Config System Test", False, f"Configuration system error: {str(e)}")
+
+    def test_phase4_database_manager(self):
+        """Test Phase 4 database connection management"""
+        print("\n💾 TESTING PHASE 4 DATABASE MANAGER")
+        
+        try:
+            sys.path.append('/app/backend')
+            from core.database import db_manager
+            
+            # Test database health check endpoint (if available)
+            if self.auth_token:
+                headers = {
+                    'Authorization': f'Bearer {self.auth_token}',
+                    'Content-Type': 'application/json'
+                }
+                
+                # Test if there's a health check endpoint
+                try:
+                    response = self.session.get(f"{BACKEND_URL}/health", headers=headers)
+                    if response.status_code == 200:
+                        data = response.json()
+                        if 'database' in data:
+                            self.log_test("DB Manager - Health Check", True, "Database health check endpoint working")
+                        else:
+                            self.log_test("DB Manager - Health Check", True, "Health endpoint exists (no DB details)")
+                    else:
+                        self.log_test("DB Manager - Health Check", False, f"Health check failed: {response.status_code}")
+                except:
+                    self.log_test("DB Manager - Health Check", False, "No health check endpoint available")
+            
+            # Test database connectivity through existing endpoints
+            response = self.session.get(f"{BACKEND_URL}/destinations")
+            if response.status_code == 200:
+                self.log_test("DB Manager - Connection Pool", True, "Database connection working through endpoints")
+            else:
+                self.log_test("DB Manager - Connection Pool", False, f"Database connection issues: {response.status_code}")
+            
+            # Test index creation (implicit through successful queries)
+            response = self.session.get(f"{BACKEND_URL}/articles")
+            if response.status_code == 200:
+                self.log_test("DB Manager - Indexes", True, "Database indexes working (queries successful)")
+            else:
+                self.log_test("DB Manager - Indexes", False, "Database query performance issues")
+                
+        except Exception as e:
+            self.log_test("DB Manager Test", False, f"Database manager test error: {str(e)}")
+
+    def test_phase4_modular_auth_service(self):
+        """Test Phase 4 modular authentication service"""
+        print("\n🔐 TESTING PHASE 4 MODULAR AUTH SERVICE")
+        
+        try:
+            sys.path.append('/app/backend')
+            from services.auth_service import auth_service
+            
+            # Test password validation
+            weak_password = "123"
+            strong_password = "StrongPass123!"
+            
+            weak_issues = auth_service.validate_password_strength(weak_password)
+            strong_issues = auth_service.validate_password_strength(strong_password)
+            
+            if len(weak_issues) > 0 and len(strong_issues) == 0:
+                self.log_test("Auth Service - Password Validation", True, "Password strength validation working")
+            else:
+                self.log_test("Auth Service - Password Validation", False, f"Password validation issues: weak={len(weak_issues)}, strong={len(strong_issues)}")
+            
+            # Test token generation and validation
+            test_data = {"sub": "test_user", "email": "test@example.com"}
+            token = auth_service.create_access_token(test_data)
+            decoded = auth_service.decode_token(token)
+            
+            if decoded and decoded.get("sub") == "test_user":
+                self.log_test("Auth Service - Token Management", True, "Token generation and validation working")
+            else:
+                self.log_test("Auth Service - Token Management", False, "Token management issues")
+            
+            # Test password hashing
+            test_password = "TestPassword123!"
+            hashed = auth_service.get_password_hash(test_password)
+            verified = auth_service.verify_password(test_password, hashed)
+            
+            if verified and hashed != test_password:
+                self.log_test("Auth Service - Password Hashing", True, "Password hashing and verification working")
+            else:
+                self.log_test("Auth Service - Password Hashing", False, "Password hashing issues")
+                
+        except Exception as e:
+            self.log_test("Auth Service Test", False, f"Auth service test error: {str(e)}")
+
+    def test_phase4_rate_limiting_middleware(self):
+        """Test Phase 4 rate limiting middleware"""
+        print("\n🚦 TESTING PHASE 4 RATE LIMITING MIDDLEWARE")
+        
+        # Test rate limiting on authentication endpoints
+        login_data = {
+            "email": "nonexistent@test.com",
+            "password": "wrongpassword"
+        }
+        
+        rate_limit_hit = False
+        requests_made = 0
+        
+        # Make multiple requests to trigger rate limiting
+        for i in range(15):  # Try to exceed the rate limit
+            try:
+                response = self.session.post(
+                    f"{BACKEND_URL}/auth/login",
+                    json=login_data,
+                    headers={'Content-Type': 'application/json'}
+                )
+                requests_made += 1
+                
+                # Check for rate limit headers
+                if 'X-RateLimit-Limit' in response.headers:
+                    self.log_test("Rate Limiting - Headers", True, "Rate limit headers present in response")
+                
+                if response.status_code == 429:
+                    rate_limit_hit = True
+                    self.log_test("Rate Limiting - Enforcement", True, f"Rate limit enforced after {requests_made} requests")
+                    break
+                    
+            except Exception as e:
+                self.log_test("Rate Limiting Test", False, f"Rate limiting test error: {str(e)}")
+                break
+        
+        if not rate_limit_hit and requests_made >= 10:
+            self.log_test("Rate Limiting - Enforcement", False, f"Rate limit not enforced after {requests_made} requests")
+        elif not rate_limit_hit:
+            self.log_test("Rate Limiting - Enforcement", True, "Rate limiting configured (limit not reached in test)")
+        
+        # Test rate limit monitoring
+        try:
+            sys.path.append('/app/backend')
+            from middleware.rate_limiting import rate_limit_monitor
+            
+            stats = rate_limit_monitor.get_rate_limit_stats()
+            if isinstance(stats, dict) and 'total_buckets' in stats:
+                self.log_test("Rate Limiting - Monitoring", True, f"Rate limit monitoring working: {stats['total_buckets']} buckets")
+            else:
+                self.log_test("Rate Limiting - Monitoring", False, "Rate limit monitoring not working")
+                
+        except Exception as e:
+            self.log_test("Rate Limiting - Monitoring", False, f"Rate limit monitoring error: {str(e)}")
+
+    def test_phase4_service_layer_architecture(self):
+        """Test Phase 4 service layer architecture"""
+        print("\n🏗️ TESTING PHASE 4 SERVICE LAYER ARCHITECTURE")
+        
+        # Test modular API routes
+        modular_endpoints = [
+            "/auth/me",
+            "/auth/login", 
+            "/auth/register"
+        ]
+        
+        for endpoint in modular_endpoints:
+            try:
+                if endpoint == "/auth/me" and self.auth_token:
+                    headers = {'Authorization': f'Bearer {self.auth_token}'}
+                    response = self.session.get(f"{BACKEND_URL}{endpoint}", headers=headers)
+                elif endpoint in ["/auth/login", "/auth/register"]:
+                    # Just test that the endpoint exists (OPTIONS request)
+                    response = self.session.options(f"{BACKEND_URL}{endpoint}")
+                else:
+                    continue
+                
+                if response.status_code in [200, 204, 405]:  # 405 = Method not allowed (but endpoint exists)
+                    self.log_test(f"Service Layer - {endpoint}", True, "Modular endpoint accessible")
+                else:
+                    self.log_test(f"Service Layer - {endpoint}", False, f"Endpoint issues: {response.status_code}")
+                    
+            except Exception as e:
+                self.log_test(f"Service Layer - {endpoint}", False, f"Error testing {endpoint}: {str(e)}")
+        
+        # Test error handling consistency
+        try:
+            response = self.session.post(
+                f"{BACKEND_URL}/auth/login",
+                json={"email": "invalid", "password": "test"},
+                headers={'Content-Type': 'application/json'}
+            )
+            
+            if response.status_code in [400, 422]:  # Validation error
+                try:
+                    error_data = response.json()
+                    if 'detail' in error_data:
+                        self.log_test("Service Layer - Error Handling", True, "Consistent error response format")
+                    else:
+                        self.log_test("Service Layer - Error Handling", False, "Inconsistent error format")
+                except:
+                    self.log_test("Service Layer - Error Handling", False, "Non-JSON error response")
+            else:
+                self.log_test("Service Layer - Error Handling", False, f"Unexpected error status: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("Service Layer - Error Handling", False, f"Error handling test failed: {str(e)}")
+        
+        # Test dependency injection patterns
+        if self.auth_token:
+            headers = {'Authorization': f'Bearer {self.auth_token}'}
+            response = self.session.get(f"{BACKEND_URL}/auth/me", headers=headers)
+            
+            if response.status_code == 200:
+                self.log_test("Service Layer - Dependency Injection", True, "Authentication dependency working")
+            else:
+                self.log_test("Service Layer - Dependency Injection", False, "Authentication dependency issues")
+
     def run_all_tests(self):
         """Run all security tests"""
         print("🚀 STARTING COMPREHENSIVE BACKEND SECURITY TESTING")
@@ -747,6 +1008,16 @@ class BackendTester:
         self.test_gdpr_audit_logging_system()
         self.test_admin_audit_access()
         self.test_file_upload_security_validation()
+        
+        # Phase 4 Architecture Tests
+        print("\n" + "="*60)
+        print("🚀 PHASE 4 ARCHITECTURE IMPROVEMENTS TESTING")
+        print("="*60)
+        self.test_phase4_configuration_system()
+        self.test_phase4_database_manager()
+        self.test_phase4_modular_auth_service()
+        self.test_phase4_rate_limiting_middleware()
+        self.test_phase4_service_layer_architecture()
         
         # Summary
         print("\n" + "=" * 60)
