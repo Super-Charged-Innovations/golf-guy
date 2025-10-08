@@ -6,6 +6,12 @@ import os
 from typing import List, Dict, Optional
 from openai import OpenAI
 from datetime import datetime, timezone
+from dotenv import load_dotenv
+from pathlib import Path
+
+# Load environment variables
+ROOT_DIR = Path(__file__).parent
+load_dotenv(ROOT_DIR / '.env')
 
 # Initialize OpenAI client with Emergent LLM key
 client = OpenAI(api_key=os.environ.get('OPENAI_API_KEY'))
