@@ -76,13 +76,22 @@ export const Layout = () => {
               {!isAuthenticated ? (
                 <>
                   <Link to="/login">
-                    <Button variant="ghost" size="sm" data-testid="login-button">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-300"
+                      data-testid="login-button"
+                    >
                       <LogIn className="h-4 w-4 mr-2" />
                       Sign In
                     </Button>
                   </Link>
                   <Link to="/register">
-                    <Button variant="outline" size="sm" data-testid="register-button">
+                    <Button 
+                      size="sm" 
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-md hover:shadow-lg hover:shadow-emerald-200 transition-all duration-300"
+                      data-testid="register-button"
+                    >
                       Get Started
                     </Button>
                   </Link>
@@ -90,22 +99,38 @@ export const Layout = () => {
               ) : (
                 <>
                   <Link to="/profile">
-                    <Button variant="ghost" size="sm" data-testid="profile-link">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-300"
+                      data-testid="profile-link"
+                    >
                       My Profile
                     </Button>
                   </Link>
                   {isAdmin && !isAdminPage && (
                     <Link to="/admin">
-                      <Button variant="outline" size="sm" data-testid="admin-dashboard-link">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="border-emerald-200 hover:bg-emerald-50 hover:border-emerald-400 hover:text-emerald-700 transition-all duration-300"
+                        data-testid="admin-dashboard-link"
+                      >
                         <UserCog className="h-4 w-4 mr-2" />
                         Admin
                       </Button>
                     </Link>
                   )}
-                  <span className="text-sm text-muted-foreground hidden sm:inline">
+                  <span className="text-sm text-gray-600 hidden sm:inline px-2">
                     {user?.full_name}
                   </span>
-                  <Button variant="ghost" size="sm" onClick={handleLogout} data-testid="logout-button">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={handleLogout} 
+                    className="hover:bg-red-50 hover:text-red-700 transition-all duration-300"
+                    data-testid="logout-button"
+                  >
                     <LogOut className="h-4 w-4 mr-2" />
                     Logout
                   </Button>
