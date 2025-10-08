@@ -1,22 +1,18 @@
 [
   {
-    "content": "Update backend Destination model to include package details, course type, resort amenities, and additional fields",
+    "content": "Create comprehensive DestinationSuite component with full add/edit forms in Admin Dashboard",
     "status": "completed"
   },
   {
-    "content": "Create comprehensive DestinationSuite component with full add/edit forms in Admin Dashboard",
-    "status": "in_progress"
-  },
-  {
-    "content": "Implement package management (multiple packages per destination with pricing, inclusions, duration)",
-    "status": "pending"
-  },
-  {
     "content": "Add course/resort categorization and detailed amenities management",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Test end-to-end destination creation and editing flow",
+    "status": "completed"
+  },
+  {
+    "content": "Implement package management (multiple packages per destination with pricing, inclusions, duration)",
     "status": "pending"
   }
 ]
