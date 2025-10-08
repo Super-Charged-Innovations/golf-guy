@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Query, Depends, Header
+from fastapi import FastAPI, APIRouter, HTTPException, Query, Depends, Header, UploadFile, File, Form
 from fastapi.responses import PlainTextResponse, StreamingResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from dotenv import load_dotenv
@@ -15,6 +15,7 @@ import io
 import csv
 from auth_service import auth_service
 from ai_service import ai_service
+from s3_service import s3_service
 
 
 ROOT_DIR = Path(__file__).parent
