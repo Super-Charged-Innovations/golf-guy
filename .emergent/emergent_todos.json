@@ -1,11 +1,11 @@
 [
   {
     "content": "Install emergentintegrations library and get Emergent LLM Key",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Update ai_service.py to use emergentintegrations with gpt-5-mini model",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Update backend/.env with EMERGENT_LLM_KEY",
