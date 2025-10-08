@@ -1,19 +1,19 @@
 [
   {
     "content": "Update backend models: Destination, Article, HeroCarousel, Testimonial, Partner, Inquiry, Settings with UUID and timezone-aware datetimes",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Implement all backend API endpoints: CRUD for destinations, articles, heroes, partners, testimonials, inquiries with proper Pydantic models",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Create mock Instagram endpoint returning 3 sample posts",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Create seed data endpoint to populate 10 destinations, 5 articles, 6 hero slides, 3 partners",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Update frontend index.css with design tokens (fairway green, gold accent, Playfair/Karla fonts)",
@@ -49,7 +49,7 @@
   },
   {
     "content": "Add SEO foundations: sitemap.xml, robots.txt endpoints, alt text, canonical patterns",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Test complete user flow and take screenshots to verify UI matches design guidelines",
