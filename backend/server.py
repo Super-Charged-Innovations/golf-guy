@@ -400,6 +400,126 @@ async def get_user_profile(
 # Include the API router
 app.include_router(api_router)
 
+# Add critical missing routes from the old server temporarily
+# TODO: Move these to proper modules
+
+@api_router.put("/profile")
+async def update_user_profile(
+    profile_data: dict,
+    current_user: dict = Depends(require_auth),
+    db = Depends(get_db)
+):
+    """Update user profile and preferences"""
+    update_data = profile_data.copy()
+    update_data["updated_at"] = datetime.now(timezone.utc).isoformat()
+    
+    await db.user_profiles.update_one(
+        {"user_id": current_user["id"]},
+        {"$set": update_data}
+    )
+    
+    # Log profile update
+    await audit_logger.log_action(
+        action_type=AuditActionType.DATA_UPDATE,
+        user_id=current_user["id"],
+        user_email=current_user["email"],
+        resource_type="user_profile",
+        resource_id=current_user["id"],
+        legal_basis="Contract performance"
+    )
+    
+    profile = await db.user_profiles.find_one({"user_id": current_user["id"]}, {"_id": 0})
+    return profile
+
+@api_router.get("/destinations")
+async def get_destinations(
+    country: Optional[str] = Query(None),
+    featured: Optional[bool] = Query(None),
+    published: Optional[bool] = Query(True),
+    db = Depends(get_db)
+):
+    """Get destinations with optional filtering"""
+    query = {}
+    if country:
+        query["country"] = country
+    if featured is not None:
+        query["featured"] = featured
+    if published is not None:
+        query["published"] = published
+    
+    destinations = await db.destinations.find(query, {"_id": 0}).to_list(1000)
+    for dest in destinations:
+        deserialize_datetime(dest, ["created_at", "updated_at"])
+    return destinations
+
+@api_router.get("/destinations/{slug}")
+async def get_destination(slug: str, db = Depends(get_db)):
+    """Get destination by slug"""
+    dest = await db.destinations.find_one({"slug": slug}, {"_id": 0})
+    if not dest:
+        raise HTTPException(status_code=404, detail="Destination not found")
+    
+    deserialize_datetime(dest, ["created_at", "updated_at"])
+    return dest
+
+# Add file upload routes from old server
+@api_router.post("/files/upload")
+async def upload_file(
+    file: UploadFile = File(...),
+    category: str = Form(...),
+    current_user: dict = Depends(require_auth),
+    db = Depends(get_db)
+):
+    """Upload file to S3 storage with security validation"""
+    
+    # Validate category
+    allowed_categories = [
+        'destination-images', 'user-profiles', 'kyc-documents', 
+        'admin-content', 'gdpr-exports', 'generated-reports'
+    ]
+    
+    if category not in allowed_categories:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Invalid category. Allowed: {', '.join(allowed_categories)}"
+        )
+    
+    # Admin-only categories
+    admin_categories = ['admin-content', 'destination-images']
+    if category in admin_categories and not current_user.get("is_admin", False):
+        raise HTTPException(status_code=403, detail="Admin access required for this category")
+    
+    try:
+        result = await s3_service.upload_file(
+            file=file,
+            category=category,
+            user_id=current_user["id"],
+            metadata={
+                'uploaded_by': current_user["email"],
+                'user_name': current_user.get("full_name", "Unknown")
+            }
+        )
+        
+        # Log file upload
+        await audit_logger.log_action(
+            action_type=AuditActionType.FILE_UPLOAD,
+            user_id=current_user["id"],
+            user_email=current_user["email"],
+            resource_type="file",
+            resource_id=result.get("file_key", ""),
+            metadata={"category": category, "filename": file.filename},
+            legal_basis="Contract performance"
+        )
+        
+        return result
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
+
+# Include the API router
+
 # Add system monitoring endpoints
 @app.get("/api/admin/system/stats")
 async def get_system_stats(
