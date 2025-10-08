@@ -148,14 +148,16 @@ export const Layout = () => {
 
       {/* Footer */}
       {!isAdminPage && (
-        <footer className="border-t bg-secondary/30 mt-20">
+        <footer className="border-t border-emerald-100 bg-gradient-to-b from-white to-emerald-50/30 mt-20">
           <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
               {/* About */}
               <div>
-                <div className="flex items-center space-x-2 mb-4">
-                  <Plane className="h-6 w-6 text-primary" />
-                  <span className="font-playfair text-xl font-bold text-primary">Golf Guy</span>
+                <div className="flex items-center space-x-2 mb-4 group">
+                  <Plane className="h-6 w-6 text-emerald-600 transition-transform duration-300 group-hover:rotate-12" />
+                  <span className="font-playfair text-xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-800 bg-clip-text text-transparent">
+                    Golf Guy
+                  </span>
                 </div>
                 <p className="text-sm text-muted-foreground">
                   Creating unforgettable golf experiences since 2010. Your trusted partner for golf travel worldwide.
