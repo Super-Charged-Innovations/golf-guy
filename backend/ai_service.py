@@ -4,24 +4,37 @@ Handles GPT-5 integration, content generation, and user recommendations
 """
 import os
 from typing import List, Dict, Optional
-from openai import OpenAI
+from emergentintegrations.llm.chat import LlmChat, UserMessage
 from datetime import datetime, timezone
 from dotenv import load_dotenv
 from pathlib import Path
+import json
+import uuid
 
 # Load environment variables
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-# Initialize OpenAI client with Emergent LLM key
-client = OpenAI(api_key=os.environ.get('OPENAI_API_KEY'))
-
 class AIService:
-    """AI Service using GPT-5 for golf platform intelligence"""
+    """AI Service using GPT-5-mini via Emergent LLM Key"""
     
     def __init__(self):
-        self.model = "gpt-4o"  # Using GPT-4o (GPT-5 not yet in public API)
-        self.client = client
+        self.model = "gpt-5-mini"
+        self.provider = "openai"
+        self.api_key = os.environ.get('EMERGENT_LLM_KEY')
+        if not self.api_key:
+            raise ValueError("EMERGENT_LLM_KEY not found in environment variables")
+    
+    def _create_chat_session(self, system_message: str) -> LlmChat:
+        """Create a new chat session with unique session ID"""
+        session_id = f"golf-guy-{uuid.uuid4()}"
+        chat = LlmChat(
+            api_key=self.api_key,
+            session_id=session_id,
+            system_message=system_message
+        )
+        chat.with_model(self.provider, self.model)
+        return chat
     
     async def generate_destination_content(
         self, 
