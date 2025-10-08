@@ -67,12 +67,17 @@ export default function ProfileKYC() {
   });
 
   useEffect(() => {
+    // Wait for auth loading to complete before checking authentication
+    if (authLoading) {
+      return; // Still loading auth state
+    }
+    
     if (!isAuthenticated) {
       navigate('/login');
       return;
     }
     loadProfile();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, authLoading]);
 
   const loadProfile = async () => {
     try {
