@@ -226,6 +226,8 @@ Conversation Style: Professional yet friendly, like a knowledgeable travel advis
         if not conversation_history:
             return "No conversation history"
         
+        system_message = "You are a conversation summarizer. Create concise, informative summaries."
+        
         conversation_text = "\n".join([
             f"{msg.get('role', 'user').title()}: {msg.get('content', '')}"
             for msg in conversation_history
@@ -245,17 +247,11 @@ Conversation:
 Provide a concise summary (2-3 paragraphs) that captures the essential information for future personalization."""
 
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    {"role": "system", "content": "You are a conversation summarizer. Create concise, informative summaries."},
-                    {"role": "user", "content": prompt}
-                ],
-                temperature=0.5,
-                max_tokens=300
-            )
+            chat = self._create_chat_session(system_message)
+            user_message = UserMessage(text=prompt)
+            response = await chat.send_message(user_message)
             
-            return response.choices[0].message.content
+            return response
             
         except Exception as e:
             print(f"AI Summarization Error: {str(e)}")
