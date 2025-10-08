@@ -29,7 +29,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 export default function PrivacySettings() {
-  const { isAuthenticated, token, logout } = useAuth();
+  const { isAuthenticated, token, logout, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
