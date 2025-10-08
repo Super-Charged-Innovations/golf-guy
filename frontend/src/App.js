@@ -14,6 +14,7 @@ import Register from './pages/Register';
 import AdminDashboard from './pages/AdminDashboard';
 import ProfileKYC from './pages/ProfileKYC';
 import ClientDashboard from './pages/ClientDashboard';
+import PrivacySettings from './pages/PrivacySettings';
 import ScrollToTop from './components/ScrollToTop';
 import { Toaster } from './components/ui/sonner';
 import './App.css';
