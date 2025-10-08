@@ -7,6 +7,7 @@ import { Badge } from '../components/ui/badge';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../components/ui/carousel';
 import { AspectRatio } from '../components/ui/aspect-ratio';
 import AIChatWidget from '../components/AIChatWidget';
+import { RecommendationsButton } from '../components/RecommendationsButton';
 import { Star, ArrowRight, Shield, Award, Users } from 'lucide-react';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
