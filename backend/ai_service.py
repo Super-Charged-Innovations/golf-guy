@@ -99,6 +99,8 @@ Focus on factual, enticing content that helps travelers understand what makes th
         """
         Generate personalized recommendations based on user profile
         """
+        system_message = "You are a golf travel recommendation expert. Provide personalized suggestions based on user preferences in JSON format."
+        
         user_context = f"""
 User Profile:
 - Name: {user_profile.get('name', 'User')}
@@ -144,18 +146,12 @@ Respond in JSON format:
 }}"""
 
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    {"role": "system", "content": "You are a golf travel recommendation expert. Provide personalized suggestions based on user preferences."},
-                    {"role": "user", "content": prompt}
-                ],
-                response_format={ "type": "json_object" },
-                temperature=0.8
-            )
+            chat = self._create_chat_session(system_message)
+            user_message = UserMessage(text=prompt)
+            response = await chat.send_message(user_message)
             
-            import json
-            recommendations = json.loads(response.choices[0].message.content)
+            # Parse JSON response
+            recommendations = json.loads(response)
             return recommendations.get('recommendations', [])
             
         except Exception as e:
