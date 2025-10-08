@@ -64,6 +64,11 @@ export const Layout = () => {
                 </>
               ) : (
                 <>
+                  <Link to="/profile">
+                    <Button variant="ghost" size="sm" data-testid="profile-link">
+                      My Profile
+                    </Button>
+                  </Link>
                   {isAdmin && !isAdminPage && (
                     <Link to="/admin">
                       <Button variant="outline" size="sm" data-testid="admin-dashboard-link">
