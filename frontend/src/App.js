@@ -21,6 +21,7 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <ScrollToTop />
         <Toaster position="top-center" />
         <Routes>
           {/* Auth Routes (no layout) */}
