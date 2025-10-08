@@ -1,18 +1,50 @@
 [
   {
-    "content": "Create comprehensive DestinationSuite component with full add/edit forms in Admin Dashboard",
-    "status": "completed"
+    "content": "Install OpenAI SDK and configure GPT-5 integration with Emergent LLM key",
+    "status": "pending"
   },
   {
-    "content": "Add course/resort categorization and detailed amenities management",
-    "status": "completed"
+    "content": "Create User authentication backend: User model, JWT auth, register/login endpoints",
+    "status": "pending"
   },
   {
-    "content": "Test end-to-end destination creation and editing flow",
-    "status": "completed"
+    "content": "Create UserProfile model with AI portfolio storage (preferences, KYC data, conversation summaries)",
+    "status": "pending"
   },
   {
-    "content": "Implement package management (multiple packages per destination with pricing, inclusions, duration)",
+    "content": "Build AI Chat Service: GPT-5 integration, conversation management, context building from user profile",
+    "status": "pending"
+  },
+  {
+    "content": "Implement AI Auto-fill endpoint for destination content generation",
+    "status": "pending"
+  },
+  {
+    "content": "Create personalized recommendation engine based on user preferences",
+    "status": "pending"
+  },
+  {
+    "content": "Build frontend Login/Register pages with JWT token management",
+    "status": "pending"
+  },
+  {
+    "content": "Create AI Chat Widget component (emerald gradient box, collapsible near destinations CTA)",
+    "status": "pending"
+  },
+  {
+    "content": "Add AI Auto-fill button to Destination Suite in admin panel",
+    "status": "pending"
+  },
+  {
+    "content": "Implement conversation summarization and MongoDB storage",
+    "status": "pending"
+  },
+  {
+    "content": "Create mock user profiles for admin testing",
+    "status": "pending"
+  },
+  {
+    "content": "Test complete AI flow: registration -> preferences -> recommendations -> chat interaction",
     "status": "pending"
   }
 ]
