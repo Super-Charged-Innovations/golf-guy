@@ -1,6 +1,22 @@
 [
   {
-    "content": "Test complete user flow and take screenshots to verify UI matches design guidelines",
-    "status": "completed"
+    "content": "Update backend Destination model to include package details, course type, resort amenities, and additional fields",
+    "status": "in_progress"
+  },
+  {
+    "content": "Create comprehensive DestinationSuite component with full add/edit forms in Admin Dashboard",
+    "status": "pending"
+  },
+  {
+    "content": "Implement package management (multiple packages per destination with pricing, inclusions, duration)",
+    "status": "pending"
+  },
+  {
+    "content": "Add course/resort categorization and detailed amenities management",
+    "status": "pending"
+  },
+  {
+    "content": "Test end-to-end destination creation and editing flow",
+    "status": "pending"
   }
 ]
