@@ -1,38 +1,6 @@
 [
   {
-    "content": "Update frontend index.css with design tokens (fairway green, gold accent, Playfair/Karla fonts)",
-    "status": "completed"
-  },
-  {
-    "content": "Create base Layout component with Header (navigation + demo buttons) and Footer",
-    "status": "completed"
-  },
-  {
-    "content": "Build Homepage: HeroCarousel, featured destinations grid, editorial strip, trust bar, CTA band",
-    "status": "completed"
-  },
-  {
-    "content": "Build Destinations pages: listing with filters + detail page with gallery and inquiry CTA",
-    "status": "completed"
-  },
-  {
-    "content": "Build Articles pages: listing + detail with category filters",
-    "status": "completed"
-  },
-  {
-    "content": "Build Contact/Inquiry form with validation and Sonner toasts",
-    "status": "completed"
-  },
-  {
-    "content": "Build comprehensive Admin Dashboard: tabs for Content, Destinations, Articles, Inquiries with CRUD operations",
-    "status": "completed"
-  },
-  {
-    "content": "Implement demo auth buttons (Client/Admin) with localStorage flags and route guards",
-    "status": "completed"
-  },
-  {
     "content": "Test complete user flow and take screenshots to verify UI matches design guidelines",
-    "status": "in_progress"
+    "status": "completed"
   }
 ]
