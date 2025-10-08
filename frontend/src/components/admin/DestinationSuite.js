@@ -742,12 +742,251 @@ export const DestinationFormDialog = ({ open, onOpenChange, destination, onSave 
             </div>
           </TabsContent>
 
-          {/* Packages Tab - Placeholder for now */}
+          {/* Packages Tab */}
           <TabsContent value="packages" className="space-y-4">
-            <div className="text-center py-8 text-muted-foreground">
-              <p className="mb-2">Package management coming soon!</p>
-              <p className="text-sm">For now, packages can be managed through the price range fields in Basic Info.</p>
-            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Travel Packages</CardTitle>
+                <CardDescription>
+                  Create and manage travel packages for this destination
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {formData.packages.map((pkg, index) => (
+                  <Card key={pkg.id || index} className="border-emerald-100">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-base">Package {index + 1}</CardTitle>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            const newPackages = formData.packages.filter((_, i) => i !== index);
+                            setFormData({ ...formData, packages: newPackages });
+                          }}
+                          className="text-destructive hover:text-destructive"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <Label>Package Name *</Label>
+                          <Input
+                            placeholder="e.g., Weekend Golf Getaway"
+                            value={pkg.name || ''}
+                            onChange={(e) => {
+                              const newPackages = [...formData.packages];
+                              newPackages[index] = { ...pkg, name: e.target.value };
+                              setFormData({ ...formData, packages: newPackages });
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <Label>Price ({pkg.currency || 'SEK'}) *</Label>
+                          <Input
+                            type="number"
+                            placeholder="15000"
+                            value={pkg.price || ''}
+                            onChange={(e) => {
+                              const newPackages = [...formData.packages];
+                              newPackages[index] = { ...pkg, price: parseInt(e.target.value) || 0 };
+                              setFormData({ ...formData, packages: newPackages });
+                            }}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <Label>Duration (Nights) *</Label>
+                          <Input
+                            type="number"
+                            placeholder="3"
+                            value={pkg.duration_nights || ''}
+                            onChange={(e) => {
+                              const newPackages = [...formData.packages];
+                              const nights = parseInt(e.target.value) || 0;
+                              newPackages[index] = { 
+                                ...pkg, 
+                                duration_nights: nights,
+                                duration_days: nights + 1 
+                              };
+                              setFormData({ ...formData, packages: newPackages });
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <Label>Duration (Days) *</Label>
+                          <Input
+                            type="number"
+                            placeholder="4"
+                            value={pkg.duration_days || ''}
+                            readOnly
+                            className="bg-muted"
+                          />
+                          <p className="text-xs text-muted-foreground mt-1">Auto-calculated from nights</p>
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label>Description</Label>
+                        <Textarea
+                          placeholder="Brief package description..."
+                          value={pkg.description || ''}
+                          onChange={(e) => {
+                            const newPackages = [...formData.packages];
+                            newPackages[index] = { ...pkg, description: e.target.value };
+                            setFormData({ ...formData, packages: newPackages });
+                          }}
+                          rows={2}
+                        />
+                      </div>
+
+                      <div>
+                        <Label>Inclusions</Label>
+                        <div className="space-y-2">
+                          {(pkg.inclusions || []).map((inc, incIndex) => (
+                            <div key={incIndex} className="flex gap-2">
+                              <Input
+                                placeholder="e.g., 3 rounds of golf"
+                                value={inc}
+                                onChange={(e) => {
+                                  const newPackages = [...formData.packages];
+                                  const newInclusions = [...(pkg.inclusions || [])];
+                                  newInclusions[incIndex] = e.target.value;
+                                  newPackages[index] = { ...pkg, inclusions: newInclusions };
+                                  setFormData({ ...formData, packages: newPackages });
+                                }}
+                              />
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                  const newPackages = [...formData.packages];
+                                  const newInclusions = (pkg.inclusions || []).filter((_, i) => i !== incIndex);
+                                  newPackages[index] = { ...pkg, inclusions: newInclusions };
+                                  setFormData({ ...formData, packages: newPackages });
+                                }}
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          ))}
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              const newPackages = [...formData.packages];
+                              newPackages[index] = { 
+                                ...pkg, 
+                                inclusions: [...(pkg.inclusions || []), ''] 
+                              };
+                              setFormData({ ...formData, packages: newPackages });
+                            }}
+                          >
+                            <Plus className="h-4 w-4 mr-1" /> Add Inclusion
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label>Exclusions (Optional)</Label>
+                        <div className="space-y-2">
+                          {(pkg.exclusions || []).map((exc, excIndex) => (
+                            <div key={excIndex} className="flex gap-2">
+                              <Input
+                                placeholder="e.g., Flights not included"
+                                value={exc}
+                                onChange={(e) => {
+                                  const newPackages = [...formData.packages];
+                                  const newExclusions = [...(pkg.exclusions || [])];
+                                  newExclusions[excIndex] = e.target.value;
+                                  newPackages[index] = { ...pkg, exclusions: newExclusions };
+                                  setFormData({ ...formData, packages: newPackages });
+                                }}
+                              />
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                  const newPackages = [...formData.packages];
+                                  const newExclusions = (pkg.exclusions || []).filter((_, i) => i !== excIndex);
+                                  newPackages[index] = { ...pkg, exclusions: newExclusions };
+                                  setFormData({ ...formData, packages: newPackages });
+                                }}
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          ))}
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              const newPackages = [...formData.packages];
+                              newPackages[index] = { 
+                                ...pkg, 
+                                exclusions: [...(pkg.exclusions || []), ''] 
+                              };
+                              setFormData({ ...formData, packages: newPackages });
+                            }}
+                          >
+                            <Plus className="h-4 w-4 mr-1" /> Add Exclusion
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          id={`available-${index}`}
+                          checked={pkg.available !== false}
+                          onChange={(e) => {
+                            const newPackages = [...formData.packages];
+                            newPackages[index] = { ...pkg, available: e.target.checked };
+                            setFormData({ ...formData, packages: newPackages });
+                          }}
+                          className="rounded border-gray-300"
+                        />
+                        <Label htmlFor={`available-${index}`} className="font-normal cursor-pointer">
+                          Package is available for booking
+                        </Label>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setFormData({
+                      ...formData,
+                      packages: [
+                        ...formData.packages,
+                        {
+                          id: `pkg-${Date.now()}`,
+                          name: '',
+                          duration_nights: 3,
+                          duration_days: 4,
+                          price: 0,
+                          currency: 'SEK',
+                          inclusions: [],
+                          exclusions: [],
+                          description: '',
+                          available: true
+                        }
+                      ]
+                    });
+                  }}
+                  className="w-full"
+                >
+                  <Plus className="h-4 w-4 mr-2" /> Add Package
+                </Button>
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
 
