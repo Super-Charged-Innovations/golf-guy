@@ -470,6 +470,34 @@ export default function ProfileKYC() {
             </CardContent>
           </Card>
 
+          {/* KYC Document Upload */}
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="w-5 h-5" />
+                KYC Documents
+              </CardTitle>
+              <CardDescription>
+                Upload identity documents to verify your profile and unlock higher tiers with better rates and exclusive offers.
+                Accepted: ID cards, passports, driver's licenses (PDF, JPG, PNG)
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <FileUpload 
+                category="kyc-documents"
+                maxFiles={3}
+                maxSizeBytes={10 * 1024 * 1024} // 10MB
+                allowedExtensions={['.pdf', '.jpg', '.jpeg', '.png']}
+                onUploadComplete={(fileData) => {
+                  toast.success(`Document "${fileData.original_filename}" uploaded successfully`);
+                  // Optionally refresh tier status after upload
+                  fetchTierStatus();
+                }}
+                className="border-0 shadow-none p-0"
+              />
+            </CardContent>
+          </Card>
+
           {/* Submit Button */}
           <div className="flex justify-end gap-4">
             <Button
