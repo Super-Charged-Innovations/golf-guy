@@ -400,6 +400,7 @@ class TokenResponse(BaseModel):
 
 # User Profile & AI Portfolio Models
 class UserPreferences(BaseModel):
+    # Basic preferences (required for Tier 1)
     budget_min: int = 0
     budget_max: int = 50000
     preferred_countries: List[str] = []
@@ -407,6 +408,15 @@ class UserPreferences(BaseModel):
     accommodation_preference: str = "Any"  # Luxury, Mid-range, Budget, Any
     trip_duration_days: Optional[int] = None
     group_size: Optional[int] = None
+    
+    # Additional KYC info (for Tier 2-3)
+    phone_number: Optional[str] = None
+    travel_frequency: Optional[str] = None  # "First-time", "Annual", "Frequent"
+    preferred_travel_months: List[str] = []
+    dietary_requirements: Optional[str] = None
+    special_requests: Optional[str] = None
+    previous_golf_destinations: List[str] = []
+    handicap: Optional[int] = None
 
 class ConversationMessage(BaseModel):
     role: str  # user or assistant
