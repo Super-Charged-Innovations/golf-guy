@@ -5,33 +5,12 @@ import { Button } from './ui/button';
 import { MapPin, Mail, Phone, Plane, LogIn, UserCog, LogOut } from 'lucide-react';
 
 export const Layout = () => {
-  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-
-  useEffect(() => {
-    const adminFlag = localStorage.getItem('demo_admin');
-    setIsAdmin(adminFlag === 'true');
-  }, [location]);
-
-  const handleDemoClient = () => {
-    localStorage.setItem('demo_client', 'true');
-    localStorage.removeItem('demo_admin');
-    setIsAdmin(false);
-    navigate('/');
-  };
-
-  const handleDemoAdmin = () => {
-    localStorage.setItem('demo_admin', 'true');
-    localStorage.removeItem('demo_client');
-    setIsAdmin(true);
-    navigate('/admin');
-  };
+  const { user, isAuthenticated, isAdmin, logout } = useAuth();
 
   const handleLogout = () => {
-    localStorage.removeItem('demo_admin');
-    localStorage.removeItem('demo_client');
-    setIsAdmin(false);
+    logout();
     navigate('/');
   };
 
