@@ -16,6 +16,7 @@ import csv
 from auth_service import auth_service
 from ai_service import ai_service
 from s3_service import s3_service
+from audit_service import audit_logger, AuditActionType
 
 
 ROOT_DIR = Path(__file__).parent
