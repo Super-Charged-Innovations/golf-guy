@@ -82,10 +82,40 @@ export default function ClientDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-emerald-50/30 to-white">
-        <div className="text-center">
-          <Loader2 className="h-12 w-12 animate-spin text-emerald-600 mx-auto mb-4" />
-          <p className="text-gray-600">Loading your dashboard...</p>
+      <div className="min-h-screen bg-gradient-to-b from-emerald-50/30 to-white py-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header Skeleton */}
+          <div className="mb-8 flex items-center justify-between">
+            <div className="space-y-2">
+              <div className="h-8 w-64 bg-gray-200 rounded animate-pulse" />
+              <div className="h-4 w-48 bg-gray-200 rounded animate-pulse" />
+            </div>
+            <div className="h-16 w-16 rounded-full bg-gray-200 animate-pulse" />
+          </div>
+          
+          {/* Stats Cards Skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="p-6 border rounded-lg bg-white">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="h-12 w-12 rounded-full bg-gray-200 animate-pulse" />
+                  <div className="h-6 w-16 bg-gray-200 rounded animate-pulse" />
+                </div>
+                <div className="h-8 w-20 bg-gray-200 rounded animate-pulse mb-2" />
+                <div className="h-4 w-32 bg-gray-200 rounded animate-pulse" />
+              </div>
+            ))}
+          </div>
+          
+          {/* Content Skeleton */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-6">
+              <div className="p-6 border rounded-lg bg-white h-48 animate-pulse" />
+            </div>
+            <div className="space-y-6">
+              <div className="p-6 border rounded-lg bg-white h-64 animate-pulse" />
+            </div>
+          </div>
         </div>
       </div>
     );
