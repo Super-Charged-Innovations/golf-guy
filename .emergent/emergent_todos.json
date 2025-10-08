@@ -1,0 +1,58 @@
+[
+  {
+    "content": "Update backend models: Destination, Article, HeroCarousel, Testimonial, Partner, Inquiry, Settings with UUID and timezone-aware datetimes",
+    "status": "pending"
+  },
+  {
+    "content": "Implement all backend API endpoints: CRUD for destinations, articles, heroes, partners, testimonials, inquiries with proper Pydantic models",
+    "status": "pending"
+  },
+  {
+    "content": "Create mock Instagram endpoint returning 3 sample posts",
+    "status": "pending"
+  },
+  {
+    "content": "Create seed data endpoint to populate 10 destinations, 5 articles, 6 hero slides, 3 partners",
+    "status": "pending"
+  },
+  {
+    "content": "Update frontend index.css with design tokens (fairway green, gold accent, Playfair/Karla fonts)",
+    "status": "pending"
+  },
+  {
+    "content": "Create base Layout component with Header (navigation + demo buttons) and Footer",
+    "status": "pending"
+  },
+  {
+    "content": "Build Homepage: HeroCarousel, featured destinations grid, editorial strip, trust bar, CTA band",
+    "status": "pending"
+  },
+  {
+    "content": "Build Destinations pages: listing with filters + detail page with gallery and inquiry CTA",
+    "status": "pending"
+  },
+  {
+    "content": "Build Articles pages: listing + detail with category filters",
+    "status": "pending"
+  },
+  {
+    "content": "Build Contact/Inquiry form with validation and Sonner toasts",
+    "status": "pending"
+  },
+  {
+    "content": "Build comprehensive Admin Dashboard: tabs for Content, Destinations, Articles, Inquiries with CRUD operations",
+    "status": "pending"
+  },
+  {
+    "content": "Implement demo auth buttons (Client/Admin) with localStorage flags and route guards",
+    "status": "pending"
+  },
+  {
+    "content": "Add SEO foundations: sitemap.xml, robots.txt endpoints, alt text, canonical patterns",
+    "status": "pending"
+  },
+  {
+    "content": "Test complete user flow and take screenshots to verify UI matches design guidelines",
+    "status": "pending"
+  }
+]
