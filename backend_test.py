@@ -738,6 +738,16 @@ class BackendTester:
         self.test_ai_integration()
         self.test_database_connectivity()
         
+        # Phase 2 Infrastructure Tests
+        print("\n" + "="*60)
+        print("🚀 PHASE 2 INFRASTRUCTURE TESTING")
+        print("="*60)
+        self.test_mongodb_security_hardening()
+        self.test_file_storage_system()
+        self.test_gdpr_audit_logging_system()
+        self.test_admin_audit_access()
+        self.test_file_upload_security_validation()
+        
         # Summary
         print("\n" + "=" * 60)
         print("📊 TEST SUMMARY")
