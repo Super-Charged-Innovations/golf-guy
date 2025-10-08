@@ -475,11 +475,261 @@ def deserialize_datetime(doc: dict, fields: List[str]) -> dict:
     return doc
 
 
+# ===== Authentication Dependency =====
+
+security = HTTPBearer()
+
+async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    """Dependency to get current authenticated user"""
+    token = credentials.credentials
+    payload = auth_service.decode_token(token)
+    
+    if not payload:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+    
+    user_id = payload.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Invalid token payload")
+    
+    # Fetch user from database
+    user = await db.users.find_one({"id": user_id}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=401, detail="User not found")
+    
+    deserialize_datetime(user, ["created_at", "last_login"])
+    return user
+
+
 # ===== Routes =====
 
 @api_router.get("/")
 async def root():
     return {"message": "Golf Guy Platform API", "version": "1.0.0"}
+
+# Authentication Routes
+@api_router.post("/auth/register", response_model=TokenResponse)
+async def register(user_data: UserCreate):
+    """Register a new user"""
+    # Check if user already exists
+    existing_user = await db.users.find_one({"email": user_data.email})
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    
+    # Create user
+    user = User(
+        email=user_data.email,
+        hashed_password=auth_service.get_password_hash(user_data.password),
+        full_name=user_data.full_name
+    )
+    
+    user_dict = user.model_dump()
+    user_dict = serialize_datetime(user_dict)
+    await db.users.insert_one(user_dict)
+    
+    # Create user profile
+    profile = UserProfile(user_id=user.id)
+    profile_dict = profile.model_dump()
+    profile_dict = serialize_datetime(profile_dict)
+    await db.user_profiles.insert_one(profile_dict)
+    
+    # Generate token
+    token = auth_service.create_access_token(data={"sub": user.id, "email": user.email})
+    
+    return TokenResponse(
+        access_token=token,
+        user=UserResponse(
+            id=user.id,
+            email=user.email,
+            full_name=user.full_name,
+            is_admin=user.is_admin
+        )
+    )
+
+@api_router.post("/auth/login", response_model=TokenResponse)
+async def login(credentials: UserLogin):
+    """Login with email and password"""
+    user = await db.users.find_one({"email": credentials.email}, {"_id": 0})
+    
+    if not user or not auth_service.verify_password(credentials.password, user["hashed_password"]):
+        raise HTTPException(status_code=401, detail="Incorrect email or password")
+    
+    # Update last login
+    await db.users.update_one(
+        {"id": user["id"]},
+        {"$set": {"last_login": datetime.now(timezone.utc).isoformat()}}
+    )
+    
+    # Generate token
+    token = auth_service.create_access_token(data={"sub": user["id"], "email": user["email"]})
+    
+    return TokenResponse(
+        access_token=token,
+        user=UserResponse(
+            id=user["id"],
+            email=user["email"],
+            full_name=user["full_name"],
+            is_admin=user.get("is_admin", False)
+        )
+    )
+
+@api_router.get("/auth/me", response_model=UserResponse)
+async def get_current_user_info(current_user: dict = Depends(get_current_user)):
+    """Get current user information"""
+    return UserResponse(
+        id=current_user["id"],
+        email=current_user["email"],
+        full_name=current_user["full_name"],
+        is_admin=current_user.get("is_admin", False)
+    )
+
+# User Profile Routes
+@api_router.get("/profile", response_model=UserProfile)
+async def get_user_profile(current_user: dict = Depends(get_current_user)):
+    """Get user profile and preferences"""
+    profile = await db.user_profiles.find_one({"user_id": current_user["id"]}, {"_id": 0})
+    
+    if not profile:
+        # Create profile if doesn't exist
+        profile = UserProfile(user_id=current_user["id"])
+        profile_dict = profile.model_dump()
+        profile_dict = serialize_datetime(profile_dict)
+        await db.user_profiles.insert_one(profile_dict)
+        return profile
+    
+    deserialize_datetime(profile, ["created_at", "updated_at"])
+    return profile
+
+@api_router.put("/profile", response_model=UserProfile)
+async def update_user_profile(
+    profile_update: UserProfileUpdate,
+    current_user: dict = Depends(get_current_user)
+):
+    """Update user profile and preferences"""
+    update_data = {k: v for k, v in profile_update.model_dump().items() if v is not None}
+    update_data["updated_at"] = datetime.now(timezone.utc)
+    update_data = serialize_datetime(update_data)
+    
+    await db.user_profiles.update_one(
+        {"user_id": current_user["id"]},
+        {"$set": update_data}
+    )
+    
+    profile = await db.user_profiles.find_one({"user_id": current_user["id"]}, {"_id": 0})
+    deserialize_datetime(profile, ["created_at", "updated_at"])
+    return profile
+
+# AI Chat Routes
+@api_router.post("/ai/chat", response_model=ChatResponse)
+async def chat_with_ai(
+    chat_message: ChatMessage,
+    current_user: dict = Depends(get_current_user)
+):
+    """Chat with AI assistant"""
+    # Get user profile for context
+    profile = await db.user_profiles.find_one({"user_id": current_user["id"]}, {"_id": 0})
+    if not profile:
+        profile = {"preferences": {}, "conversation_summary": "", "conversation_history": []}
+    
+    # Get available destinations for context
+    destinations = await db.destinations.find({"published": True}, {"_id": 0}).to_list(100)
+    
+    # Get conversation history
+    conversation_history = profile.get("conversation_history", [])
+    
+    # Chat with AI
+    response = await ai_service.chat_with_context(
+        user_message=chat_message.message,
+        user_profile={
+            "name": current_user.get("full_name", "Guest"),
+            **profile.get("preferences", {})
+        },
+        conversation_history=conversation_history,
+        available_destinations=destinations
+    )
+    
+    # Append to conversation history
+    conversation_history.append({
+        "role": "user",
+        "content": chat_message.message,
+        "timestamp": datetime.now(timezone.utc).isoformat()
+    })
+    conversation_history.append({
+        "role": "assistant",
+        "content": response,
+        "timestamp": datetime.now(timezone.utc).isoformat()
+    })
+    
+    # Update profile with new conversation history
+    await db.user_profiles.update_one(
+        {"user_id": current_user["id"]},
+        {"$set": {"conversation_history": conversation_history}}
+    )
+    
+    # If conversation is long (>20 messages), summarize and clear
+    if len(conversation_history) > 20:
+        summary = await ai_service.summarize_conversation(conversation_history)
+        await db.user_profiles.update_one(
+            {"user_id": current_user["id"]},
+            {
+                "$set": {
+                    "conversation_summary": summary,
+                    "conversation_history": []
+                }
+            }
+        )
+    
+    return ChatResponse(response=response)
+
+# AI Recommendations Route
+@api_router.get("/ai/recommendations", response_model=RecommendationResponse)
+async def get_ai_recommendations(current_user: dict = Depends(get_current_user)):
+    """Get personalized AI recommendations"""
+    # Get user profile
+    profile = await db.user_profiles.find_one({"user_id": current_user["id"]}, {"_id": 0})
+    if not profile:
+        profile = {"preferences": {}, "conversation_summary": ""}
+    
+    # Get all destinations
+    destinations = await db.destinations.find({"published": True}, {"_id": 0}).to_list(1000)
+    
+    # Get recent additions (last 30 days)
+    thirty_days_ago = datetime.now(timezone.utc) - timedelta(days=30)
+    recent = await db.destinations.find({
+        "published": True,
+        "created_at": {"$gte": thirty_days_ago.isoformat()}
+    }, {"_id": 0}).to_list(100)
+    
+    # Generate recommendations
+    recommendations = await ai_service.generate_recommendations(
+        user_profile={
+            "name": current_user.get("full_name", "Guest"),
+            **profile.get("preferences", {}),
+            "conversation_summary": profile.get("conversation_summary", ""),
+            "past_inquiries": profile.get("past_inquiries", [])
+        },
+        available_destinations=destinations,
+        recent_additions=recent
+    )
+    
+    return RecommendationResponse(recommendations=recommendations)
+
+# AI Content Generation (Admin only)
+@api_router.post("/ai/generate-destination")
+async def generate_destination_content(
+    request: DestinationAIRequest,
+    current_user: dict = Depends(get_current_user)
+):
+    """AI Auto-fill destination content (Admin only)"""
+    if not current_user.get("is_admin", False):
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    content = await ai_service.generate_destination_content(
+        course_name=request.course_name,
+        location=request.location,
+        additional_info=request.additional_info
+    )
+    
+    return content
 
 # Destinations
 @api_router.get("/destinations", response_model=List[Destination])
