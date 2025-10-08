@@ -268,7 +268,11 @@ export default function AdminDashboard() {
               <div className="space-y-4">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-semibold">All Destinations</h3>
-                  <Button className="bg-primary" data-testid="add-destination-button">
+                  <Button 
+                    className="bg-primary" 
+                    onClick={() => setShowDestDialog(true)}
+                    data-testid="add-destination-button"
+                  >
                     <Plus className="h-4 w-4 mr-2" />
                     Add Destination
                   </Button>
@@ -279,6 +283,7 @@ export default function AdminDashboard() {
                     <TableHeader>
                       <TableRow>
                         <TableHead>Name</TableHead>
+                        <TableHead>Type</TableHead>
                         <TableHead>Country</TableHead>
                         <TableHead>Price From</TableHead>
                         <TableHead>Status</TableHead>
@@ -289,38 +294,10 @@ export default function AdminDashboard() {
                       {destinations.map(dest => (
                         <TableRow key={dest.id}>
                           <TableCell className="font-medium">{dest.name}</TableCell>
-                          <TableCell>{dest.country}</TableCell>
-                          <TableCell>{dest.price_from.toLocaleString()} {dest.currency}</TableCell>
                           <TableCell>
-                            <Badge variant={dest.published ? 'default' : 'secondary'}>
-                              {dest.published ? 'Published' : 'Draft'}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Button 
-                              variant="ghost" 
-                              size="sm"
-                              onClick={() => window.open(`/destinations/${dest.slug}`, '_blank')}
-                              data-testid={`view-dest-${dest.id}`}
-                            >
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                            <Button 
-                              variant="ghost" 
-                              size="sm"
-                              onClick={() => handleDeleteDestination(dest.id)}
-                              data-testid={`delete-dest-${dest.id}`}
-                            >
-                              <Trash2 className="h-4 w-4 text-destructive" />
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </div>
-            </TabsContent>
+                            <Badge variant="outline">
+                              {dest.destination_type === 'golf_course' ? 'Course' :
+                               dest.destination_type === 'golf_resort' ? 'Resort' :
 
             {/* Articles Tab */}
             <TabsContent value="articles">
