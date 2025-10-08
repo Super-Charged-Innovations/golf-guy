@@ -119,56 +119,8 @@ export default function Destinations() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredDestinations.map((dest) => (
-                <Card key={dest.id} className="group overflow-hidden hover:shadow-xl transition-all duration-300" data-testid="destination-card">
-                  <Link to={`/destinations/${dest.slug}`}>
-                    <div className="relative">
-                      <AspectRatio ratio={4/3}>
-                        <img 
-                          src={dest.images[0]} 
-                          alt={dest.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                      </AspectRatio>
-                      {dest.featured && (
-                        <Badge className="absolute top-3 left-3 bg-accent text-accent-foreground">
-                          Featured
-                        </Badge>
-                      )}
-                    </div>
-                    <div className="p-6">
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                        <MapPin className="h-4 w-4" />
-                        <span>{dest.country}</span>
-                        {dest.region && <span>• {dest.region}</span>}
-                      </div>
-                      <h3 className="font-playfair text-xl font-semibold mb-2">{dest.name}</h3>
-                      <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{dest.short_desc}</p>
-                      
-                      {/* Highlights */}
-                      {dest.highlights && dest.highlights.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mb-4">
-                          {dest.highlights.slice(0, 3).map((highlight, idx) => (
-                            <Badge key={idx} variant="outline" className="text-xs">{highlight}</Badge>
-                          ))}
-                        </div>
-                      )}
-
-                      <div className="flex items-center justify-between pt-4 border-t">
-                        <div>
-                          <p className="text-xs text-muted-foreground">From</p>
-                          <p className="font-semibold text-primary text-lg">
-                            {dest.price_from.toLocaleString()} {dest.currency}
-                          </p>
-                        </div>
-                        <Button size="sm" data-testid="destination-view-button">
-                          View Details
-                          <ArrowRight className="ml-1 h-3 w-3" />
-                        </Button>
-                      </div>
-                    </div>
-                  </Link>
-                </Card>
+              {filteredDestinations.map((dest, index) => (
+                <DestinationCard key={dest.id} dest={dest} index={index} />
               ))}
             </div>
           )}
