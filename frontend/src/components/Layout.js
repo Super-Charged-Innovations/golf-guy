@@ -202,4 +202,36 @@ export const Layout = () => {
   );
 };
 
+// Active Navigation Link Component
+function NavLink({ to, label, testId }) {
+  const location = useLocation();
+  const isActive = location.pathname === to || location.pathname.startsWith(to + '/');
+
+  return (
+    <Link 
+      to={to}
+      className={`relative text-sm font-medium transition-all duration-300 ${
+        isActive 
+          ? 'text-emerald-600' 
+          : 'text-gray-700 hover:text-emerald-600'
+      }`}
+      data-testid={testId}
+    >
+      {label}
+      {/* Active indicator */}
+      <span 
+        className={`absolute -bottom-2 left-0 h-0.5 bg-gradient-to-r from-emerald-500 to-emerald-600 transition-all duration-300 ${
+          isActive ? 'w-full' : 'w-0'
+        }`}
+      />
+      {/* Hover indicator */}
+      <span 
+        className={`absolute -bottom-2 left-0 h-0.5 bg-gradient-to-r from-emerald-400 to-emerald-500 transition-all duration-300 ${
+          isActive ? 'w-0' : 'w-0 group-hover:w-full'
+        }`}
+      />
+    </Link>
+  );
+}
+
 export default Layout;
