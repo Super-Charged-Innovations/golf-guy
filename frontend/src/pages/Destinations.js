@@ -6,7 +6,8 @@ import { Card } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { AspectRatio } from '../components/ui/aspect-ratio';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-import { ArrowRight, MapPin } from 'lucide-react';
+import { ArrowRight, MapPin, Sparkles } from 'lucide-react';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
