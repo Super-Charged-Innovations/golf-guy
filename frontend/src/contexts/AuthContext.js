@@ -36,7 +36,16 @@ export const AuthProvider = ({ children }) => {
       setUser(response.data);
     } catch (error) {
       console.error('Failed to fetch user:', error);
-      logout();
+      
+      // If token is invalid (401/403), clear it and don't redirect
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        localStorage.removeItem('auth_token');
+        setToken(null);
+        setUser(null);
+      } else {
+        // For other errors, just logout
+        logout();
+      }
     } finally {
       setLoading(false);
     }
