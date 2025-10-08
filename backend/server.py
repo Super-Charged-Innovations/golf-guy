@@ -461,6 +461,52 @@ class RecommendationResponse(BaseModel):
 
 # ===== Helper Functions =====
 
+def calculate_user_tier(profile: UserProfile) -> int:
+    """Calculate user tier based on KYC and profile completeness"""
+    if not profile.kyc_completed:
+        return 0
+    
+    prefs = profile.preferences
+    score = 0
+    
+    # Tier 1 requirements (basic info)
+    if prefs.budget_min and prefs.budget_max:
+        score += 1
+    if prefs.preferred_countries:
+        score += 1
+    if prefs.playing_level:
+        score += 1
+    if prefs.accommodation_preference and prefs.accommodation_preference != "Any":
+        score += 1
+    
+    # Tier 2 requirements (enhanced info)
+    if prefs.trip_duration_days:
+        score += 1
+    if prefs.group_size:
+        score += 1
+    if prefs.phone_number:
+        score += 1
+    if prefs.travel_frequency:
+        score += 1
+    
+    # Tier 3 requirements (comprehensive info)
+    if prefs.preferred_travel_months:
+        score += 1
+    if prefs.previous_golf_destinations:
+        score += 1
+    if prefs.handicap is not None:
+        score += 1
+    if profile.past_inquiries:
+        score += 1
+    
+    # Determine tier
+    if score <= 4:
+        return 1
+    elif score <= 8:
+        return 2
+    else:
+        return 3
+
 def serialize_datetime(doc: dict) -> dict:
     """Convert datetime objects to ISO strings for MongoDB storage"""
     if not doc:
