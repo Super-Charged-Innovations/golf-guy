@@ -277,8 +277,13 @@ class BackendTester:
         print("\n🔒 TESTING ENCRYPTION FUNCTIONALITY")
         
         try:
-            # Import encryption utilities
+            # Import encryption utilities with proper environment loading
             sys.path.append('/app/backend')
+            
+            # Load environment variables first
+            from dotenv import load_dotenv
+            load_dotenv('/app/backend/.env')
+            
             from encryption_utils import encrypt_data, decrypt_data, hash_data, anonymize_email
             
             # Test encryption/decryption
@@ -306,12 +311,14 @@ class BackendTester:
             else:
                 self.log_test("Email Anonymization", False, f"Anonymization failed: {anon_email}")
                 
-        except ImportError as e:
-            # Try to test encryption by checking if environment key exists
+            # Test encryption key is loaded
+            import os
             if os.environ.get('ENCRYPTION_KEY'):
-                self.log_test("Encryption Key", True, "ENCRYPTION_KEY environment variable is set")
+                self.log_test("Encryption Key", True, "ENCRYPTION_KEY environment variable is loaded")
             else:
                 self.log_test("Encryption Key", False, "ENCRYPTION_KEY environment variable missing")
+                
+        except ImportError as e:
             self.log_test("Encryption Import", False, f"Cannot import encryption utilities: {str(e)}")
         except Exception as e:
             self.log_test("Encryption Functionality", False, f"Encryption test error: {str(e)}")
