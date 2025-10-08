@@ -229,8 +229,8 @@ Complete comprehensive codebase audit focusing on security, compliance, architec
     - "Phase 4 Rate Limiting Integration"
   stuck_tasks:
     - "Phase 4 Rate Limiting Middleware - not integrated into main server"
-  test_all: false
-  test_priority: "critical_first"
+  test_all: true
+  test_priority: "comprehensive_final_audit"
 
 ## agent_communication:
   - agent: "main"
