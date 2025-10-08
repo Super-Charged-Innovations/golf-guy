@@ -11,7 +11,7 @@ import { Badge } from '../ui/badge';
 import { Card } from '../ui/card';
 import { Switch } from '../ui/switch';
 import { toast } from 'sonner';
-import { Plus, X, Save, Trash2 } from 'lucide-react';
+import { Plus, X, Save, Trash2, Sparkles, Loader2 } from 'lucide-react';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
