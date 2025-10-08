@@ -166,7 +166,7 @@ Respond in JSON format:
         available_destinations: List[Dict]
     ) -> str:
         """
-        Chat with user using GPT-5, with full context awareness
+        Chat with user using GPT-5-mini, with full context awareness
         """
         # Build system context
         system_context = f"""You are the Golf Guy AI travel assistant. You help users find perfect golf destinations and packages.
@@ -190,28 +190,27 @@ Your Role:
 
 Conversation Style: Professional yet friendly, like a knowledgeable travel advisor."""
 
-        # Build conversation messages
-        messages = [{"role": "system", "content": system_context}]
-        
-        # Add conversation history (last 10 messages to manage tokens)
-        for msg in conversation_history[-10:]:
-            messages.append({
-                "role": msg.get("role", "user"),
-                "content": msg.get("content", "")
-            })
-        
-        # Add current message
-        messages.append({"role": "user", "content": user_message})
-        
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=messages,
-                temperature=0.7,
-                max_tokens=500
-            )
+            # Create chat session with system context
+            chat = self._create_chat_session(system_context)
             
-            return response.choices[0].message.content
+            # Build conversation context with history
+            conversation_context = ""
+            if conversation_history:
+                conversation_context = "Previous conversation:\n"
+                for msg in conversation_history[-5:]:  # Last 5 messages
+                    role = msg.get("role", "user")
+                    content = msg.get("content", "")
+                    conversation_context += f"{role.title()}: {content}\n"
+                conversation_context += "\n"
+            
+            # Combine context with current message
+            full_message = conversation_context + f"User: {user_message}"
+            
+            user_msg = UserMessage(text=full_message)
+            response = await chat.send_message(user_msg)
+            
+            return response
             
         except Exception as e:
             print(f"AI Chat Error: {str(e)}")
