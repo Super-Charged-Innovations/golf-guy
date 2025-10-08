@@ -1622,6 +1622,134 @@ async def seed_database():
         "testimonials": len(testimonials_data)
     }
 
+# Seed Mock Users for Testing
+@api_router.post("/seed-users")
+async def seed_mock_users():
+    """Create mock user profiles for admin testing"""
+    
+    mock_users_data = [
+        {
+            "email": "budget.golfer@test.com",
+            "password": "password123",
+            "full_name": "Budget Bob",
+            "preferences": {
+                "budget_min": 5000,
+                "budget_max": 15000,
+                "preferred_countries": ["Spain", "Portugal"],
+                "playing_level": "Beginner",
+                "accommodation_preference": "Budget",
+                "trip_duration_days": 7,
+                "group_size": 2
+            },
+            "conversation_summary": "Looking for affordable golf vacations in Spain or Portugal. Prefers value-for-money packages with basic accommodations."
+        },
+        {
+            "email": "luxury.player@test.com",
+            "password": "password123",
+            "full_name": "Luxury Linda",
+            "preferences": {
+                "budget_min": 25000,
+                "budget_max": 50000,
+                "preferred_countries": ["Scotland", "Ireland", "France"],
+                "playing_level": "Advanced",
+                "accommodation_preference": "Luxury",
+                "trip_duration_days": 10,
+                "group_size": 4
+            },
+            "conversation_summary": "Interested in premium golf experiences with luxury resort stays. Enjoys historic courses and fine dining. Budget not a concern."
+        },
+        {
+            "email": "family.vacation@test.com",
+            "password": "password123",
+            "full_name": "Family Frank",
+            "preferences": {
+                "budget_min": 15000,
+                "budget_max": 30000,
+                "preferred_countries": ["Turkey", "Morocco", "UAE"],
+                "playing_level": "Intermediate",
+                "accommodation_preference": "Mid-range",
+                "trip_duration_days": 7,
+                "group_size": 4
+            },
+            "conversation_summary": "Planning family golf vacation. Needs kid-friendly resorts with multiple amenities. Wife doesn't play golf, so resort activities important."
+        },
+        {
+            "email": "corporate.group@test.com",
+            "password": "password123",
+            "full_name": "Corporate Carl",
+            "preferences": {
+                "budget_min": 20000,
+                "budget_max": 40000,
+                "preferred_countries": ["Spain", "Portugal", "Mauritius"],
+                "playing_level": "Professional",
+                "accommodation_preference": "Luxury",
+                "trip_duration_days": 5,
+                "group_size": 12
+            },
+            "conversation_summary": "Organizing corporate golf retreat. Needs conference facilities, premium courses, and team-building activities. Group of 12 executives."
+        },
+        {
+            "email": "admin@golfguy.com",
+            "password": "admin123",
+            "full_name": "Admin User",
+            "is_admin": True,
+            "preferences": {
+                "budget_min": 0,
+                "budget_max": 100000,
+                "preferred_countries": [],
+                "playing_level": "Advanced",
+                "accommodation_preference": "Any",
+                "trip_duration_days": 7,
+                "group_size": 1
+            },
+            "conversation_summary": "Admin account for testing and platform management."
+        }
+    ]
+    
+    created_users = []
+    
+    for user_data in mock_users_data:
+        # Check if user exists
+        existing = await db.users.find_one({"email": user_data["email"]})
+        if existing:
+            continue
+        
+        # Create user
+        user = User(
+            email=user_data["email"],
+            hashed_password=auth_service.get_password_hash(user_data["password"]),
+            full_name=user_data["full_name"],
+            is_admin=user_data.get("is_admin", False)
+        )
+        
+        user_dict = user.model_dump()
+        user_dict = serialize_datetime(user_dict)
+        await db.users.insert_one(user_dict)
+        
+        # Create user profile
+        profile = UserProfile(
+            user_id=user.id,
+            preferences=UserPreferences(**user_data["preferences"]),
+            conversation_summary=user_data["conversation_summary"]
+        )
+        
+        profile_dict = profile.model_dump()
+        profile_dict = serialize_datetime(profile_dict)
+        await db.user_profiles.insert_one(profile_dict)
+        
+        created_users.append({
+            "email": user.email,
+            "full_name": user.full_name,
+            "is_admin": user.is_admin
+        })
+    
+    return {
+        "message": "Mock users created successfully",
+        "users": created_users,
+        "count": len(created_users),
+        "note": "Login with any email above using password: 'password123' (admin password: 'admin123')"
+    }
+
 
 # Include the router in the main app
 app.include_router(api_router)
