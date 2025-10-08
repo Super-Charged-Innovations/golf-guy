@@ -100,11 +100,14 @@ export default function Home() {
                               <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>
                           </Link>
-                          <Link to="/destinations">
-                            <Button size="lg" variant="outline" className="bg-white hover:bg-white/90 text-primary border-white">
-                              View All Destinations
-                            </Button>
-                          </Link>
+                          <div className="flex gap-3">
+                            <Link to="/destinations">
+                              <Button size="lg" variant="outline" className="bg-white hover:bg-white/90 text-primary border-white">
+                                View All Destinations
+                              </Button>
+                            </Link>
+                            <RecommendationsButton />
+                          </div>
                         </div>
                       </div>
                     </div>
