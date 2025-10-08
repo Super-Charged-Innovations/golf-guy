@@ -127,11 +127,21 @@ class DestinationCreate(BaseModel):
     region: Optional[str] = None
     short_desc: str
     long_desc: str
+    destination_type: str = "golf_course"
     price_from: int
     price_to: int
     currency: str = "SEK"
     images: List[str] = []
+    video_url: Optional[str] = None
     highlights: List[str] = []
+    courses: List[CourseDetails] = []
+    amenities: Optional[ResortAmenities] = None
+    packages: List[Package] = []
+    location_coordinates: Optional[Dict[str, float]] = None
+    climate: Optional[str] = None
+    best_time_to_visit: Optional[str] = None
+    nearest_airport: Optional[str] = None
+    transfer_time: Optional[str] = None
     featured: bool = False
     published: bool = True
     seo: Optional[SEO] = None
@@ -143,11 +153,21 @@ class DestinationUpdate(BaseModel):
     region: Optional[str] = None
     short_desc: Optional[str] = None
     long_desc: Optional[str] = None
+    destination_type: Optional[str] = None
     price_from: Optional[int] = None
     price_to: Optional[int] = None
     currency: Optional[str] = None
     images: Optional[List[str]] = None
+    video_url: Optional[str] = None
     highlights: Optional[List[str]] = None
+    courses: Optional[List[CourseDetails]] = None
+    amenities: Optional[ResortAmenities] = None
+    packages: Optional[List[Package]] = None
+    location_coordinates: Optional[Dict[str, float]] = None
+    climate: Optional[str] = None
+    best_time_to_visit: Optional[str] = None
+    nearest_airport: Optional[str] = None
+    transfer_time: Optional[str] = None
     featured: Optional[bool] = None
     published: Optional[bool] = None
     seo: Optional[SEO] = None
