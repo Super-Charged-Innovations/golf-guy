@@ -495,6 +495,28 @@ class DestinationAIRequest(BaseModel):
 class RecommendationResponse(BaseModel):
     recommendations: List[Dict]
 
+# File Upload Models
+class FileUploadResponse(BaseModel):
+    file_key: str
+    file_url: str
+    file_size: int
+    mime_type: str
+    original_filename: str
+    category: str
+    uploaded_at: str
+
+class FileInfoResponse(BaseModel):
+    file_key: str
+    file_size: int
+    last_modified: str
+    content_type: str
+    metadata: Dict
+    server_side_encryption: str
+
+class PresignedUrlResponse(BaseModel):
+    presigned_url: str
+    expires_in: int
+
 
 # ===== Helper Functions =====
 
