@@ -1,7 +1,7 @@
 [
   {
     "content": "Build frontend Login/Register pages with JWT token management",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Create AI Chat Widget component (emerald gradient box, collapsible near destinations CTA)",
