@@ -40,34 +40,10 @@ export const Layout = () => {
             {/* Navigation */}
             {!isAdminPage && (
               <nav className="hidden md:flex items-center space-x-8">
-                <Link 
-                  to="/destinations" 
-                  className="relative text-sm font-medium text-gray-700 hover:text-emerald-600 transition-all duration-300" 
-                  data-testid="nav-destinations"
-                >
-                  Destinations
-                </Link>
-                <Link 
-                  to="/articles" 
-                  className="relative text-sm font-medium text-gray-700 hover:text-emerald-600 transition-all duration-300" 
-                  data-testid="nav-articles"
-                >
-                  Travel Reports
-                </Link>
-                <Link 
-                  to="/about" 
-                  className="relative text-sm font-medium text-gray-700 hover:text-emerald-600 transition-all duration-300" 
-                  data-testid="nav-about"
-                >
-                  About
-                </Link>
-                <Link 
-                  to="/contact" 
-                  className="relative text-sm font-medium text-gray-700 hover:text-emerald-600 transition-all duration-300" 
-                  data-testid="nav-contact"
-                >
-                  Contact
-                </Link>
+                <NavLink to="/destinations" label="Destinations" testId="nav-destinations" />
+                <NavLink to="/articles" label="Travel Reports" testId="nav-articles" />
+                <NavLink to="/about" label="About" testId="nav-about" />
+                <NavLink to="/contact" label="Contact" testId="nav-contact" />
               </nav>
             )}
 
