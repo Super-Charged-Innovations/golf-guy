@@ -297,7 +297,57 @@ export default function AdminDashboard() {
                           <TableCell>
                             <Badge variant="outline">
                               {dest.destination_type === 'golf_course' ? 'Course' :
-                               dest.destination_type === 'golf_resort' ? 'Resort' :
+                               dest.destination_type === 'golf_resort' ? 'Resort' : 'Both'}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>{dest.country}</TableCell>
+                          <TableCell>{dest.price_from.toLocaleString()} {dest.currency}</TableCell>
+                          <TableCell>
+                            <Badge variant={dest.published ? 'default' : 'secondary'}>
+                              {dest.published ? 'Published' : 'Draft'}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => window.open(`/destinations/${dest.slug}`, '_blank')}
+                              data-testid={`view-dest-${dest.id}`}
+                            >
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => handleEditDestination(dest)}
+                              data-testid={`edit-dest-${dest.id}`}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => handleDeleteDestination(dest.id)}
+                              data-testid={`delete-dest-${dest.id}`}
+                            >
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </div>
+
+              {/* Destination Form Dialog */}
+              <DestinationFormDialog
+                open={showDestDialog}
+                onOpenChange={handleCloseDestDialog}
+                destination={editingDest}
+                onSave={handleSaveDestination}
+              />
+            </TabsContent>
 
             {/* Articles Tab */}
             <TabsContent value="articles">
