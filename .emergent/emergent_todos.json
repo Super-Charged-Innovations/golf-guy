@@ -1,11 +1,7 @@
 [
   {
-    "content": "Build frontend Login/Register pages with JWT token management",
-    "status": "completed"
-  },
-  {
     "content": "Create AI Chat Widget component (emerald gradient box, collapsible near destinations CTA)",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Add AI Auto-fill button to Destination Suite in admin panel",
