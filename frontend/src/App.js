@@ -16,6 +16,7 @@ import ProfileKYC from './pages/ProfileKYC';
 import ClientDashboard from './pages/ClientDashboard';
 import PrivacySettings from './pages/PrivacySettings';
 import ScrollToTop from './components/ScrollToTop';
+import CookieConsent from './components/CookieConsent';
 import { Toaster } from './components/ui/sonner';
 import './App.css';
 
