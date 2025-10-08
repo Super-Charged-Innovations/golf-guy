@@ -1,18 +1,26 @@
 [
   {
-    "content": "Create AI Chat Widget component (emerald gradient box, collapsible near destinations CTA)",
-    "status": "completed"
-  },
-  {
-    "content": "Add AI Auto-fill button to Destination Suite in admin panel",
-    "status": "completed"
-  },
-  {
-    "content": "Create mock user profiles for admin testing",
-    "status": "completed"
-  },
-  {
-    "content": "Test complete AI flow: registration -> preferences -> recommendations -> chat interaction",
+    "content": "Install emergentintegrations library and get Emergent LLM Key",
     "status": "in_progress"
+  },
+  {
+    "content": "Update ai_service.py to use emergentintegrations with gpt-5-mini model",
+    "status": "pending"
+  },
+  {
+    "content": "Update backend/.env with EMERGENT_LLM_KEY",
+    "status": "pending"
+  },
+  {
+    "content": "Test AI chat widget functionality with gpt-5-mini",
+    "status": "pending"
+  },
+  {
+    "content": "Test AI auto-fill in admin destination suite",
+    "status": "pending"
+  },
+  {
+    "content": "Implement package management feature in Destination Suite",
+    "status": "pending"
   }
 ]
