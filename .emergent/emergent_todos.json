@@ -1,31 +1,7 @@
 [
   {
-    "content": "Create User authentication backend: User model, JWT auth, register/login endpoints",
-    "status": "completed"
-  },
-  {
-    "content": "Create UserProfile model with AI portfolio storage (preferences, KYC data, conversation summaries)",
-    "status": "completed"
-  },
-  {
-    "content": "Build AI Chat Service: GPT-5 integration, conversation management, context building from user profile",
-    "status": "completed"
-  },
-  {
-    "content": "Implement AI Auto-fill endpoint for destination content generation",
-    "status": "completed"
-  },
-  {
-    "content": "Create personalized recommendation engine based on user preferences",
-    "status": "completed"
-  },
-  {
-    "content": "Implement conversation summarization and MongoDB storage",
-    "status": "completed"
-  },
-  {
     "content": "Build frontend Login/Register pages with JWT token management",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Create AI Chat Widget component (emerald gradient box, collapsible near destinations CTA)",
