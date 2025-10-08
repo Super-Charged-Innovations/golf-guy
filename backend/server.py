@@ -1190,6 +1190,10 @@ async def seed_database():
     await db.partners.delete_many({})
     await db.testimonials.delete_many({})
     
+    # Clear users for fresh start (optional - comment out in production)
+    # await db.users.delete_many({})
+    # await db.user_profiles.delete_many({})
+    
     # Seed Destinations
     destinations_data = [
         {
