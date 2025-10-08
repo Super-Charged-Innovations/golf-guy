@@ -46,12 +46,17 @@ export default function PrivacySettings() {
   const [exportData, setExportData] = useState(null);
 
   useEffect(() => {
+    // Wait for auth loading to complete before checking authentication
+    if (authLoading) {
+      return; // Still loading auth state
+    }
+    
     if (!isAuthenticated) {
       navigate('/login');
       return;
     }
     loadPrivacySettings();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, authLoading]);
 
   const loadPrivacySettings = async () => {
     try {
