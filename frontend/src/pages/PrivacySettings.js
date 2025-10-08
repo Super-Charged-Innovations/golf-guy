@@ -138,7 +138,7 @@ export default function PrivacySettings() {
     }
   };
 
-  if (loading) {
+  if (loading || authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-emerald-50/30 to-white">
         <Loader2 className="h-12 w-12 animate-spin text-emerald-600" />
