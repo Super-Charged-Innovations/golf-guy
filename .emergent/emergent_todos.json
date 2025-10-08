@@ -21,10 +21,10 @@
   },
   {
     "content": "Test AI auto-fill in admin destination suite",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Implement package management feature in Destination Suite",
-    "status": "pending"
+    "status": "in_progress"
   }
 ]
