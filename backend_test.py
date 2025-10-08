@@ -239,7 +239,12 @@ class BackendTester:
         
         for endpoint in protected_endpoints:
             try:
-                response = self.session.get(f"{BACKEND_URL}{endpoint}", headers=headers)
+                if endpoint == "/ai/chat":
+                    # AI chat is POST endpoint
+                    chat_data = {"message": "test"}
+                    response = self.session.post(f"{BACKEND_URL}{endpoint}", json=chat_data, headers=headers)
+                else:
+                    response = self.session.get(f"{BACKEND_URL}{endpoint}", headers=headers)
                 
                 if response.status_code in [200, 404]:  # 404 is OK if endpoint doesn't exist
                     self.log_test(f"Protected Route {endpoint}", True, f"Authenticated access successful: {response.status_code}")
@@ -252,7 +257,12 @@ class BackendTester:
         # Test without authentication
         for endpoint in protected_endpoints[:2]:  # Test first 2 endpoints
             try:
-                response = self.session.get(f"{BACKEND_URL}{endpoint}")
+                if endpoint == "/ai/chat":
+                    # AI chat is POST endpoint
+                    chat_data = {"message": "test"}
+                    response = self.session.post(f"{BACKEND_URL}{endpoint}", json=chat_data)
+                else:
+                    response = self.session.get(f"{BACKEND_URL}{endpoint}")
                 
                 if response.status_code in [401, 403]:
                     self.log_test(f"Unauth Access {endpoint}", True, "Unauthenticated access properly blocked")
