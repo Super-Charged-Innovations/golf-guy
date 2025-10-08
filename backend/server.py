@@ -1062,6 +1062,149 @@ async def get_ai_recommendations(current_user: dict = Depends(get_current_user))
     
     return RecommendationResponse(recommendations=recommendations)
 
+# File Upload & Storage Routes
+@api_router.post("/files/upload", response_model=FileUploadResponse)
+async def upload_file(
+    file: UploadFile = File(...),
+    category: str = Form(...),
+    current_user: dict = Depends(get_current_user)
+):
+    """Upload file to S3 storage with security validation"""
+    
+    # Validate category
+    allowed_categories = [
+        'destination-images', 'user-profiles', 'kyc-documents', 
+        'admin-content', 'gdpr-exports', 'generated-reports'
+    ]
+    
+    if category not in allowed_categories:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Invalid category. Allowed: {', '.join(allowed_categories)}"
+        )
+    
+    # Admin-only categories
+    admin_categories = ['admin-content', 'destination-images']
+    if category in admin_categories and not current_user.get("is_admin", False):
+        raise HTTPException(status_code=403, detail="Admin access required for this category")
+    
+    try:
+        result = await s3_service.upload_file(
+            file=file,
+            category=category,
+            user_id=current_user["id"],
+            metadata={
+                'uploaded_by': current_user["email"],
+                'user_name': current_user.get("full_name", "Unknown")
+            }
+        )
+        return FileUploadResponse(**result)
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
+
+@api_router.get("/files/{file_key}/info", response_model=FileInfoResponse)
+async def get_file_info(
+    file_key: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Get file information and metadata"""
+    
+    # Check if user can access this file (basic security check)
+    if 'users/' in file_key and current_user["id"] not in file_key:
+        if not current_user.get("is_admin", False):
+            raise HTTPException(status_code=403, detail="Access denied")
+    
+    try:
+        info = s3_service.get_file_info(file_key)
+        return FileInfoResponse(**info)
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get file info: {str(e)}")
+
+@api_router.get("/files/{file_key}/download", response_model=PresignedUrlResponse)
+async def get_download_url(
+    file_key: str,
+    expiration: int = Query(default=3600, description="URL expiration in seconds"),
+    current_user: dict = Depends(get_current_user)
+):
+    """Generate presigned URL for secure file download"""
+    
+    # Validate expiration (max 7 days)
+    if expiration > 604800:
+        expiration = 604800
+    
+    # Check if user can access this file
+    if 'users/' in file_key and current_user["id"] not in file_key:
+        if not current_user.get("is_admin", False):
+            raise HTTPException(status_code=403, detail="Access denied")
+    
+    try:
+        presigned_url = s3_service.generate_presigned_url(file_key, expiration)
+        return PresignedUrlResponse(
+            presigned_url=presigned_url,
+            expires_in=expiration
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to generate download URL: {str(e)}")
+
+@api_router.delete("/files/{file_key}")
+async def delete_file(
+    file_key: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Delete file from storage (with permission checks)"""
+    
+    # Check if user can delete this file
+    if 'users/' in file_key and current_user["id"] not in file_key:
+        if not current_user.get("is_admin", False):
+            raise HTTPException(status_code=403, detail="Access denied")
+    
+    try:
+        success = s3_service.delete_file(file_key, current_user["id"])
+        if success:
+            return {"message": "File deleted successfully", "file_key": file_key}
+        else:
+            raise HTTPException(status_code=500, detail="File deletion failed")
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to delete file: {str(e)}")
+
+@api_router.get("/files/list")
+async def list_user_files(
+    category: str = Query(..., description="File category to list"),
+    current_user: dict = Depends(get_current_user)
+):
+    """List user's files by category"""
+    
+    # Admin can list any category, users only their own files
+    if not current_user.get("is_admin", False):
+        user_categories = ['user-profiles', 'kyc-documents', 'gdpr-exports']
+        if category not in user_categories:
+            raise HTTPException(
+                status_code=403, 
+                detail="Access denied to this file category"
+            )
+    
+    try:
+        prefix = s3_service.storage_categories.get(category, '')
+        files = s3_service.list_files(prefix, current_user["id"])
+        return {
+            "category": category,
+            "total_files": len(files),
+            "files": files
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to list files: {str(e)}")
+
 # AI Content Generation (Admin only)
 @api_router.post("/ai/generate-destination")
 async def generate_destination_content(
