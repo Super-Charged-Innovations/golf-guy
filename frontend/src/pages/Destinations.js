@@ -145,3 +145,98 @@ export default function Destinations() {
     </div>
   );
 }
+
+// Animated Destination Card Component
+function DestinationCard({ dest, index }) {
+  const [ref, isVisible] = useScrollAnimation({ threshold: 0.2 });
+
+  return (
+    <div
+      ref={ref}
+      className={`transition-all duration-700 ${
+        isVisible 
+          ? 'opacity-100 translate-y-0' 
+          : 'opacity-0 translate-y-8'
+      }`}
+      style={{ transitionDelay: `${index * 100}ms` }}
+    >
+      <Card 
+        className="card-hover group overflow-hidden border-2 border-emerald-accent h-full" 
+        data-testid="destination-card"
+      >
+        <Link to={`/destinations/${dest.slug}`}>
+          <div className="relative overflow-hidden">
+            <AspectRatio ratio={4/3}>
+              <img 
+                src={dest.images[0]} 
+                alt={dest.name}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              {/* Emerald overlay on hover */}
+              <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            </AspectRatio>
+            {dest.featured && (
+              <Badge className="absolute top-3 left-3 bg-emerald-600 text-white border-0 shadow-lg">
+                <Sparkles className="h-3 w-3 mr-1" />
+                Featured
+              </Badge>
+            )}
+            {/* Hover shine effect */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <div 
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                style={{
+                  animation: 'shimmer 2s infinite',
+                  backgroundSize: '200% 100%'
+                }}
+              ></div>
+            </div>
+          </div>
+          <div className="p-6">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
+              <MapPin className="h-4 w-4 text-emerald-600 group-hover:animate-pulse" />
+              <span>{dest.country}</span>
+              {dest.region && <span>• {dest.region}</span>}
+            </div>
+            <h3 className="font-playfair text-xl font-semibold mb-2 group-hover:text-emerald-700 transition-colors">
+              {dest.name}
+            </h3>
+            <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{dest.short_desc}</p>
+            
+            {/* Highlights */}
+            {dest.highlights && dest.highlights.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {dest.highlights.slice(0, 3).map((highlight, idx) => (
+                  <Badge 
+                    key={idx} 
+                    variant="outline" 
+                    className="text-xs border-emerald-200 text-emerald-700 group-hover:bg-emerald-50 transition-colors"
+                  >
+                    {highlight}
+                  </Badge>
+                ))}
+              </div>
+            )}
+
+            <div className="flex items-center justify-between pt-4 border-t border-emerald-100">
+              <div>
+                <p className="text-xs text-muted-foreground">From</p>
+                <p className="font-semibold text-emerald-700 text-lg">
+                  {dest.price_from.toLocaleString()} {dest.currency}
+                </p>
+              </div>
+              <Button 
+                size="sm" 
+                className="bg-emerald-600 hover:bg-emerald-700 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-emerald-200"
+                data-testid="destination-view-button"
+              >
+                View Details
+                <ArrowRight className="ml-1 h-3 w-3 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </div>
+          </div>
+        </Link>
+      </Card>
+    </div>
+  );
+}
