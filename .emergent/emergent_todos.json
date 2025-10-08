@@ -1,27 +1,27 @@
 [
   {
-    "content": "Install OpenAI SDK and configure GPT-5 integration with Emergent LLM key",
+    "content": "Create User authentication backend: User model, JWT auth, register/login endpoints",
     "status": "completed"
   },
   {
-    "content": "Create User authentication backend: User model, JWT auth, register/login endpoints",
-    "status": "in_progress"
-  },
-  {
     "content": "Create UserProfile model with AI portfolio storage (preferences, KYC data, conversation summaries)",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Build AI Chat Service: GPT-5 integration, conversation management, context building from user profile",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Implement AI Auto-fill endpoint for destination content generation",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Create personalized recommendation engine based on user preferences",
-    "status": "pending"
+    "status": "completed"
+  },
+  {
+    "content": "Implement conversation summarization and MongoDB storage",
+    "status": "completed"
   },
   {
     "content": "Build frontend Login/Register pages with JWT token management",
@@ -33,10 +33,6 @@
   },
   {
     "content": "Add AI Auto-fill button to Destination Suite in admin panel",
-    "status": "pending"
-  },
-  {
-    "content": "Implement conversation summarization and MongoDB storage",
     "status": "pending"
   },
   {
