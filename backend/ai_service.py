@@ -21,9 +21,16 @@ class AIService:
     def __init__(self):
         self.model = "gpt-5-mini"
         self.provider = "openai"
-        self.api_key = os.environ.get('EMERGENT_LLM_KEY')
-        if not self.api_key:
-            raise ValueError("EMERGENT_LLM_KEY not found in environment variables")
+        self._api_key = None
+    
+    @property
+    def api_key(self):
+        """Lazy load API key from environment"""
+        if self._api_key is None:
+            self._api_key = os.environ.get('EMERGENT_LLM_KEY')
+            if not self._api_key:
+                raise ValueError("EMERGENT_LLM_KEY not found in environment variables")
+        return self._api_key
     
     def _create_chat_session(self, system_message: str) -> LlmChat:
         """Create a new chat session with unique session ID"""
