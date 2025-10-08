@@ -19,28 +19,53 @@ export const Layout = () => {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+      <header className="sticky top-0 z-50 w-full border-b border-emerald-100 bg-white/90 backdrop-blur-md supports-[backdrop-filter]:bg-white/80 shadow-sm transition-all duration-300">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-2" data-testid="logo-link">
-              <Plane className="h-8 w-8 text-primary" />
-              <span className="font-playfair text-2xl font-bold text-primary">Golf Guy</span>
+            <Link 
+              to="/" 
+              className="flex items-center space-x-2 group transition-transform duration-300 hover:scale-105" 
+              data-testid="logo-link"
+            >
+              <div className="relative">
+                <Plane className="h-8 w-8 text-emerald-600 transition-all duration-300 group-hover:text-emerald-700" />
+                <div className="absolute inset-0 bg-emerald-400 blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
+              </div>
+              <span className="font-playfair text-2xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-800 bg-clip-text text-transparent">
+                Golf Guy
+              </span>
             </Link>
 
             {/* Navigation */}
             {!isAdminPage && (
-              <nav className="hidden md:flex items-center space-x-6">
-                <Link to="/destinations" className="text-sm font-medium hover:text-primary transition-colors" data-testid="nav-destinations">
+              <nav className="hidden md:flex items-center space-x-8">
+                <Link 
+                  to="/destinations" 
+                  className="relative text-sm font-medium text-gray-700 hover:text-emerald-600 transition-all duration-300" 
+                  data-testid="nav-destinations"
+                >
                   Destinations
                 </Link>
-                <Link to="/articles" className="text-sm font-medium hover:text-primary transition-colors" data-testid="nav-articles">
+                <Link 
+                  to="/articles" 
+                  className="relative text-sm font-medium text-gray-700 hover:text-emerald-600 transition-all duration-300" 
+                  data-testid="nav-articles"
+                >
                   Travel Reports
                 </Link>
-                <Link to="/about" className="text-sm font-medium hover:text-primary transition-colors" data-testid="nav-about">
+                <Link 
+                  to="/about" 
+                  className="relative text-sm font-medium text-gray-700 hover:text-emerald-600 transition-all duration-300" 
+                  data-testid="nav-about"
+                >
                   About
                 </Link>
-                <Link to="/contact" className="text-sm font-medium hover:text-primary transition-colors" data-testid="nav-contact">
+                <Link 
+                  to="/contact" 
+                  className="relative text-sm font-medium text-gray-700 hover:text-emerald-600 transition-all duration-300" 
+                  data-testid="nav-contact"
+                >
                   Contact
                 </Link>
               </nav>
