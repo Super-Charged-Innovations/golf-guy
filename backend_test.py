@@ -306,6 +306,13 @@ class BackendTester:
             else:
                 self.log_test("Email Anonymization", False, f"Anonymization failed: {anon_email}")
                 
+        except ImportError as e:
+            # Try to test encryption by checking if environment key exists
+            if os.environ.get('ENCRYPTION_KEY'):
+                self.log_test("Encryption Key", True, "ENCRYPTION_KEY environment variable is set")
+            else:
+                self.log_test("Encryption Key", False, "ENCRYPTION_KEY environment variable missing")
+            self.log_test("Encryption Import", False, f"Cannot import encryption utilities: {str(e)}")
         except Exception as e:
             self.log_test("Encryption Functionality", False, f"Encryption test error: {str(e)}")
     
