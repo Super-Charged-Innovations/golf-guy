@@ -12,6 +12,7 @@ import About from './pages/About';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import AdminDashboard from './pages/AdminDashboard';
+import ProfileKYC from './pages/ProfileKYC';
 import { Toaster } from './components/ui/sonner';
 import './App.css';
 
