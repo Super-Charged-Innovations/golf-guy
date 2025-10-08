@@ -698,8 +698,15 @@ async def register(user_data: UserCreate, request: Request = None):
     )
 
 @api_router.post("/auth/login", response_model=TokenResponse)
-async def login(credentials: UserLogin):
-    """Login with email and password"""
+async def login(credentials: UserLogin, request: Request = None):
+    """Login with email and password with rate limiting"""
+    
+    # Apply rate limiting
+    client_ip = request.client.host if request and request.client else "unknown"
+    rate_key = f"login:{credentials.email}:{client_ip}"
+    if not rate_limiter.is_allowed(rate_key):
+        raise HTTPException(status_code=429, detail="Too many login attempts. Please try again later.")
+    
     user = await db.users.find_one({"email": credentials.email}, {"_id": 0})
     
     if not user or not auth_service.verify_password(credentials.password, user["hashed_password"]):
