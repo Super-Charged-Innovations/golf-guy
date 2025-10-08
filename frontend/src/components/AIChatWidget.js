@@ -17,8 +17,6 @@ export const AIChatWidget = () => {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const [recommendations, setRecommendations] = useState([]);
-  const [loadingRecs, setLoadingRecs] = useState(false);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -28,26 +26,6 @@ export const AIChatWidget = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  useEffect(() => {
-    if (isOpen && isAuthenticated && recommendations.length === 0) {
-      loadRecommendations();
-    }
-  }, [isOpen, isAuthenticated]);
-
-  const loadRecommendations = async () => {
-    setLoadingRecs(true);
-    try {
-      const response = await axios.get(`${API}/ai/recommendations`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setRecommendations(response.data.recommendations || []);
-    } catch (error) {
-      console.error('Failed to load recommendations:', error);
-    } finally {
-      setLoadingRecs(false);
-    }
-  };
 
   const sendMessage = async () => {
     if (!inputMessage.trim() || loading) return;
