@@ -366,6 +366,86 @@ class Setting(BaseModel):
 class SettingUpdate(BaseModel):
     value: Any
 
+# User & Authentication Models
+class User(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    email: EmailStr
+    hashed_password: str
+    full_name: str
+    is_active: bool = True
+    is_admin: bool = False
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    last_login: Optional[datetime] = None
+
+class UserCreate(BaseModel):
+    email: EmailStr
+    password: str
+    full_name: str
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+class UserResponse(BaseModel):
+    id: str
+    email: EmailStr
+    full_name: str
+    is_admin: bool
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    user: UserResponse
+
+# User Profile & AI Portfolio Models
+class UserPreferences(BaseModel):
+    budget_min: int = 0
+    budget_max: int = 50000
+    preferred_countries: List[str] = []
+    playing_level: str = "Intermediate"  # Beginner, Intermediate, Advanced, Professional
+    accommodation_preference: str = "Any"  # Luxury, Mid-range, Budget, Any
+    trip_duration_days: Optional[int] = None
+    group_size: Optional[int] = None
+
+class ConversationMessage(BaseModel):
+    role: str  # user or assistant
+    content: str
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class UserProfile(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    preferences: UserPreferences = Field(default_factory=UserPreferences)
+    conversation_summary: str = ""
+    conversation_history: List[Dict] = []  # Temporary storage, cleared after summarization
+    past_inquiries: List[str] = []  # List of inquiry IDs
+    kyc_notes: str = ""  # AI-generated KYC summary
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class UserProfileUpdate(BaseModel):
+    preferences: Optional[UserPreferences] = None
+    kyc_notes: Optional[str] = None
+
+# AI Chat Models
+class ChatMessage(BaseModel):
+    message: str
+
+class ChatResponse(BaseModel):
+    response: str
+    conversation_id: Optional[str] = None
+
+# AI Content Generation Models
+class DestinationAIRequest(BaseModel):
+    course_name: str
+    location: str
+    additional_info: Optional[str] = None
+
+class RecommendationResponse(BaseModel):
+    recommendations: List[Dict]
+
 
 # ===== Helper Functions =====
 
