@@ -771,6 +771,165 @@ async def get_tier_status(current_user: dict = Depends(get_current_user)):
         "message": tier_messages.get(tier, tier_messages[0])
     }
 
+# GDPR Compliance Routes
+@api_router.get("/privacy/settings")
+async def get_privacy_settings(current_user: dict = Depends(get_current_user)):
+    """Get user's privacy settings"""
+    settings = await db.privacy_settings.find_one({"user_id": current_user["id"]}, {"_id": 0})
+    
+    if not settings:
+        # Return default settings
+        return {
+            "user_id": current_user["id"],
+            "marketing_emails": False,
+            "analytics_tracking": True,
+            "cookie_consent": False,
+            "data_sharing": False,
+            "updated_at": datetime.now(timezone.utc).isoformat()
+        }
+    
+    deserialize_datetime(settings, ["updated_at"])
+    return settings
+
+@api_router.put("/privacy/settings")
+async def update_privacy_settings(
+    settings: PrivacySettings,
+    current_user: dict = Depends(get_current_user)
+):
+    """Update user's privacy settings (GDPR compliance)"""
+    settings.user_id = current_user["id"]
+    settings.updated_at = datetime.now(timezone.utc)
+    
+    await db.privacy_settings.update_one(
+        {"user_id": current_user["id"]},
+        {"$set": serialize_datetime(settings.model_dump())},
+        upsert=True
+    )
+    
+    # Log consent change
+    consent_log = {
+        "id": str(uuid.uuid4()),
+        "user_id": current_user["id"],
+        "settings_update": settings.model_dump(),
+        "timestamp": datetime.now(timezone.utc).isoformat()
+    }
+    await db.consent_logs.insert_one(serialize_datetime(consent_log))
+    
+    return {"message": "Privacy settings updated successfully"}
+
+@api_router.post("/privacy/export-data")
+async def request_data_export(current_user: dict = Depends(get_current_user)):
+    """Request data export (GDPR Article 20 - Right to data portability)"""
+    
+    # Collect all user data
+    user_data = {
+        "user": await db.users.find_one({"id": current_user["id"]}, {"_id": 0, "password": 0}),
+        "profile": await db.user_profiles.find_one({"user_id": current_user["id"]}, {"_id": 0}),
+        "inquiries": await db.inquiries.find({"email": current_user["email"]}, {"_id": 0}).to_list(1000),
+        "privacy_settings": await db.privacy_settings.find_one({"user_id": current_user["id"]}, {"_id": 0}),
+        "export_date": datetime.now(timezone.utc).isoformat()
+    }
+    
+    # Create export request record
+    export_request = DataExportRequest(
+        user_id=current_user["id"],
+        email=current_user["email"],
+        status="completed",
+        export_data=user_data,
+        completed_at=datetime.now(timezone.utc)
+    )
+    
+    await db.data_export_requests.insert_one(serialize_datetime(export_request.model_dump()))
+    
+    return {
+        "message": "Data export completed",
+        "data": user_data,
+        "export_id": export_request.id
+    }
+
+@api_router.post("/privacy/delete-account")
+async def request_account_deletion(
+    reason: Optional[str] = None,
+    current_user: dict = Depends(get_current_user)
+):
+    """Request account deletion (GDPR Article 17 - Right to be forgotten)"""
+    
+    # Create deletion request
+    deletion_request = DataDeletionRequest(
+        user_id=current_user["id"],
+        email=current_user["email"],
+        reason=reason,
+        status="pending"
+    )
+    
+    await db.data_deletion_requests.insert_one(serialize_datetime(deletion_request.model_dump()))
+    
+    return {
+        "message": "Account deletion request received. We will process this within 30 days as required by GDPR.",
+        "request_id": deletion_request.id,
+        "note": "You can cancel this request within 7 days by contacting support."
+    }
+
+@api_router.delete("/privacy/delete-account/confirm/{request_id}")
+async def confirm_account_deletion(
+    request_id: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Permanently delete user account and data (Admin or user after review period)"""
+    
+    request = await db.data_deletion_requests.find_one({"id": request_id, "user_id": current_user["id"]})
+    
+    if not request:
+        raise HTTPException(status_code=404, detail="Deletion request not found")
+    
+    if request["status"] != "pending":
+        raise HTTPException(status_code=400, detail="Request already processed")
+    
+    # Anonymize user data (GDPR compliance - retain for legal purposes but anonymize)
+    from encryption_utils import anonymize_email
+    
+    anonymized_email = anonymize_email(current_user["email"])
+    
+    # Update user to anonymized state
+    await db.users.update_one(
+        {"id": current_user["id"]},
+        {
+            "$set": {
+                "email": anonymized_email,
+                "full_name": "Deleted User",
+                "deleted_at": datetime.now(timezone.utc).isoformat()
+            }
+        }
+    )
+    
+    # Delete or anonymize profile
+    await db.user_profiles.delete_one({"user_id": current_user["id"]})
+    
+    # Anonymize inquiries (keep for business records but remove PII)
+    await db.inquiries.update_many(
+        {"email": current_user["email"]},
+        {
+            "$set": {
+                "email": anonymized_email,
+                "name": "Deleted User",
+                "phone": "[DELETED]"
+            }
+        }
+    )
+    
+    # Update deletion request
+    await db.data_deletion_requests.update_one(
+        {"id": request_id},
+        {
+            "$set": {
+                "status": "completed",
+                "completed_at": datetime.now(timezone.utc).isoformat()
+            }
+        }
+    )
+    
+    return {"message": "Account successfully deleted"}
+
 # AI Chat Routes
 @api_router.post("/ai/chat", response_model=ChatResponse)
 async def chat_with_ai(
