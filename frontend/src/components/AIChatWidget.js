@@ -112,8 +112,8 @@ export const AIChatWidget = () => {
         <div className="flex items-center gap-2">
           <Sparkles className="h-5 w-5" />
           <div>
-            <h3 className="font-semibold">Golf Guy AI Assistant</h3>
-            <p className="text-xs text-emerald-100">Powered by GPT-5</p>
+            <h3 className="font-semibold">Chat with Alex</h3>
+            <p className="text-xs text-emerald-100">Your golf travel expert • GPT-5</p>
           </div>
         </div>
         <Button
