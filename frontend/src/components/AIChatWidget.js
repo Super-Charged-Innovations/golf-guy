@@ -117,24 +117,6 @@ export const AIChatWidget = () => {
               <p className="text-sm text-muted-foreground">
                 Looking for your next golf adventure? Just ask me anything - I'll keep it short and sweet! ⛳
               </p>
-              
-              {/* Recommendations */}
-              {loadingRecs ? (
-                <div className="mt-4 flex items-center justify-center">
-                  <Loader2 className="h-4 w-4 animate-spin text-emerald-600" />
-                  <span className="ml-2 text-xs text-muted-foreground">Loading personalized recommendations...</span>
-                </div>
-              ) : recommendations.length > 0 ? (
-                <div className="mt-4">
-                  <p className="text-xs font-semibold text-emerald-700 mb-2">✨ Recommended for you:</p>
-                  {recommendations.slice(0, 3).map((rec, idx) => (
-                    <div key={idx} className="mb-2 p-2 bg-emerald-50 rounded text-xs">
-                      <p className="font-medium text-emerald-900">{rec.destination_name}</p>
-                      <p className="text-emerald-700 mt-1">{rec.reason}</p>
-                    </div>
-                  ))}
-                </div>
-              ) : null}
             </div>
           )}
 
