@@ -41,6 +41,7 @@ function App() {
             <Route path="about" element={<About />} />
             <Route path="dashboard" element={<ClientDashboard />} />
             <Route path="profile" element={<ProfileKYC />} />
+            <Route path="privacy" element={<PrivacySettings />} />
             <Route path="admin" element={<AdminDashboard />} />
           </Route>
         </Routes>
