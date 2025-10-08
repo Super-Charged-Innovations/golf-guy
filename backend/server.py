@@ -1114,8 +1114,17 @@ async def delete_partner(partner_id: str):
 
 # Inquiries
 @api_router.get("/inquiries", response_model=List[Inquiry])
-async def get_inquiries(status: Optional[str] = None):
+async def get_inquiries(
+    status: Optional[str] = None,
+    current_user: dict = Depends(get_current_user)
+):
+    """Get user's own inquiries or all inquiries if admin"""
     query = {}
+    
+    # Non-admin users can only see their own inquiries
+    if not current_user.get("is_admin", False):
+        query["email"] = current_user.get("email")
+    
     if status:
         query["status"] = status
     
