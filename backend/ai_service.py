@@ -46,7 +46,9 @@ class AIService:
         AI Auto-fill: Generate comprehensive destination content
         based on course name and location
         """
-        prompt = f"""You are an expert golf travel content writer. Generate comprehensive destination content for:
+        system_message = "You are an expert golf travel content generator. Provide accurate, engaging content in JSON format."
+        
+        prompt = f"""Generate comprehensive destination content for:
 
 Course/Resort Name: {course_name}
 Location: {location}
@@ -67,18 +69,12 @@ Please provide a JSON response with the following structure:
 Focus on factual, enticing content that helps travelers understand what makes this destination special."""
 
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    {"role": "system", "content": "You are an expert golf travel content generator. Provide accurate, engaging content in JSON format."},
-                    {"role": "user", "content": prompt}
-                ],
-                response_format={ "type": "json_object" },
-                temperature=0.7
-            )
+            chat = self._create_chat_session(system_message)
+            user_message = UserMessage(text=prompt)
+            response = await chat.send_message(user_message)
             
-            import json
-            content = json.loads(response.choices[0].message.content)
+            # Parse JSON response
+            content = json.loads(response)
             return content
             
         except Exception as e:
