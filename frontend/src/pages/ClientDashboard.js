@@ -85,7 +85,7 @@ export default function ClientDashboard() {
     return <TrendingUp className="h-5 w-5" />;
   };
 
-  if (loading) {
+  if (loading || authLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-emerald-50/30 to-white py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
