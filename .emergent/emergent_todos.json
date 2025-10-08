@@ -5,11 +5,15 @@
   },
   {
     "content": "Update ai_service.py to use emergentintegrations with gpt-5-mini model",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Update backend/.env with EMERGENT_LLM_KEY",
-    "status": "pending"
+    "status": "completed"
+  },
+  {
+    "content": "Restart backend service and verify no errors",
+    "status": "in_progress"
   },
   {
     "content": "Test AI chat widget functionality with gpt-5-mini",
