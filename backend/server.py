@@ -441,6 +441,42 @@ class UserProfileUpdate(BaseModel):
     preferences: Optional[UserPreferences] = None
     kyc_notes: Optional[str] = None
 
+# GDPR Compliance Models
+class ConsentRecord(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    consent_type: str  # marketing, analytics, cookies, data_processing
+    granted: bool
+    ip_address: Optional[str] = None
+    user_agent: Optional[str] = None
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class DataExportRequest(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    email: str
+    status: str = "pending"  # pending, processing, completed, failed
+    export_data: Optional[Dict] = None
+    requested_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    completed_at: Optional[datetime] = None
+
+class DataDeletionRequest(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    email: str
+    reason: Optional[str] = None
+    status: str = "pending"  # pending, approved, processing, completed
+    requested_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    completed_at: Optional[datetime] = None
+
+class PrivacySettings(BaseModel):
+    user_id: str
+    marketing_emails: bool = False
+    analytics_tracking: bool = True
+    cookie_consent: bool = False
+    data_sharing: bool = False
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
 # AI Chat Models
 class ChatMessage(BaseModel):
     message: str
