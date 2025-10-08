@@ -8,7 +8,8 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { AspectRatio } from '../components/ui/aspect-ratio';
 import AIChatWidget from '../components/AIChatWidget';
 import { RecommendationsButton } from '../components/RecommendationsButton';
-import { Star, ArrowRight, Shield, Award, Users } from 'lucide-react';
+import { Star, ArrowRight, Shield, Award, Users, Sparkles } from 'lucide-react';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
