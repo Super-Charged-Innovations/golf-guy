@@ -46,45 +46,41 @@ export const Layout = () => {
               </nav>
             )}
 
-            {/* Demo Buttons / Admin Link */}
+            {/* Auth Buttons */}
             <div className="flex items-center gap-2">
-              {!isAdmin && !isAdminPage ? (
+              {!isAuthenticated ? (
                 <>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleDemoClient}
-                    data-testid="demo-client-button"
-                    className="hidden sm:flex"
-                  >
-                    <LogIn className="h-4 w-4 mr-2" />
-                    Demo Client
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleDemoAdmin}
-                    data-testid="demo-admin-button"
-                  >
-                    <UserCog className="h-4 w-4 mr-2" />
-                    Demo Admin
-                  </Button>
+                  <Link to="/login">
+                    <Button variant="ghost" size="sm" data-testid="login-button">
+                      <LogIn className="h-4 w-4 mr-2" />
+                      Sign In
+                    </Button>
+                  </Link>
+                  <Link to="/register">
+                    <Button variant="outline" size="sm" data-testid="register-button">
+                      Get Started
+                    </Button>
+                  </Link>
                 </>
-              ) : isAdmin ? (
+              ) : (
                 <>
-                  {!isAdminPage && (
+                  {isAdmin && !isAdminPage && (
                     <Link to="/admin">
                       <Button variant="outline" size="sm" data-testid="admin-dashboard-link">
                         <UserCog className="h-4 w-4 mr-2" />
-                        Dashboard
+                        Admin
                       </Button>
                     </Link>
                   )}
+                  <span className="text-sm text-muted-foreground hidden sm:inline">
+                    {user?.full_name}
+                  </span>
                   <Button variant="ghost" size="sm" onClick={handleLogout} data-testid="logout-button">
+                    <LogOut className="h-4 w-4 mr-2" />
                     Logout
                   </Button>
                 </>
-              ) : null}
+              )}
             </div>
           </div>
         </div>
