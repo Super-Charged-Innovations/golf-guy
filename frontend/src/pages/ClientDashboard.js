@@ -278,48 +278,69 @@ export default function ClientDashboard() {
             </Card>
 
             {/* Recent Inquiries */}
-            {inquiries.length > 0 && (
-              <Card className="animate-fade-in-up animate-delay-400 border-emerald-100">
-                <CardHeader>
-                  <CardTitle>Recent Inquiries</CardTitle>
-                  <CardDescription>Your latest travel requests</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {inquiries.map((inquiry, index) => (
-                      <div 
-                        key={inquiry.id || index} 
-                        className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-emerald-200 hover:bg-emerald-50/30 transition-all"
-                      >
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <MapPin className="h-4 w-4 text-emerald-600" />
-                            <span className="font-medium text-gray-900">
-                              {inquiry.destination_name || 'General Inquiry'}
-                            </span>
+            <Card className="animate-fade-in-up animate-delay-400 border-emerald-100">
+              <CardHeader>
+                <CardTitle>Recent Inquiries</CardTitle>
+                <CardDescription>Your latest travel requests</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {inquiries.length > 0 ? (
+                  <>
+                    <div className="space-y-4">
+                      {inquiries.map((inquiry, index) => (
+                        <div 
+                          key={inquiry.id || index} 
+                          className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-emerald-200 hover:bg-emerald-50/30 transition-all cursor-pointer"
+                          onClick={() => navigate('/contact')}
+                          role="button"
+                          tabIndex={0}
+                        >
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <MapPin className="h-4 w-4 text-emerald-600" />
+                              <span className="font-medium text-gray-900">
+                                {inquiry.destination_name || 'General Inquiry'}
+                              </span>
+                            </div>
+                            <p className="text-sm text-gray-600">
+                              {inquiry.message?.substring(0, 80)}...
+                            </p>
+                            <p className="text-xs text-gray-500 mt-1">
+                              {new Date(inquiry.created_at).toLocaleDateString()}
+                            </p>
                           </div>
-                          <p className="text-sm text-gray-600">
-                            {inquiry.message?.substring(0, 80)}...
-                          </p>
-                          <p className="text-xs text-gray-500 mt-1">
-                            {new Date(inquiry.created_at).toLocaleDateString()}
-                          </p>
+                          <Badge variant="outline" className="ml-4">
+                            {inquiry.status || 'Pending'}
+                          </Badge>
                         </div>
-                        <Badge variant="outline" className="ml-4">
-                          {inquiry.status || 'Pending'}
-                        </Badge>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
+                    <Link to="/contact">
+                      <Button variant="ghost" className="w-full mt-4 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50">
+                        Make New Inquiry
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
+                    </Link>
+                  </>
+                ) : (
+                  <div className="text-center py-12">
+                    <div className="inline-flex p-4 rounded-full bg-gray-100 mb-4">
+                      <MessageSquare className="h-8 w-8 text-gray-400" />
+                    </div>
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">No inquiries yet</h3>
+                    <p className="text-sm text-gray-600 mb-6 max-w-sm mx-auto">
+                      Start planning your dream golf vacation by making your first travel inquiry
+                    </p>
+                    <Link to="/contact">
+                      <Button className="bg-emerald-600 hover:bg-emerald-700">
+                        <Mail className="h-4 w-4 mr-2" />
+                        Make Your First Inquiry
+                      </Button>
+                    </Link>
                   </div>
-                  <Link to="/contact">
-                    <Button variant="ghost" className="w-full mt-4 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50">
-                      Make New Inquiry
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            )}
+                )}
+              </CardContent>
+            </Card>
           </div>
 
           {/* Right Column - Profile Details */}
