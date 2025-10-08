@@ -39,7 +39,7 @@ const TRAVEL_MONTHS = [
 ];
 
 export default function ProfileKYC() {
-  const { isAuthenticated, token, user } = useAuth();
+  const { isAuthenticated, token, user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
