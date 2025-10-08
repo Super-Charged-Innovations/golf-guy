@@ -800,11 +800,24 @@ async def chat_with_ai(
 # AI Recommendations Route
 @api_router.get("/ai/recommendations", response_model=RecommendationResponse)
 async def get_ai_recommendations(current_user: dict = Depends(get_current_user)):
-    """Get personalized AI recommendations"""
+    """Get personalized AI recommendations based on user tier"""
     # Get user profile
     profile = await db.user_profiles.find_one({"user_id": current_user["id"]}, {"_id": 0})
     if not profile:
-        profile = {"preferences": {}, "conversation_summary": ""}
+        profile = {"preferences": {}, "conversation_summary": "", "tier": 0, "kyc_completed": False}
+    
+    tier = profile.get("tier", 0)
+    kyc_completed = profile.get("kyc_completed", False)
+    
+    # If tier 0 (no KYC), return message to complete profile
+    if tier == 0 or not kyc_completed:
+        return RecommendationResponse(recommendations=[{
+            "destination_name": "Complete Your Profile",
+            "reason": "Fill out your KYC form to unlock personalized recommendations and best available rates!",
+            "match_score": 0,
+            "highlight": "🌟 Get started now",
+            "is_kyc_prompt": True
+        }])
     
     # Get all destinations
     destinations = await db.destinations.find({"published": True}, {"_id": 0}).to_list(1000)
@@ -816,13 +829,14 @@ async def get_ai_recommendations(current_user: dict = Depends(get_current_user))
         "created_at": {"$gte": thirty_days_ago.isoformat()}
     }, {"_id": 0}).to_list(100)
     
-    # Generate recommendations
+    # Generate recommendations with tier context
     recommendations = await ai_service.generate_recommendations(
         user_profile={
             "name": current_user.get("full_name", "Guest"),
             **profile.get("preferences", {}),
             "conversation_summary": profile.get("conversation_summary", ""),
-            "past_inquiries": profile.get("past_inquiries", [])
+            "past_inquiries": profile.get("past_inquiries", []),
+            "tier": tier
         },
         available_destinations=destinations,
         recent_additions=recent
