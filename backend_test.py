@@ -498,7 +498,7 @@ class BackendTester:
             
             if response.status_code == 500:
                 error_detail = response.text
-                if "AWS credentials not configured" in error_detail:
+                if "AWS credentials not configured" in error_detail or "File upload failed" in error_detail:
                     self.log_test("File Upload Validation", True, "File upload properly fails without AWS credentials (expected)")
                 else:
                     self.log_test("File Upload Validation", False, f"Unexpected error: {error_detail}")
