@@ -422,6 +422,8 @@ class UserProfile(BaseModel):
     conversation_history: List[Dict] = []  # Temporary storage, cleared after summarization
     past_inquiries: List[str] = []  # List of inquiry IDs
     kyc_notes: str = ""  # AI-generated KYC summary
+    kyc_completed: bool = False  # Whether user has completed KYC
+    tier: int = 0  # 0 = No KYC, 1-3 = Based on information completeness
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
