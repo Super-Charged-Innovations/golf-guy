@@ -17,11 +17,11 @@
   },
   {
     "content": "Test AI chat widget functionality with gpt-5-mini",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Test AI auto-fill in admin destination suite",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Implement package management feature in Destination Suite",
