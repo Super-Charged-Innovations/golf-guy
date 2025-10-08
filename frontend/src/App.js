@@ -26,6 +26,7 @@ function App() {
       <AuthProvider>
         <ScrollToTop />
         <Toaster position="top-center" />
+        <CookieConsent />
         <Routes>
           {/* Auth Routes (no layout) */}
           <Route path="/login" element={<Login />} />
