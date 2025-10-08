@@ -18,6 +18,33 @@ from ai_service import ai_service
 from s3_service import s3_service
 from audit_service import audit_logger, AuditActionType
 
+# Rate limiting middleware
+class RateLimiter:
+    """Simple rate limiter for authentication endpoints"""
+    def __init__(self):
+        self.attempts = {}
+        self.max_attempts = 10
+        self.window = 3600  # 1 hour
+    
+    def is_allowed(self, key: str) -> bool:
+        """Check if request is allowed"""
+        import time
+        current_time = time.time()
+        
+        if key not in self.attempts:
+            self.attempts[key] = []
+        
+        # Clean old attempts
+        self.attempts[key] = [t for t in self.attempts[key] if current_time - t < self.window]
+        
+        # Check if under limit
+        if len(self.attempts[key]) < self.max_attempts:
+            self.attempts[key].append(current_time)
+            return True
+        return False
+
+rate_limiter = RateLimiter()
+
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
