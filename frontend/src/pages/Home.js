@@ -308,3 +308,62 @@ export default function Home() {
     </div>
   );
 }
+
+// Animated Home Destination Card
+function HomeDestinationCard({ dest, index }) {
+  const [ref, isVisible] = useScrollAnimation({ threshold: 0.2 });
+
+  return (
+    <div
+      ref={ref}
+      className={`transition-all duration-700 ${
+        isVisible 
+          ? 'opacity-100 translate-y-0' 
+          : 'opacity-0 translate-y-8'
+      }`}
+      style={{ transitionDelay: `${index * 100}ms` }}
+    >
+      <Card 
+        className="card-hover group overflow-hidden border-2 border-emerald-accent h-full" 
+        data-testid="destination-card"
+      >
+        <Link to={`/destinations/${dest.slug}`}>
+          <div className="relative overflow-hidden">
+            <AspectRatio ratio={4/3}>
+              <img 
+                src={dest.images[0]} 
+                alt={dest.name}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              {/* Emerald overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            </AspectRatio>
+            {dest.featured && (
+              <Badge className="absolute top-3 left-3 bg-emerald-600 text-white border-0 shadow-lg">
+                <Sparkles className="h-3 w-3 mr-1" />
+                Featured
+              </Badge>
+            )}
+          </div>
+          <div className="p-4">
+            <h3 className="font-playfair text-lg font-semibold mb-1 group-hover:text-emerald-700 transition-colors">{dest.name}</h3>
+            <p className="text-sm text-muted-foreground mb-3">{dest.country}</p>
+            <div className="flex items-center justify-between">
+              <span className="text-sm">
+                from <span className="font-semibold text-emerald-700">{dest.price_from.toLocaleString()} SEK</span>
+              </span>
+              <Button 
+                size="sm" 
+                variant="ghost" 
+                className="text-emerald-700 hover:text-emerald-800 hover:bg-emerald-50"
+                data-testid="destination-view-button"
+              >
+                View <ArrowRight className="ml-1 h-3 w-3 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </div>
+          </div>
+        </Link>
+      </Card>
+    </div>
+  );
+}
