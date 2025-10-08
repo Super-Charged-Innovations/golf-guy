@@ -37,6 +37,40 @@ class SEO(BaseModel):
     description: Optional[str] = None
     canonical: Optional[str] = None
 
+# Package Model for Destinations
+class Package(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    duration_nights: int
+    duration_days: int
+    price: int
+    currency: str = "SEK"
+    inclusions: List[str] = []
+    exclusions: List[str] = []
+    description: Optional[str] = None
+    available: bool = True
+
+# Course Details Model
+class CourseDetails(BaseModel):
+    par: Optional[int] = None
+    holes: Optional[int] = None
+    length_meters: Optional[int] = None
+    difficulty: Optional[str] = None  # Easy, Medium, Hard, Championship
+    designer: Optional[str] = None
+    year_established: Optional[int] = None
+    course_type: Optional[str] = None  # Links, Parkland, Desert, Mountain, etc.
+
+# Resort Amenities Model
+class ResortAmenities(BaseModel):
+    spa: bool = False
+    restaurants: int = 0
+    pools: int = 0
+    gym: bool = False
+    kids_club: bool = False
+    conference_facilities: bool = False
+    beach_access: bool = False
+    additional: List[str] = []
+
 # Destination Models
 class Destination(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -47,14 +81,42 @@ class Destination(BaseModel):
     region: Optional[str] = None
     short_desc: str
     long_desc: str
+    
+    # Categorization
+    destination_type: str = "golf_course"  # golf_course, golf_resort, both
+    
+    # Pricing
     price_from: int
     price_to: int
     currency: str = "SEK"
+    
+    # Media
     images: List[str] = []
+    video_url: Optional[str] = None
+    
+    # Details
     highlights: List[str] = []
+    courses: List[CourseDetails] = []  # Multiple courses at one destination
+    amenities: Optional[ResortAmenities] = None
+    packages: List[Package] = []
+    
+    # Location details
+    location_coordinates: Optional[Dict[str, float]] = None  # lat, lng
+    climate: Optional[str] = None
+    best_time_to_visit: Optional[str] = None
+    
+    # Logistics
+    nearest_airport: Optional[str] = None
+    transfer_time: Optional[str] = None
+    
+    # Status
     featured: bool = False
     published: bool = True
+    
+    # SEO
     seo: Optional[SEO] = None
+    
+    # Timestamps
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
