@@ -64,10 +64,22 @@ export default function Destinations() {
   return (
     <div>
       {/* Hero Header */}
-      <section className="bg-gradient-to-br from-primary/10 via-sky-mist to-sand/30 py-16 md:py-24">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="font-playfair text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">Golf Destinations</h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+      <section className="relative bg-gradient-to-br from-emerald-50 via-emerald-100/30 to-white py-16 md:py-24 overflow-hidden">
+        {/* Animated background accent */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-10 right-10 w-64 h-64 bg-emerald-400 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-10 left-10 w-96 h-96 bg-emerald-300 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
+        </div>
+        
+        <div className="relative max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-100 text-emerald-700 mb-6 animate-fade-in-up">
+            <Sparkles className="h-4 w-4" />
+            <span className="text-sm font-medium">Premium Golf Destinations</span>
+          </div>
+          <h1 className="font-playfair text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 text-gray-900 animate-fade-in-up animate-delay-100">
+            Golf Destinations
+          </h1>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto animate-fade-in-up animate-delay-200">
             Explore our curated collection of the world's finest golf destinations
           </p>
         </div>
