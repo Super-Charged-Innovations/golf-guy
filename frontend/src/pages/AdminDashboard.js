@@ -45,6 +45,21 @@ export default function AdminDashboard() {
   const [showDestDialog, setShowDestDialog] = useState(false);
   const [showArticleDialog, setShowArticleDialog] = useState(false);
 
+  const handleEditDestination = (dest) => {
+    setEditingDest(dest);
+    setShowDestDialog(true);
+  };
+
+  const handleCloseDestDialog = () => {
+    setShowDestDialog(false);
+    setEditingDest(null);
+  };
+
+  const handleSaveDestination = () => {
+    loadAdminData();
+    handleCloseDestDialog();
+  };
+
   useEffect(() => {
     const isAdmin = localStorage.getItem('demo_admin') === 'true';
     if (!isAdmin) {
