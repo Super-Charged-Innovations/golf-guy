@@ -13,11 +13,11 @@
   },
   {
     "content": "Restart backend service and verify no errors",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Test AI chat widget functionality with gpt-5-mini",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Test AI auto-fill in admin destination suite",
