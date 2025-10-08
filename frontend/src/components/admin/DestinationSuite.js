@@ -227,6 +227,38 @@ export const DestinationFormDialog = ({ open, onOpenChange, destination, onSave 
 
           {/* Basic Info Tab */}
           <TabsContent value="basic" className="space-y-4">
+            {/* AI Auto-fill Banner */}
+            <Card className="bg-gradient-to-r from-emerald-50 to-emerald-100 border-emerald-200 p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Sparkles className="h-5 w-5 text-emerald-600" />
+                  <div>
+                    <p className="font-semibold text-emerald-900">AI Auto-fill</p>
+                    <p className="text-xs text-emerald-700">Generate comprehensive content with GPT-5</p>
+                  </div>
+                </div>
+                <Button
+                  type="button"
+                  onClick={handleAIAutofill}
+                  disabled={aiGenerating || !formData.name || !formData.country}
+                  className="bg-emerald-600 hover:bg-emerald-700"
+                  data-testid="ai-autofill-button"
+                >
+                  {aiGenerating ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="mr-2 h-4 w-4" />
+                      Auto-fill with AI
+                    </>
+                  )}
+                </Button>
+              </div>
+            </Card>
+
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-2">
                 <Label htmlFor="name">Destination Name *</Label>
