@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { Badge } from '../ui/badge';
-import { Card } from '../ui/card';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../ui/card';
 import { Switch } from '../ui/switch';
 import { toast } from 'sonner';
 import { Plus, X, Save, Trash2, Sparkles, Loader2 } from 'lucide-react';
