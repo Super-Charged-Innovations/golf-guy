@@ -175,6 +175,9 @@ export const Layout = () => {
 
             <div className="mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
               <p>&copy; {new Date().getFullYear()} Golf Guy. All rights reserved.</p>
+              <p className="mt-2 text-xs">
+                Golf travel specialists since 2010. Creating unforgettable golf experiences worldwide.
+              </p>
             </div>
           </div>
         </footer>
