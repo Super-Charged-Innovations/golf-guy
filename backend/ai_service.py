@@ -20,7 +20,7 @@ class AIService:
     """AI Service using GPT-5 for golf platform intelligence"""
     
     def __init__(self):
-        self.model = "gpt-5"  # Using GPT-5 as requested
+        self.model = "gpt-4o"  # Using GPT-4o (GPT-5 not yet in public API)
         self.client = client
     
     async def generate_destination_content(
