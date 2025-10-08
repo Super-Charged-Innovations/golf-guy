@@ -34,12 +34,17 @@ export default function ClientDashboard() {
   const [recommendations, setRecommendations] = useState([]);
 
   useEffect(() => {
+    // Wait for auth loading to complete before checking authentication
+    if (authLoading) {
+      return; // Still loading auth state
+    }
+    
     if (!isAuthenticated) {
       navigate('/login');
       return;
     }
     loadDashboardData();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, authLoading]);
 
   const loadDashboardData = async () => {
     try {
