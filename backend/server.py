@@ -676,6 +676,65 @@ async def update_user_profile(
     deserialize_datetime(profile, ["created_at", "updated_at"])
     return profile
 
+@api_router.post("/profile/complete-kyc")
+async def complete_kyc(
+    current_user: dict = Depends(get_current_user)
+):
+    """Mark KYC as completed and calculate tier"""
+    profile = await db.user_profiles.find_one({"user_id": current_user["id"]}, {"_id": 0})
+    
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    
+    # Convert to UserProfile model
+    profile_obj = UserProfile(**profile)
+    profile_obj.kyc_completed = True
+    
+    # Calculate tier
+    tier = calculate_user_tier(profile_obj)
+    
+    # Update database
+    await db.user_profiles.update_one(
+        {"user_id": current_user["id"]},
+        {
+            "$set": {
+                "kyc_completed": True,
+                "tier": tier,
+                "updated_at": datetime.now(timezone.utc)
+            }
+        }
+    )
+    
+    return {"message": "KYC completed", "tier": tier}
+
+@api_router.get("/profile/tier-status")
+async def get_tier_status(current_user: dict = Depends(get_current_user)):
+    """Get user tier and KYC status"""
+    profile = await db.user_profiles.find_one({"user_id": current_user["id"]}, {"_id": 0})
+    
+    if not profile:
+        return {
+            "tier": 0,
+            "kyc_completed": False,
+            "message": "Hey! Fill out your profile for the most accurate details and best available rates"
+        }
+    
+    tier = profile.get("tier", 0)
+    kyc_completed = profile.get("kyc_completed", False)
+    
+    tier_messages = {
+        0: "Hey! Fill out your KYC form for the most accurate details and best available rates",
+        1: "Basic profile complete! Add more details to unlock better rates",
+        2: "Enhanced profile! You're getting great rates",
+        3: "VIP status! You have access to our best rates and exclusive offers"
+    }
+    
+    return {
+        "tier": tier,
+        "kyc_completed": kyc_completed,
+        "message": tier_messages.get(tier, tier_messages[0])
+    }
+
 # AI Chat Routes
 @api_router.post("/ai/chat", response_model=ChatResponse)
 async def chat_with_ai(
