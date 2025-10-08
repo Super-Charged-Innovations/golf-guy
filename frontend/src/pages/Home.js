@@ -62,6 +62,9 @@ export default function Home() {
 
   return (
     <div>
+      {/* AI Chat Widget */}
+      <AIChatWidget />
+      
       {/* Hero Carousel */}
       <section className="relative" data-testid="hero-section">
         <Carousel className="w-full" data-testid="hero-carousel">
