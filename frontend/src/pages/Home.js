@@ -146,47 +146,26 @@ export default function Home() {
       </section>
 
       {/* Featured Destinations */}
-      <section className="py-16 md:py-24 bg-white">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-16 md:py-24 bg-gradient-to-b from-white to-emerald-50/30 relative overflow-hidden">
+        {/* Decorative background */}
+        <div className="absolute top-20 left-0 w-72 h-72 bg-emerald-200 rounded-full blur-3xl opacity-20"></div>
+        <div className="absolute bottom-20 right-0 w-96 h-96 bg-emerald-300 rounded-full blur-3xl opacity-10"></div>
+        
+        <div className="relative max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="font-playfair text-3xl sm:text-4xl font-bold mb-4">Featured Destinations</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-100 text-emerald-700 mb-4">
+              <Sparkles className="h-4 w-4" />
+              <span className="text-sm font-medium">Handpicked Selection</span>
+            </div>
+            <h2 className="font-playfair text-3xl sm:text-4xl font-bold mb-4 text-gray-900">Featured Destinations</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Discover our handpicked selection of the world's finest golf destinations
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredDestinations.map((dest) => (
-              <Card key={dest.id} className="group overflow-hidden hover:shadow-lg transition-all duration-200" data-testid="destination-card">
-                <Link to={`/destinations/${dest.slug}`}>
-                  <div className="relative">
-                    <AspectRatio ratio={4/3}>
-                      <img 
-                        src={dest.images[0]} 
-                        alt={dest.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    </AspectRatio>
-                    {dest.featured && (
-                      <Badge className="absolute top-3 left-3 bg-accent text-accent-foreground">
-                        Featured
-                      </Badge>
-                    )}
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-playfair text-lg font-semibold mb-1">{dest.name}</h3>
-                    <p className="text-sm text-muted-foreground mb-3">{dest.country}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">
-                        from <span className="font-semibold text-primary">{dest.price_from.toLocaleString()} SEK</span>
-                      </span>
-                      <Button size="sm" variant="ghost" data-testid="destination-view-button">
-                        View <ArrowRight className="ml-1 h-3 w-3" />
-                      </Button>
-                    </div>
-                  </div>
-                </Link>
-              </Card>
+            {featuredDestinations.map((dest, index) => (
+              <HomeDestinationCard key={dest.id} dest={dest} index={index} />
             ))}
           </div>
 
