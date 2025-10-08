@@ -1206,6 +1206,137 @@ async def list_user_files(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to list files: {str(e)}")
 
+# GDPR Audit & Compliance Routes
+@api_router.get("/audit/my-trail")
+async def get_my_audit_trail(
+    start_date: Optional[str] = Query(None, description="Start date (ISO format)"),
+    end_date: Optional[str] = Query(None, description="End date (ISO format)"),
+    action_types: Optional[str] = Query(None, description="Comma-separated action types"),
+    limit: int = Query(100, description="Maximum entries to return"),
+    current_user: dict = Depends(get_current_user)
+):
+    """Get user's own audit trail (GDPR Article 15 - Right of Access)"""
+    
+    # Parse date filters
+    start_dt = None
+    end_dt = None
+    if start_date:
+        try:
+            start_dt = datetime.fromisoformat(start_date.replace('Z', '+00:00'))
+        except:
+            raise HTTPException(status_code=400, detail="Invalid start_date format")
+    
+    if end_date:
+        try:
+            end_dt = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
+        except:
+            raise HTTPException(status_code=400, detail="Invalid end_date format")
+    
+    # Parse action types
+    action_type_list = None
+    if action_types:
+        action_type_list = [AuditActionType(t.strip()) for t in action_types.split(',')]
+    
+    try:
+        entries = await audit_logger.get_user_audit_trail(
+            user_id=current_user["id"],
+            start_date=start_dt,
+            end_date=end_dt,
+            action_types=action_type_list,
+            limit=min(limit, 1000)  # Cap at 1000 for performance
+        )
+        
+        return {
+            "user_id": current_user["id"],
+            "total_entries": len(entries),
+            "entries": entries
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get audit trail: {str(e)}")
+
+@api_router.get("/audit/gdpr-report")
+async def get_gdpr_report(
+    current_user: dict = Depends(get_current_user)
+):
+    """Generate comprehensive GDPR data processing report for user"""
+    
+    try:
+        report = await audit_logger.generate_gdpr_report(current_user["id"])
+        
+        # Log the GDPR report generation
+        await audit_logger.log_action(
+            action_type=AuditActionType.GDPR_DATA_REQUEST,
+            user_id=current_user["id"],
+            user_email=current_user["email"],
+            resource_type="gdpr_report",
+            resource_id=current_user["id"],
+            metadata={"report_type": "comprehensive_audit"},
+            legal_basis="Article 15 - Right of Access"
+        )
+        
+        return report
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to generate GDPR report: {str(e)}")
+
+@api_router.get("/admin/audit/{user_id}")
+async def get_user_audit_trail_admin(
+    user_id: str,
+    start_date: Optional[str] = Query(None),
+    end_date: Optional[str] = Query(None),
+    limit: int = Query(100),
+    current_user: dict = Depends(get_current_user)
+):
+    """Get audit trail for any user (Admin only)"""
+    
+    if not current_user.get("is_admin", False):
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    # Log admin access to user audit trail
+    await audit_logger.log_action(
+        action_type=AuditActionType.ADMIN_ACCESS,
+        user_id=current_user["id"],
+        user_email=current_user["email"],
+        resource_type="user_audit_trail",
+        resource_id=user_id,
+        metadata={"accessed_user_id": user_id},
+        legal_basis="Legitimate interest - Security monitoring"
+    )
+    
+    # Parse dates
+    start_dt = None
+    end_dt = None
+    if start_date:
+        try:
+            start_dt = datetime.fromisoformat(start_date.replace('Z', '+00:00'))
+        except:
+            raise HTTPException(status_code=400, detail="Invalid start_date format")
+    
+    if end_date:
+        try:
+            end_dt = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
+        except:
+            raise HTTPException(status_code=400, detail="Invalid end_date format")
+    
+    try:
+        entries = await audit_logger.get_user_audit_trail(
+            user_id=user_id,
+            start_date=start_dt,
+            end_date=end_dt,
+            limit=min(limit, 1000)
+        )
+        
+        return {
+            "user_id": user_id,
+            "accessed_by": current_user["email"],
+            "total_entries": len(entries),
+            "entries": entries
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get user audit trail: {str(e)}")
+
 # AI Content Generation (Admin only)
 @api_router.post("/ai/generate-destination")
 async def generate_destination_content(
