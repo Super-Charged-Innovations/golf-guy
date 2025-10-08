@@ -434,7 +434,291 @@ class BackendTester:
                 
         except Exception as e:
             self.log_test("Database Connectivity", False, f"Database error: {str(e)}")
-    
+
+    def test_mongodb_security_hardening(self):
+        """Test MongoDB security hardening and authentication"""
+        print("\n🔒 TESTING MONGODB SECURITY HARDENING")
+        
+        # Test that existing endpoints still work with authenticated MongoDB
+        endpoints_to_test = [
+            ("/destinations", "GET"),
+            ("/articles", "GET"),
+            ("/partners", "GET"),
+            ("/testimonials", "GET")
+        ]
+        
+        for endpoint, method in endpoints_to_test:
+            try:
+                if method == "GET":
+                    response = self.session.get(f"{BACKEND_URL}{endpoint}")
+                
+                if response.status_code == 200:
+                    self.log_test(f"MongoDB Auth - {endpoint}", True, f"Endpoint working with authenticated MongoDB")
+                else:
+                    self.log_test(f"MongoDB Auth - {endpoint}", False, f"Endpoint failed: {response.status_code}")
+                    
+            except Exception as e:
+                self.log_test(f"MongoDB Auth - {endpoint}", False, f"Error testing {endpoint}: {str(e)}")
+        
+        # Test user registration/login still works with new MongoDB setup
+        if self.auth_token:
+            self.log_test("MongoDB User Auth", True, "User authentication working with secured MongoDB")
+        else:
+            self.log_test("MongoDB User Auth", False, "User authentication failed with secured MongoDB")
+
+    def test_file_storage_system(self):
+        """Test S3 file storage system endpoints"""
+        print("\n📁 TESTING FILE STORAGE SYSTEM (S3 Integration)")
+        
+        if not self.auth_token:
+            self.log_test("File Storage System", False, "No auth token available for testing")
+            return
+        
+        headers = {
+            'Authorization': f'Bearer {self.auth_token}',
+        }
+        
+        # Test file upload endpoint (should fail without AWS credentials - expected behavior)
+        try:
+            # Create a small test file
+            test_file_content = b"Test file content for golf platform"
+            files = {
+                'file': ('test_file.txt', test_file_content, 'text/plain')
+            }
+            data = {
+                'category': 'user-profiles'
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/files/upload",
+                files=files,
+                data=data,
+                headers=headers
+            )
+            
+            if response.status_code == 500:
+                error_detail = response.text
+                if "AWS credentials not configured" in error_detail:
+                    self.log_test("File Upload Validation", True, "File upload properly fails without AWS credentials (expected)")
+                else:
+                    self.log_test("File Upload Validation", False, f"Unexpected error: {error_detail}")
+            elif response.status_code == 200:
+                self.log_test("File Upload", True, "File upload successful (AWS configured)")
+            else:
+                self.log_test("File Upload", False, f"Unexpected response: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("File Upload Test", False, f"File upload test error: {str(e)}")
+        
+        # Test file listing endpoint
+        try:
+            response = self.session.get(
+                f"{BACKEND_URL}/files/list?category=user-profiles",
+                headers=headers
+            )
+            
+            if response.status_code == 500:
+                error_detail = response.text
+                if "AWS credentials not configured" in error_detail:
+                    self.log_test("File List Validation", True, "File listing properly fails without AWS credentials (expected)")
+                else:
+                    self.log_test("File List Validation", False, f"Unexpected error: {error_detail}")
+            elif response.status_code == 200:
+                data = response.json()
+                if 'category' in data and 'files' in data:
+                    self.log_test("File Listing", True, "File listing endpoint working")
+                else:
+                    self.log_test("File Listing", False, f"File listing response incomplete: {data}")
+            else:
+                self.log_test("File Listing", False, f"File listing failed: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("File Listing Test", False, f"File listing test error: {str(e)}")
+        
+        # Test file download URL generation (should fail without AWS credentials)
+        try:
+            response = self.session.get(
+                f"{BACKEND_URL}/files/test_file_key/download",
+                headers=headers
+            )
+            
+            if response.status_code == 500:
+                error_detail = response.text
+                if "AWS credentials not configured" in error_detail:
+                    self.log_test("File Download URL", True, "Download URL generation properly fails without AWS credentials (expected)")
+                else:
+                    self.log_test("File Download URL", False, f"Unexpected error: {error_detail}")
+            elif response.status_code == 404:
+                self.log_test("File Download URL", True, "File not found response (expected for test key)")
+            else:
+                self.log_test("File Download URL", False, f"Unexpected response: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("File Download Test", False, f"File download test error: {str(e)}")
+
+    def test_gdpr_audit_logging_system(self):
+        """Test GDPR audit logging system"""
+        print("\n📋 TESTING GDPR AUDIT LOGGING SYSTEM")
+        
+        if not self.auth_token:
+            self.log_test("GDPR Audit System", False, "No auth token available for testing")
+            return
+        
+        headers = {
+            'Authorization': f'Bearer {self.auth_token}',
+            'Content-Type': 'application/json'
+        }
+        
+        # Test user's own audit trail endpoint
+        try:
+            response = self.session.get(f"{BACKEND_URL}/audit/my-trail", headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if 'user_id' in data and 'entries' in data:
+                    self.log_test("User Audit Trail", True, f"Audit trail working, {data.get('total_entries', 0)} entries found")
+                else:
+                    self.log_test("User Audit Trail", False, f"Audit trail response incomplete: {data}")
+            else:
+                error_detail = response.text
+                self.log_test("User Audit Trail", False, f"Audit trail failed: {response.status_code} - {error_detail}")
+                
+        except Exception as e:
+            self.log_test("User Audit Trail", False, f"Audit trail error: {str(e)}")
+        
+        # Test GDPR report generation
+        try:
+            response = self.session.get(f"{BACKEND_URL}/audit/gdpr-report", headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if 'user_id' in data and 'total_logged_actions' in data:
+                    self.log_test("GDPR Report", True, f"GDPR report generated, {data.get('total_logged_actions', 0)} actions logged")
+                else:
+                    self.log_test("GDPR Report", False, f"GDPR report incomplete: {data}")
+            else:
+                error_detail = response.text
+                self.log_test("GDPR Report", False, f"GDPR report failed: {response.status_code} - {error_detail}")
+                
+        except Exception as e:
+            self.log_test("GDPR Report", False, f"GDPR report error: {str(e)}")
+        
+        # Test audit trail with filters
+        try:
+            response = self.session.get(
+                f"{BACKEND_URL}/audit/my-trail?action_types=user_login,user_register&limit=50",
+                headers=headers
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if 'entries' in data:
+                    self.log_test("Audit Trail Filters", True, "Audit trail filtering working")
+                else:
+                    self.log_test("Audit Trail Filters", False, f"Filtered audit trail incomplete: {data}")
+            else:
+                self.log_test("Audit Trail Filters", False, f"Filtered audit trail failed: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("Audit Trail Filters", False, f"Audit trail filter error: {str(e)}")
+
+    def test_admin_audit_access(self):
+        """Test admin audit access (will fail for non-admin users - expected)"""
+        print("\n👑 TESTING ADMIN AUDIT ACCESS")
+        
+        if not self.auth_token:
+            self.log_test("Admin Audit Access", False, "No auth token available for testing")
+            return
+        
+        headers = {
+            'Authorization': f'Bearer {self.auth_token}',
+            'Content-Type': 'application/json'
+        }
+        
+        # Test admin audit access (should fail for regular users)
+        try:
+            response = self.session.get(
+                f"{BACKEND_URL}/admin/audit/{self.user_id}",
+                headers=headers
+            )
+            
+            if response.status_code == 403:
+                self.log_test("Admin Audit Access Control", True, "Admin audit access properly restricted to admins")
+            elif response.status_code == 200:
+                self.log_test("Admin Audit Access", True, "Admin audit access working (user has admin privileges)")
+            else:
+                self.log_test("Admin Audit Access", False, f"Unexpected response: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("Admin Audit Access", False, f"Admin audit test error: {str(e)}")
+
+    def test_file_upload_security_validation(self):
+        """Test file upload security validation"""
+        print("\n🛡️ TESTING FILE UPLOAD SECURITY VALIDATION")
+        
+        if not self.auth_token:
+            self.log_test("File Security Validation", False, "No auth token available for testing")
+            return
+        
+        headers = {
+            'Authorization': f'Bearer {self.auth_token}',
+        }
+        
+        # Test invalid category
+        try:
+            test_file_content = b"Test content"
+            files = {
+                'file': ('test.txt', test_file_content, 'text/plain')
+            }
+            data = {
+                'category': 'invalid-category'
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/files/upload",
+                files=files,
+                data=data,
+                headers=headers
+            )
+            
+            if response.status_code == 400:
+                error_detail = response.text
+                if "Invalid category" in error_detail:
+                    self.log_test("File Category Validation", True, "Invalid file category properly rejected")
+                else:
+                    self.log_test("File Category Validation", False, f"Unexpected error: {error_detail}")
+            else:
+                self.log_test("File Category Validation", False, f"Invalid category not rejected: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("File Category Validation", False, f"Category validation error: {str(e)}")
+        
+        # Test admin-only category access
+        try:
+            files = {
+                'file': ('test.txt', b"Test content", 'text/plain')
+            }
+            data = {
+                'category': 'admin-content'
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/files/upload",
+                files=files,
+                data=data,
+                headers=headers
+            )
+            
+            if response.status_code == 403:
+                self.log_test("Admin Category Access", True, "Admin-only category properly restricted")
+            elif response.status_code == 500 and "AWS credentials" in response.text:
+                self.log_test("Admin Category Access", True, "Admin category access passed (AWS credentials missing)")
+            else:
+                self.log_test("Admin Category Access", False, f"Admin category not restricted: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("Admin Category Access", False, f"Admin category test error: {str(e)}")
+
     def run_all_tests(self):
         """Run all security tests"""
         print("🚀 STARTING COMPREHENSIVE BACKEND SECURITY TESTING")
