@@ -226,11 +226,8 @@ Complete comprehensive codebase audit focusing on security, compliance, architec
 
 ## test_plan:
   current_focus:
-    - "Authentication Flow Fix"
-    - "Frontend authentication state management"
     - "Phase 4 Rate Limiting Integration"
   stuck_tasks:
-    - "Authentication Flow Fix - protected routes redirect to login (FRONTEND ISSUE)"
     - "Phase 4 Rate Limiting Middleware - not integrated into main server"
   test_all: false
   test_priority: "critical_first"
