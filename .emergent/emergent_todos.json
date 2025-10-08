@@ -1,7 +1,7 @@
 [
   {
     "content": "Update backend models: Destination, Article, HeroCarousel, Testimonial, Partner, Inquiry, Settings with UUID and timezone-aware datetimes",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Implement all backend API endpoints: CRUD for destinations, articles, heroes, partners, testimonials, inquiries with proper Pydantic models",
