@@ -1,18 +1,18 @@
 [
   {
     "content": "Create AI Chat Widget component (emerald gradient box, collapsible near destinations CTA)",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Add AI Auto-fill button to Destination Suite in admin panel",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Create mock user profiles for admin testing",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Test complete AI flow: registration -> preferences -> recommendations -> chat interaction",
-    "status": "pending"
+    "status": "in_progress"
   }
 ]
