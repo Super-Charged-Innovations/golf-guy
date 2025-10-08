@@ -134,10 +134,10 @@ export const AIChatWidget = () => {
           {messages.length === 0 && (
             <div className="bg-white rounded-lg p-4 shadow-sm border border-emerald-100">
               <p className="text-sm mb-2">
-                👋 Hi {user?.full_name || 'there'}! I'm your personal golf travel assistant.
+                👋 Hey {user?.full_name || 'there'}! I'm Alex, your golf travel buddy.
               </p>
               <p className="text-sm text-muted-foreground">
-                I can help you discover perfect golf destinations, suggest packages, and answer questions about courses and resorts.
+                Looking for your next golf adventure? Just ask me anything - I'll keep it short and sweet! ⛳
               </p>
               
               {/* Recommendations */}
