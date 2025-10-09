@@ -34,8 +34,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           
-          {/* Main Routes (with layout) */}
-          <Route path="/" element={<Layout />}>
+          {/* Main Routes with responsive layout */}
+          <Route path="/" element={<ResponsiveLayout />}>
             <Route index element={<Home />} />
             <Route path="destinations" element={<Destinations />} />
             <Route path="destinations/:slug" element={<DestinationDetail />} />
@@ -53,5 +53,12 @@ function App() {
     </BrowserRouter>
   );
 }
+
+// Responsive layout component that chooses between mobile and desktop
+const ResponsiveLayout = () => {
+  const { isMobile } = useDeviceDetection();
+  
+  return isMobile ? <MobileLayout /> : <Layout />;
+};
 
 export default App;
