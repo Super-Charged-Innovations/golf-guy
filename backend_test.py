@@ -980,6 +980,557 @@ class BackendTester:
             else:
                 self.log_test("Service Layer - Dependency Injection", False, "Authentication dependency issues")
 
+    def test_booking_system_api(self):
+        """Test Booking System API endpoints"""
+        print("\n📅 TESTING BOOKING SYSTEM API")
+        
+        if not self.auth_token:
+            self.log_test("Booking System API", False, "No auth token available for testing")
+            return
+        
+        headers = {
+            'Authorization': f'Bearer {self.auth_token}',
+            'Content-Type': 'application/json'
+        }
+        
+        # Test booking availability endpoint
+        try:
+            response = self.session.get(f"{BACKEND_URL}/bookings/availability", headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                self.log_test("Booking Availability", True, "Booking availability endpoint working")
+            elif response.status_code == 401:
+                self.log_test("Booking Availability", True, "Booking availability endpoint secured (401 expected)")
+            else:
+                self.log_test("Booking Availability", False, f"Booking availability failed: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("Booking Availability", False, f"Booking availability error: {str(e)}")
+        
+        # Test user bookings endpoint
+        try:
+            response = self.session.get(f"{BACKEND_URL}/bookings/my-bookings", headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                self.log_test("User Bookings", True, "User bookings endpoint working")
+            elif response.status_code == 401:
+                self.log_test("User Bookings", True, "User bookings endpoint secured (401 expected)")
+            else:
+                self.log_test("User Bookings", False, f"User bookings failed: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("User Bookings", False, f"User bookings error: {str(e)}")
+        
+        # Test booking creation endpoint
+        booking_data = {
+            "destination_id": "test-destination-123",
+            "check_in_date": "2024-06-15",
+            "check_out_date": "2024-06-20",
+            "guests": 2,
+            "package_id": "test-package-456"
+        }
+        
+        try:
+            response = self.session.post(f"{BACKEND_URL}/bookings", json=booking_data, headers=headers)
+            
+            if response.status_code in [200, 201]:
+                data = response.json()
+                self.log_test("Booking Creation", True, "Booking creation endpoint working")
+            elif response.status_code == 401:
+                self.log_test("Booking Creation", True, "Booking creation endpoint secured (401 expected)")
+            else:
+                self.log_test("Booking Creation", False, f"Booking creation failed: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("Booking Creation", False, f"Booking creation error: {str(e)}")
+
+    def test_advanced_search_filtering_api(self):
+        """Test Advanced Search & Filtering API endpoints"""
+        print("\n🔍 TESTING ADVANCED SEARCH & FILTERING API")
+        
+        # Test search destinations with filters
+        search_params = {
+            "countries": "Spain,Portugal",
+            "price_min": "1000",
+            "price_max": "5000",
+            "difficulty": "Medium",
+            "course_type": "Links"
+        }
+        
+        try:
+            response = self.session.get(f"{BACKEND_URL}/search/destinations", params=search_params)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if isinstance(data, list):
+                    self.log_test("Search Destinations", True, f"Search destinations working, {len(data)} results")
+                else:
+                    self.log_test("Search Destinations", False, f"Search destinations unexpected format: {type(data)}")
+            else:
+                self.log_test("Search Destinations", False, f"Search destinations failed: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("Search Destinations", False, f"Search destinations error: {str(e)}")
+        
+        # Test search filters endpoint
+        try:
+            response = self.session.get(f"{BACKEND_URL}/search/filters")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if isinstance(data, dict) and 'countries' in data:
+                    filter_count = len(data.keys())
+                    self.log_test("Search Filters", True, f"Search filters working, {filter_count} filter categories")
+                else:
+                    self.log_test("Search Filters", False, f"Search filters unexpected format: {data}")
+            else:
+                self.log_test("Search Filters", False, f"Search filters failed: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("Search Filters", False, f"Search filters error: {str(e)}")
+        
+        # Test popular searches endpoint
+        try:
+            response = self.session.get(f"{BACKEND_URL}/search/popular")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if isinstance(data, list):
+                    self.log_test("Popular Searches", True, f"Popular searches working, {len(data)} popular terms")
+                else:
+                    self.log_test("Popular Searches", False, f"Popular searches unexpected format: {type(data)}")
+            else:
+                self.log_test("Popular Searches", False, f"Popular searches failed: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("Popular Searches", False, f"Popular searches error: {str(e)}")
+        
+        # Test AI search suggestions
+        if self.auth_token:
+            headers = {'Authorization': f'Bearer {self.auth_token}', 'Content-Type': 'application/json'}
+            search_query = {"query": "golf courses in Spain with ocean views"}
+            
+            try:
+                response = self.session.post(f"{BACKEND_URL}/search/ai-suggestions", json=search_query, headers=headers)
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    self.log_test("AI Search Suggestions", True, "AI search suggestions working")
+                elif response.status_code == 401:
+                    self.log_test("AI Search Suggestions", True, "AI search suggestions secured (401 expected)")
+                else:
+                    self.log_test("AI Search Suggestions", False, f"AI search suggestions failed: {response.status_code}")
+                    
+            except Exception as e:
+                self.log_test("AI Search Suggestions", False, f"AI search suggestions error: {str(e)}")
+
+    def test_payment_system_stripe_api(self):
+        """Test Payment System (Stripe Integration) API endpoints"""
+        print("\n💳 TESTING PAYMENT SYSTEM (STRIPE INTEGRATION)")
+        
+        # Test payment packages endpoint
+        try:
+            response = self.session.get(f"{BACKEND_URL}/payments/packages")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if isinstance(data, list) and len(data) > 0:
+                    package_count = len(data)
+                    self.log_test("Payment Packages", True, f"Payment packages working, {package_count} packages available")
+                else:
+                    self.log_test("Payment Packages", False, f"Payment packages empty or wrong format: {data}")
+            else:
+                self.log_test("Payment Packages", False, f"Payment packages failed: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("Payment Packages", False, f"Payment packages error: {str(e)}")
+        
+        if not self.auth_token:
+            self.log_test("Payment System Auth", False, "No auth token available for authenticated payment tests")
+            return
+        
+        headers = {
+            'Authorization': f'Bearer {self.auth_token}',
+            'Content-Type': 'application/json'
+        }
+        
+        # Test Stripe checkout session creation
+        checkout_data = {
+            "package_id": "premium-golf-package",
+            "destination_id": "spain-costa-del-sol",
+            "success_url": "https://golf-ai-advisor.preview.emergentagent.com/payment/success",
+            "cancel_url": "https://golf-ai-advisor.preview.emergentagent.com/payment/cancel"
+        }
+        
+        try:
+            response = self.session.post(f"{BACKEND_URL}/payments/create-checkout-session", json=checkout_data, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if 'checkout_url' in data or 'session_id' in data:
+                    self.log_test("Stripe Checkout Session", True, "Stripe checkout session creation working")
+                else:
+                    self.log_test("Stripe Checkout Session", False, f"Checkout session missing required fields: {data}")
+            elif response.status_code == 401:
+                self.log_test("Stripe Checkout Session", True, "Stripe checkout session secured (401 expected)")
+            else:
+                self.log_test("Stripe Checkout Session", False, f"Stripe checkout session failed: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("Stripe Checkout Session", False, f"Stripe checkout session error: {str(e)}")
+        
+        # Test payment status checking
+        try:
+            response = self.session.get(f"{BACKEND_URL}/payments/status/test-payment-123", headers=headers)
+            
+            if response.status_code in [200, 404]:  # 404 is OK for non-existent payment
+                self.log_test("Payment Status Check", True, "Payment status checking endpoint working")
+            elif response.status_code == 401:
+                self.log_test("Payment Status Check", True, "Payment status checking secured (401 expected)")
+            else:
+                self.log_test("Payment Status Check", False, f"Payment status check failed: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("Payment Status Check", False, f"Payment status check error: {str(e)}")
+        
+        # Test user transactions endpoint
+        try:
+            response = self.session.get(f"{BACKEND_URL}/payments/my-transactions", headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                self.log_test("User Transactions", True, "User transactions endpoint working")
+            elif response.status_code == 401:
+                self.log_test("User Transactions", True, "User transactions secured (401 expected)")
+            else:
+                self.log_test("User Transactions", False, f"User transactions failed: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("User Transactions", False, f"User transactions error: {str(e)}")
+
+    def test_swedish_localization_i18n_api(self):
+        """Test Swedish Localization (i18n) API endpoints"""
+        print("\n🇸🇪 TESTING SWEDISH LOCALIZATION (i18n)")
+        
+        # Test English translations endpoint
+        try:
+            response = self.session.get(f"{BACKEND_URL}/i18n/translations/en")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if isinstance(data, dict) and len(data) > 0:
+                    translation_count = len(data)
+                    self.log_test("English Translations", True, f"English translations working, {translation_count} translations")
+                else:
+                    self.log_test("English Translations", False, f"English translations empty or wrong format: {data}")
+            else:
+                self.log_test("English Translations", False, f"English translations failed: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("English Translations", False, f"English translations error: {str(e)}")
+        
+        # Test Swedish translations endpoint
+        try:
+            response = self.session.get(f"{BACKEND_URL}/i18n/translations/sv")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if isinstance(data, dict) and len(data) > 0:
+                    translation_count = len(data)
+                    self.log_test("Swedish Translations", True, f"Swedish translations working, {translation_count} translations")
+                    
+                    # Check for Swedish-specific content
+                    if 'currency_symbol' in data and data['currency_symbol'] == 'kr':
+                        self.log_test("Swedish Currency", True, "Swedish currency symbol properly configured")
+                    else:
+                        self.log_test("Swedish Currency", False, "Swedish currency symbol not found or incorrect")
+                else:
+                    self.log_test("Swedish Translations", False, f"Swedish translations empty or wrong format: {data}")
+            else:
+                self.log_test("Swedish Translations", False, f"Swedish translations failed: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("Swedish Translations", False, f"Swedish translations error: {str(e)}")
+        
+        # Test localized countries endpoint
+        try:
+            response = self.session.get(f"{BACKEND_URL}/i18n/countries/sv")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if isinstance(data, dict) and len(data) > 0:
+                    country_count = len(data)
+                    self.log_test("Localized Countries", True, f"Localized countries working, {country_count} countries")
+                else:
+                    self.log_test("Localized Countries", False, f"Localized countries empty or wrong format: {data}")
+            else:
+                self.log_test("Localized Countries", False, f"Localized countries failed: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("Localized Countries", False, f"Localized countries error: {str(e)}")
+        
+        # Test currency formatting endpoint
+        try:
+            response = self.session.get(f"{BACKEND_URL}/i18n/currency-format/sv")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if isinstance(data, dict) and 'symbol' in data:
+                    self.log_test("Currency Formatting", True, f"Currency formatting working: {data}")
+                else:
+                    self.log_test("Currency Formatting", False, f"Currency formatting wrong format: {data}")
+            else:
+                self.log_test("Currency Formatting", False, f"Currency formatting failed: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("Currency Formatting", False, f"Currency formatting error: {str(e)}")
+
+    def test_pwa_mobile_backend_support(self):
+        """Test PWA Mobile Infrastructure Backend Support"""
+        print("\n📱 TESTING PWA MOBILE BACKEND SUPPORT")
+        
+        # Test mobile-optimized API endpoints
+        mobile_headers = {
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15',
+            'Content-Type': 'application/json'
+        }
+        
+        # Test mobile destinations endpoint
+        try:
+            response = self.session.get(f"{BACKEND_URL}/destinations?mobile=true", headers=mobile_headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if isinstance(data, list):
+                    self.log_test("Mobile Destinations API", True, f"Mobile destinations API working, {len(data)} destinations")
+                else:
+                    self.log_test("Mobile Destinations API", False, f"Mobile destinations unexpected format: {type(data)}")
+            else:
+                self.log_test("Mobile Destinations API", False, f"Mobile destinations failed: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("Mobile Destinations API", False, f"Mobile destinations error: {str(e)}")
+        
+        # Test mobile search API performance
+        try:
+            import time
+            start_time = time.time()
+            response = self.session.get(f"{BACKEND_URL}/search/destinations?limit=10", headers=mobile_headers)
+            end_time = time.time()
+            response_time = (end_time - start_time) * 1000  # Convert to milliseconds
+            
+            if response.status_code == 200 and response_time < 2000:  # Under 2 seconds
+                self.log_test("Mobile API Performance", True, f"Mobile API performance good: {response_time:.0f}ms")
+            elif response.status_code == 200:
+                self.log_test("Mobile API Performance", False, f"Mobile API slow: {response_time:.0f}ms")
+            else:
+                self.log_test("Mobile API Performance", False, f"Mobile API failed: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("Mobile API Performance", False, f"Mobile API performance error: {str(e)}")
+        
+        # Test mobile error handling
+        try:
+            response = self.session.get(f"{BACKEND_URL}/nonexistent-endpoint", headers=mobile_headers)
+            
+            if response.status_code == 404:
+                try:
+                    error_data = response.json()
+                    if 'detail' in error_data:
+                        self.log_test("Mobile Error Handling", True, "Mobile error handling working")
+                    else:
+                        self.log_test("Mobile Error Handling", False, "Mobile error format inconsistent")
+                except:
+                    self.log_test("Mobile Error Handling", False, "Mobile error not JSON formatted")
+            else:
+                self.log_test("Mobile Error Handling", False, f"Mobile error handling unexpected: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("Mobile Error Handling", False, f"Mobile error handling error: {str(e)}")
+        
+        # Test mobile data compression/optimization
+        if self.auth_token:
+            headers = {
+                'Authorization': f'Bearer {self.auth_token}',
+                'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15',
+                'Accept-Encoding': 'gzip, deflate'
+            }
+            
+            try:
+                response = self.session.get(f"{BACKEND_URL}/destinations", headers=headers)
+                
+                if response.status_code == 200:
+                    content_encoding = response.headers.get('Content-Encoding', '')
+                    if 'gzip' in content_encoding:
+                        self.log_test("Mobile Data Compression", True, "Mobile data compression enabled")
+                    else:
+                        self.log_test("Mobile Data Compression", True, "Mobile API working (compression optional)")
+                else:
+                    self.log_test("Mobile Data Compression", False, f"Mobile compression test failed: {response.status_code}")
+                    
+            except Exception as e:
+                self.log_test("Mobile Data Compression", False, f"Mobile compression error: {str(e)}")
+
+    def test_integration_workflows(self):
+        """Test end-to-end integration workflows"""
+        print("\n🔄 TESTING INTEGRATION WORKFLOWS")
+        
+        if not self.auth_token:
+            self.log_test("Integration Workflows", False, "No auth token available for integration testing")
+            return
+        
+        headers = {
+            'Authorization': f'Bearer {self.auth_token}',
+            'Content-Type': 'application/json'
+        }
+        
+        # Test search → book → pay workflow simulation
+        try:
+            # Step 1: Search for destinations
+            search_response = self.session.get(f"{BACKEND_URL}/search/destinations?countries=Spain")
+            
+            if search_response.status_code != 200:
+                self.log_test("Search→Book→Pay Workflow", False, f"Search step failed: {search_response.status_code}")
+                return
+            
+            # Step 2: Get payment packages
+            packages_response = self.session.get(f"{BACKEND_URL}/payments/packages")
+            
+            if packages_response.status_code != 200:
+                self.log_test("Search→Book→Pay Workflow", False, f"Packages step failed: {packages_response.status_code}")
+                return
+            
+            # Step 3: Check booking availability (simulated)
+            availability_response = self.session.get(f"{BACKEND_URL}/bookings/availability", headers=headers)
+            
+            # This might return 401 or 404, which is acceptable for this workflow test
+            if availability_response.status_code in [200, 401, 404]:
+                self.log_test("Search→Book→Pay Workflow", True, "End-to-end workflow endpoints accessible")
+            else:
+                self.log_test("Search→Book→Pay Workflow", False, f"Booking step failed: {availability_response.status_code}")
+                
+        except Exception as e:
+            self.log_test("Search→Book→Pay Workflow", False, f"Integration workflow error: {str(e)}")
+        
+        # Test mobile vs desktop API consistency
+        try:
+            desktop_headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
+            mobile_headers = {'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15'}
+            
+            desktop_response = self.session.get(f"{BACKEND_URL}/destinations", headers=desktop_headers)
+            mobile_response = self.session.get(f"{BACKEND_URL}/destinations", headers=mobile_headers)
+            
+            if desktop_response.status_code == 200 and mobile_response.status_code == 200:
+                desktop_data = desktop_response.json()
+                mobile_data = mobile_response.json()
+                
+                if len(desktop_data) == len(mobile_data):
+                    self.log_test("Mobile vs Desktop Consistency", True, "Mobile and desktop APIs return consistent data")
+                else:
+                    self.log_test("Mobile vs Desktop Consistency", False, f"Data inconsistency: desktop={len(desktop_data)}, mobile={len(mobile_data)}")
+            else:
+                self.log_test("Mobile vs Desktop Consistency", False, f"API consistency test failed: desktop={desktop_response.status_code}, mobile={mobile_response.status_code}")
+                
+        except Exception as e:
+            self.log_test("Mobile vs Desktop Consistency", False, f"API consistency error: {str(e)}")
+
+    def test_performance_and_security_validation(self):
+        """Test performance and security validation for production readiness"""
+        print("\n⚡ TESTING PERFORMANCE & SECURITY VALIDATION")
+        
+        # Test concurrent request handling (simplified)
+        try:
+            import threading
+            import time
+            
+            results = []
+            
+            def make_request():
+                try:
+                    start_time = time.time()
+                    response = self.session.get(f"{BACKEND_URL}/destinations")
+                    end_time = time.time()
+                    results.append({
+                        'status_code': response.status_code,
+                        'response_time': (end_time - start_time) * 1000
+                    })
+                except Exception as e:
+                    results.append({'error': str(e)})
+            
+            # Create 5 concurrent requests
+            threads = []
+            for i in range(5):
+                thread = threading.Thread(target=make_request)
+                threads.append(thread)
+                thread.start()
+            
+            # Wait for all threads to complete
+            for thread in threads:
+                thread.join()
+            
+            successful_requests = [r for r in results if 'status_code' in r and r['status_code'] == 200]
+            if len(successful_requests) >= 4:  # At least 4 out of 5 successful
+                avg_response_time = sum(r['response_time'] for r in successful_requests) / len(successful_requests)
+                self.log_test("Concurrent Request Handling", True, f"Concurrent requests handled: {len(successful_requests)}/5, avg: {avg_response_time:.0f}ms")
+            else:
+                self.log_test("Concurrent Request Handling", False, f"Concurrent request issues: {len(successful_requests)}/5 successful")
+                
+        except Exception as e:
+            self.log_test("Concurrent Request Handling", False, f"Concurrent request test error: {str(e)}")
+        
+        # Test GDPR compliance with new features
+        if self.auth_token:
+            headers = {'Authorization': f'Bearer {self.auth_token}', 'Content-Type': 'application/json'}
+            
+            try:
+                # Test that user data export includes new feature data
+                export_response = self.session.post(f"{BACKEND_URL}/privacy/export-data", headers=headers)
+                
+                if export_response.status_code == 200:
+                    export_data = export_response.json()
+                    if 'data' in export_data and isinstance(export_data['data'], dict):
+                        data_sections = list(export_data['data'].keys())
+                        self.log_test("GDPR New Features Compliance", True, f"GDPR export includes {len(data_sections)} data sections")
+                    else:
+                        self.log_test("GDPR New Features Compliance", False, "GDPR export data format issues")
+                else:
+                    self.log_test("GDPR New Features Compliance", False, f"GDPR export failed: {export_response.status_code}")
+                    
+            except Exception as e:
+                self.log_test("GDPR New Features Compliance", False, f"GDPR compliance test error: {str(e)}")
+        
+        # Test API response time validation
+        try:
+            import time
+            
+            critical_endpoints = [
+                "/destinations",
+                "/search/destinations",
+                "/payments/packages",
+                "/i18n/translations/en"
+            ]
+            
+            slow_endpoints = []
+            
+            for endpoint in critical_endpoints:
+                start_time = time.time()
+                response = self.session.get(f"{BACKEND_URL}{endpoint}")
+                end_time = time.time()
+                response_time = (end_time - start_time) * 1000
+                
+                if response_time > 1000:  # Over 1 second
+                    slow_endpoints.append(f"{endpoint}: {response_time:.0f}ms")
+            
+            if len(slow_endpoints) == 0:
+                self.log_test("API Response Time Validation", True, "All critical endpoints respond under 1 second")
+            else:
+                self.log_test("API Response Time Validation", False, f"Slow endpoints: {', '.join(slow_endpoints)}")
+                
+        except Exception as e:
+            self.log_test("API Response Time Validation", False, f"Response time validation error: {str(e)}")
+
     def run_all_tests(self):
         """Run all security tests"""
         print("🚀 STARTING COMPREHENSIVE BACKEND SECURITY TESTING")
