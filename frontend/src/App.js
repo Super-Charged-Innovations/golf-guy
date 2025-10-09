@@ -56,21 +56,8 @@ function App() {
 
 // Responsive layout component that chooses between mobile and desktop
 const ResponsiveLayout = () => {
-  // Use CSS-based detection instead of JavaScript for more stable rendering
-  const [isMobileView, setIsMobileView] = useState(false);
-  
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobileView(window.innerWidth <= 768);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-  
-  return isMobileView ? <MobileLayout /> : <Layout />;
+  // Temporarily use regular layout with enhanced mobile CSS until hooks issue is resolved
+  return <Layout />;
 };
 
 export default App;
