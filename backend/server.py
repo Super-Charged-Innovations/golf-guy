@@ -2424,6 +2424,169 @@ async def seed_mock_users():
         "note": "Login with any email above using password: 'password123' (admin password: 'admin123')"
     }
 
+# ===== BOOKING SYSTEM ROUTES =====
+
+from services.booking_service import booking_service
+from models.booking_models import (
+    BookingCreate, BookingUpdate, AvailabilityRequest, AvailabilityResponse,
+    Booking, BookingStatus, PaymentStatus
+)
+
+@api_router.post("/bookings/check-availability", response_model=AvailabilityResponse)
+async def check_availability(
+    request: AvailabilityRequest,
+    current_user: dict = Depends(get_current_user)
+):
+    """Check availability for golf booking"""
+    try:
+        availability = await booking_service.check_availability(request)
+        
+        # Log availability check
+        await audit_logger.log_action(
+            action_type=AuditActionType.DATA_READ,
+            user_id=current_user["id"],
+            user_email=current_user["email"],
+            resource_type="availability",
+            resource_id=request.destination_id,
+            metadata={
+                "date": request.date.isoformat(),
+                "players": request.players
+            },
+            legal_basis="Contract performance"
+        )
+        
+        return availability
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Availability check failed: {str(e)}")
+
+@api_router.post("/bookings", response_model=Booking)
+async def create_booking(
+    booking_data: BookingCreate,
+    current_user: dict = Depends(get_current_user)
+):
+    """Create a new golf booking"""
+    try:
+        booking = await booking_service.create_booking(
+            booking_data=booking_data,
+            user_id=current_user["id"]
+        )
+        
+        # Log booking creation
+        await audit_logger.log_action(
+            action_type=AuditActionType.DATA_CREATE,
+            user_id=current_user["id"],
+            user_email=current_user["email"],
+            resource_type="booking",
+            resource_id=booking.id,
+            metadata={
+                "booking_reference": booking.booking_reference,
+                "total_amount": booking.total_amount,
+                "items": len(booking.items)
+            },
+            legal_basis="Contract performance"
+        )
+        
+        return booking
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Booking creation failed: {str(e)}")
+
+@api_router.get("/bookings/my", response_model=List[Booking])
+async def get_my_bookings(
+    status: Optional[str] = Query(None, description="Filter by booking status"),
+    current_user: dict = Depends(get_current_user)
+):
+    """Get user's bookings"""
+    try:
+        booking_status = BookingStatus(status) if status else None
+        bookings = await booking_service.get_user_bookings(
+            user_id=current_user["id"],
+            status=booking_status
+        )
+        
+        # Log booking access
+        await audit_logger.log_action(
+            action_type=AuditActionType.DATA_READ,
+            user_id=current_user["id"],
+            user_email=current_user["email"],
+            resource_type="user_bookings",
+            resource_id=current_user["id"],
+            metadata={"status_filter": status},
+            legal_basis="Contract performance"
+        )
+        
+        return bookings
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get bookings: {str(e)}")
+
+@api_router.get("/bookings/{booking_id}", response_model=Booking)
+async def get_booking(
+    booking_id: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Get specific booking details"""
+    try:
+        booking = await booking_service.get_booking(booking_id)
+        if not booking:
+            raise HTTPException(status_code=404, detail="Booking not found")
+        
+        # Check permission (user can only see their own bookings unless admin)
+        if booking.user_id != current_user["id"] and not current_user.get("is_admin", False):
+            raise HTTPException(status_code=403, detail="Access denied")
+        
+        # Log booking access
+        await audit_logger.log_action(
+            action_type=AuditActionType.DATA_READ,
+            user_id=current_user["id"],
+            user_email=current_user["email"],
+            resource_type="booking",
+            resource_id=booking_id,
+            legal_basis="Contract performance"
+        )
+        
+        return booking
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get booking: {str(e)}")
+
+@api_router.put("/bookings/{booking_id}/cancel")
+async def cancel_booking(
+    booking_id: str,
+    reason: str = "Customer request",
+    current_user: dict = Depends(get_current_user)
+):
+    """Cancel a booking"""
+    try:
+        booking = await booking_service.get_booking(booking_id)
+        if not booking:
+            raise HTTPException(status_code=404, detail="Booking not found")
+        
+        # Check permission
+        if booking.user_id != current_user["id"] and not current_user.get("is_admin", False):
+            raise HTTPException(status_code=403, detail="Access denied")
+        
+        # Cancel booking
+        success = await booking_service.cancel_booking(booking_id, reason)
+        if not success:
+            raise HTTPException(status_code=500, detail="Failed to cancel booking")
+        
+        # Log cancellation
+        await audit_logger.log_action(
+            action_type=AuditActionType.DATA_UPDATE,
+            user_id=current_user["id"],
+            user_email=current_user["email"],
+            resource_type="booking",
+            resource_id=booking_id,
+            metadata={"action": "cancelled", "reason": reason},
+            legal_basis="Contract performance"
+        )
+        
+        return {"message": "Booking cancelled successfully", "booking_reference": booking.booking_reference}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to cancel booking: {str(e)}")
+
 
 # Include the router in the main app
 app.include_router(api_router)
