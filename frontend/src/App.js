@@ -30,6 +30,7 @@ function App() {
         <ScrollToTop />
         <Toaster position="top-center" />
         <CookieConsent />
+        <PWAInstaller />
         <Routes>
           {/* Auth Routes (no layout) */}
           <Route path="/login" element={<Login />} />
