@@ -1,51 +1,59 @@
-// Golf Guy PWA Service Worker
-// Handles offline functionality, caching, and push notifications
+// Golf Guy PWA Service Worker v2.0
+// Enhanced for browser compatibility (Vivaldi, Samsung Internet, Chrome, Safari)
 
 const CACHE_NAME = 'golf-guy-v2.0.0';
 const OFFLINE_URL = '/offline.html';
 
-// Assets to cache for offline functionality
-const STATIC_ASSETS = [
+// Critical assets for PWA functionality
+const ESSENTIAL_ASSETS = [
   '/',
   '/destinations',
-  '/about',
-  '/contact',
-  OFFLINE_URL,
-  // Core styles and scripts
-  '/static/css/main.css',
-  '/static/js/main.js',
-  // Essential images
-  '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png'
+  '/offline.html',
+  '/manifest.json'
 ];
 
-// API endpoints to cache responses
-const CACHEABLE_API_PATTERNS = [
-  /\/api\/destinations$/,
-  /\/api\/articles$/,
-  /\/api\/i18n\/translations/
+// Optional assets for better offline experience
+const OPTIONAL_ASSETS = [
+  '/about',
+  '/contact',
+  '/static/css/main.css',
+  '/logo192.png',
+  '/logo512.png'
 ];
 
 self.addEventListener('install', (event) => {
-  console.log('Golf Guy SW: Install event');
+  console.log('[Golf Guy SW] Installing service worker version 2.0');
   
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('Golf Guy SW: Caching static assets');
-        return cache.addAll(STATIC_ASSETS);
-      })
-      .catch((error) => {
-        console.error('Golf Guy SW: Error during install:', error);
-      })
+    caches.open(CACHE_NAME).then(async (cache) => {
+      console.log('[Golf Guy SW] Caching essential assets');
+      
+      try {
+        // Cache essential assets first
+        await cache.addAll(ESSENTIAL_ASSETS);
+        console.log('[Golf Guy SW] Essential assets cached successfully');
+        
+        // Cache optional assets (don't fail if these fail)
+        for (const asset of OPTIONAL_ASSETS) {
+          try {
+            await cache.add(asset);
+          } catch (error) {
+            console.log(`[Golf Guy SW] Optional asset failed: ${asset}`);
+          }
+        }
+        
+      } catch (error) {
+        console.error('[Golf Guy SW] Caching failed:', error);
+      }
+    })
   );
   
-  // Force activation of new service worker
+  // Activate immediately
   self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
-  console.log('Golf Guy SW: Activate event');
+  console.log('[Golf Guy SW] Activating service worker');
   
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -53,242 +61,89 @@ self.addEventListener('activate', (event) => {
         cacheNames
           .filter((name) => name !== CACHE_NAME)
           .map((name) => {
-            console.log('Golf Guy SW: Deleting old cache:', name);
+            console.log('[Golf Guy SW] Deleting old cache:', name);
             return caches.delete(name);
           })
       );
     }).then(() => {
-      // Ensure SW controls all tabs immediately
+      console.log('[Golf Guy SW] Service worker activated and ready');
       return self.clients.claim();
     })
   );
 });
 
 self.addEventListener('fetch', (event) => {
-  // Skip non-GET requests and chrome extensions
-  if (event.request.method !== 'GET' || event.request.url.startsWith('chrome-extension://')) {
+  // Skip non-GET requests and browser extension requests
+  if (event.request.method !== 'GET' || 
+      event.request.url.includes('chrome-extension://') ||
+      event.request.url.includes('browser-extension://')) {
     return;
   }
 
-  const url = new URL(event.request.url);
-  
-  // Handle different types of requests
-  if (url.pathname.startsWith('/api/')) {
-    // API requests - cache strategy
-    event.respondWith(handleApiRequest(event.request));
-  } else {
-    // Static assets and pages - cache first strategy
-    event.respondWith(handleStaticRequest(event.request));
-  }
+  event.respondWith(handleRequest(event.request));
 });
 
-async function handleApiRequest(request) {
+async function handleRequest(request) {
   const url = new URL(request.url);
   
-  // Check if this API endpoint should be cached
-  const shouldCache = CACHEABLE_API_PATTERNS.some(pattern => 
-    pattern.test(url.pathname)
-  );
-  
-  if (!shouldCache) {
-    // For non-cacheable API requests (like POST, auth), just fetch
+  // For navigation requests, try network first, then cache, then offline page
+  if (request.mode === 'navigate') {
     try {
-      return await fetch(request);
+      const response = await fetch(request);
+      if (response.status === 200) {
+        // Cache the successful response
+        const cache = await caches.open(CACHE_NAME);
+        await cache.put(request, response.clone());
+        return response;
+      }
     } catch (error) {
-      console.log('Golf Guy SW: API request failed, returning error');
-      return new Response(
-        JSON.stringify({ 
-          error: 'Network unavailable', 
-          message: 'Please check your connection and try again',
-          offline: true 
-        }),
-        { 
-          status: 503,
-          headers: { 'Content-Type': 'application/json' }
-        }
-      );
-    }
-  }
-  
-  // For cacheable API requests, use network first with cache fallback
-  try {
-    const response = await fetch(request);
-    
-    // Cache successful responses
-    if (response.status === 200) {
-      const cache = await caches.open(CACHE_NAME);
-      await cache.put(request, response.clone());
+      console.log('[Golf Guy SW] Network failed for navigation, trying cache');
     }
     
-    return response;
-  } catch (error) {
-    // Network failed, try cache
+    // Try cache
     const cachedResponse = await caches.match(request);
     if (cachedResponse) {
-      console.log('Golf Guy SW: Serving cached API response');
       return cachedResponse;
     }
     
-    // No cache available, return error
-    return new Response(
-      JSON.stringify({ 
-        error: 'Data unavailable offline',
-        message: 'This content requires an internet connection',
-        offline: true 
-      }),
-      { 
-        status: 503,
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
+    // Return offline page
+    return caches.match(OFFLINE_URL);
   }
-}
-
-async function handleStaticRequest(request) {
-  // Cache first strategy for static assets
-  const cachedResponse = await caches.match(request);
   
+  // For other requests, try cache first, then network
+  const cachedResponse = await caches.match(request);
   if (cachedResponse) {
-    console.log('Golf Guy SW: Serving from cache:', request.url);
     return cachedResponse;
   }
   
   try {
     const response = await fetch(request);
-    
-    // Cache successful responses
     if (response.status === 200) {
       const cache = await caches.open(CACHE_NAME);
       await cache.put(request, response.clone());
     }
-    
     return response;
   } catch (error) {
-    console.log('Golf Guy SW: Network failed, serving offline page');
-    
-    // For navigation requests, serve offline page
-    if (request.mode === 'navigate') {
-      const cache = await caches.open(CACHE_NAME);
-      return cache.match(OFFLINE_URL);
+    // Return generic offline response for failed requests
+    if (request.destination === 'document') {
+      return caches.match(OFFLINE_URL);
     }
-    
-    // For other requests, return generic error
     return new Response('Offline', { status: 503 });
   }
 }
 
-// Handle background sync for offline actions
-self.addEventListener('sync', (event) => {
-  console.log('Golf Guy SW: Background sync:', event.tag);
-  
-  if (event.tag === 'background-sync-bookings') {
-    event.waitUntil(syncOfflineBookings());
-  }
-  
-  if (event.tag === 'background-sync-inquiries') {
-    event.waitUntil(syncOfflineInquiries());
-  }
-});
-
-async function syncOfflineBookings() {
-  console.log('Golf Guy SW: Syncing offline bookings');
-  
-  try {
-    // Get offline bookings from IndexedDB (if implemented)
-    // Send them to server when connection is restored
-    // This would integrate with booking system
-  } catch (error) {
-    console.error('Golf Guy SW: Error syncing bookings:', error);
-  }
-}
-
-async function syncOfflineInquiries() {
-  console.log('Golf Guy SW: Syncing offline inquiries');
-  
-  try {
-    // Get offline inquiries from IndexedDB
-    // Send them to server when connection is restored
-  } catch (error) {
-    console.error('Golf Guy SW: Error syncing inquiries:', error);
-  }
-}
-
-// Handle push notifications (for booking confirmations, etc.)
-self.addEventListener('push', (event) => {
-  console.log('Golf Guy SW: Push notification received');
-  
-  let data = {};
-  if (event.data) {
-    try {
-      data = event.data.json();
-    } catch (error) {
-      data = { message: event.data.text() };
-    }
-  }
-  
-  const title = data.title || 'Golf Guy';
-  const options = {
-    body: data.message || 'You have a new golf notification',
-    icon: '/icons/icon-192x192.png',
-    badge: '/icons/badge-72x72.png',
-    vibrate: [100, 50, 100],
-    data: {
-      dateOfArrival: Date.now(),
-      primaryKey: data.id || '1',
-      url: data.url || '/'
-    },
-    actions: data.actions || [
-      {
-        action: 'view',
-        title: 'View Details'
-      },
-      {
-        action: 'close',
-        title: 'Dismiss'
-      }
-    ]
-  };
-  
-  event.waitUntil(
-    self.registration.showNotification(title, options)
-  );
-});
-
-// Handle notification clicks
-self.addEventListener('notificationclick', (event) => {
-  console.log('Golf Guy SW: Notification clicked');
-  
-  event.notification.close();
-  
-  const urlToOpen = event.notification.data.url || '/';
-  
-  event.waitUntil(
-    clients.matchAll({
-      type: 'window',
-      includeUncontrolled: true
-    }).then((windowClients) => {
-      // Check if app is already open
-      const existingClient = windowClients.find(client => 
-        client.url.includes(urlToOpen)
-      );
-      
-      if (existingClient) {
-        return existingClient.focus();
-      } else if (windowClients.length > 0) {
-        return windowClients[0].navigate(urlToOpen).then(client => client.focus());
-      } else {
-        return clients.openWindow(urlToOpen);
-      }
-    })
-  );
-});
-
-// Handle app updates
+// Enhanced PWA install criteria checking
 self.addEventListener('message', (event) => {
+  console.log('[Golf Guy SW] Received message:', event.data);
+  
   if (event.data && event.data.type === 'SKIP_WAITING') {
-    console.log('Golf Guy SW: Skipping waiting');
+    console.log('[Golf Guy SW] Skipping waiting, activating immediately');
     self.skipWaiting();
   }
+  
+  if (event.data && event.data.type === 'GET_VERSION') {
+    event.ports[0].postMessage({ version: CACHE_NAME });
+  }
 });
 
-console.log('Golf Guy Service Worker loaded successfully');
+console.log('[Golf Guy SW] Service Worker v2.0 loaded and ready for enhanced PWA experience');
