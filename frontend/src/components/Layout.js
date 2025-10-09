@@ -198,30 +198,30 @@ export const Layout = () => {
           </div>
         </footer>
       )}
-    </div>
-    
-    {/* Mobile Bottom Navigation */}
-    <div className="mobile-nav-bottom md:hidden">
-      <a href="/" className={`mobile-nav-item ${location.pathname === '/' ? 'active' : ''}`}>
-        <span className="text-lg mb-1">🏠</span>
-        <span className="text-xs font-medium">Home</span>
-      </a>
-      <a href="/destinations" className={`mobile-nav-item ${location.pathname === '/destinations' ? 'active' : ''}`}>
-        <span className="text-lg mb-1">⛳</span>
-        <span className="text-xs font-medium">Golf</span>
-      </a>
-      <a href="/search" className={`mobile-nav-item ${location.pathname === '/search' ? 'active' : ''}`}>
-        <span className="text-lg mb-1">🔍</span>
-        <span className="text-xs font-medium">Search</span>
-      </a>
-      <a href="/dashboard" className={`mobile-nav-item ${location.pathname === '/dashboard' ? 'active' : ''}`}>
-        <span className="text-lg mb-1">📊</span>
-        <span className="text-xs font-medium">Trips</span>
-      </a>
-      <a href="/profile" className={`mobile-nav-item ${location.pathname === '/profile' ? 'active' : ''}`}>
-        <span className="text-lg mb-1">👤</span>
-        <span className="text-xs font-medium">Profile</span>
-      </a>
+      
+      {/* Mobile Bottom Navigation */}
+      <div className="mobile-nav-bottom md:hidden">
+        <a href="/" className={`mobile-nav-item ${location.pathname === '/' ? 'active' : ''}`}>
+          <span className="text-lg mb-1">🏠</span>
+          <span className="text-xs font-medium">Home</span>
+        </a>
+        <a href="/destinations" className={`mobile-nav-item ${location.pathname === '/destinations' ? 'active' : ''}`}>
+          <span className="text-lg mb-1">⛳</span>
+          <span className="text-xs font-medium">Golf</span>
+        </a>
+        <a href="/search" className={`mobile-nav-item ${location.pathname === '/search' ? 'active' : ''}`}>
+          <span className="text-lg mb-1">🔍</span>
+          <span className="text-xs font-medium">Search</span>
+        </a>
+        <a href="/dashboard" className={`mobile-nav-item ${location.pathname === '/dashboard' ? 'active' : ''}`}>
+          <span className="text-lg mb-1">📊</span>
+          <span className="text-xs font-medium">Trips</span>
+        </a>
+        <a href="/profile" className={`mobile-nav-item ${location.pathname === '/profile' ? 'active' : ''}`}>
+          <span className="text-lg mb-1">👤</span>
+          <span className="text-xs font-medium">Profile</span>
+        </a>
+      </div>
     </div>
   );
 };
