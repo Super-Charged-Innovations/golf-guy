@@ -56,9 +56,21 @@ function App() {
 
 // Responsive layout component that chooses between mobile and desktop
 const ResponsiveLayout = () => {
-  const { isMobile } = useDeviceDetection();
+  // Use CSS-based detection instead of JavaScript for more stable rendering
+  const [isMobileView, setIsMobileView] = useState(false);
   
-  return isMobile ? <MobileLayout /> : <Layout />;
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobileView(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+  
+  return isMobileView ? <MobileLayout /> : <Layout />;
 };
 
 export default App;
