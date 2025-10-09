@@ -1570,6 +1570,18 @@ class BackendTester:
         self.test_phase4_rate_limiting_middleware()
         self.test_phase4_service_layer_architecture()
         
+        # Medium Priority Features & PWA Mobile Testing
+        print("\n" + "="*60)
+        print("🚀 MEDIUM PRIORITY FEATURES & PWA MOBILE TESTING")
+        print("="*60)
+        self.test_booking_system_api()
+        self.test_advanced_search_filtering_api()
+        self.test_payment_system_stripe_api()
+        self.test_swedish_localization_i18n_api()
+        self.test_pwa_mobile_backend_support()
+        self.test_integration_workflows()
+        self.test_performance_and_security_validation()
+        
         # Summary
         print("\n" + "=" * 60)
         print("📊 TEST SUMMARY")
