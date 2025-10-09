@@ -226,16 +226,14 @@ Complete comprehensive codebase audit focusing on security, compliance, architec
 
 ## test_plan:
   current_focus:
-    - "Booking System Testing"
-    - "Advanced Search & Filtering"
-    - "Payment System (Stripe Integration)"
-    - "Swedish Localization (i18n)"
-    - "PWA Mobile Experience Testing"
-    - "Mobile UI Components"
+    - "Mobile UI JavaScript Debugging"
+    - "Mobile Component Rendering Issues"
   stuck_tasks:
     - "Phase 4 Rate Limiting Middleware - not integrated into main server"
-  test_all: true
-  test_priority: "medium_priority_features_and_pwa_mobile"
+    - "PWA Mobile Experience Testing - JavaScript errors preventing mobile UI rendering"
+    - "Mobile UI Components Testing - useEffect and ReferenceError issues"
+  test_all: false
+  test_priority: "mobile_ui_debugging_required"
 
 ## agent_communication:
   - agent: "main"
