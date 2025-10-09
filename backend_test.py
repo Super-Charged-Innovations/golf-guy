@@ -994,8 +994,15 @@ class BackendTester:
         }
         
         # Test booking availability endpoint
+        availability_data = {
+            "destination_id": "test-destination-123",
+            "check_in_date": "2024-06-15",
+            "check_out_date": "2024-06-20",
+            "guests": 2
+        }
+        
         try:
-            response = self.session.get(f"{BACKEND_URL}/bookings/availability", headers=headers)
+            response = self.session.post(f"{BACKEND_URL}/bookings/check-availability", json=availability_data, headers=headers)
             
             if response.status_code == 200:
                 data = response.json()
@@ -1010,7 +1017,7 @@ class BackendTester:
         
         # Test user bookings endpoint
         try:
-            response = self.session.get(f"{BACKEND_URL}/bookings/my-bookings", headers=headers)
+            response = self.session.get(f"{BACKEND_URL}/bookings/my", headers=headers)
             
             if response.status_code == 200:
                 data = response.json()
