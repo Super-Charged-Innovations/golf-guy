@@ -2429,7 +2429,7 @@ async def seed_mock_users():
 from services.booking_service import booking_service
 from models.booking_models import (
     BookingCreate, BookingUpdate, AvailabilityRequest, AvailabilityResponse,
-    Booking, BookingStatus, PaymentStatus
+    Booking, BookingStatus, PaymentStatus, PlayerInfo, BookingItem, TimeSlot
 )
 from services.search_service import search_service, SearchRequest
 from services.payment_service import payment_service
