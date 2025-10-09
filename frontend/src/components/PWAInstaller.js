@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '../ui/button';
-import { Card } from '../ui/card';
 import { X, Download, Smartphone, Star } from 'lucide-react';
 
 const PWAInstaller = () => {
