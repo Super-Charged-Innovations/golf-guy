@@ -1148,7 +1148,10 @@ class BackendTester:
             
             if response.status_code == 200:
                 data = response.json()
-                if isinstance(data, list) and len(data) > 0:
+                if isinstance(data, dict) and 'packages' in data:
+                    package_count = len(data['packages'])
+                    self.log_test("Payment Packages", True, f"Payment packages working, {package_count} packages available")
+                elif isinstance(data, list) and len(data) > 0:
                     package_count = len(data)
                     self.log_test("Payment Packages", True, f"Payment packages working, {package_count} packages available")
                 else:
@@ -1177,7 +1180,7 @@ class BackendTester:
         }
         
         try:
-            response = self.session.post(f"{BACKEND_URL}/payments/create-checkout-session", json=checkout_data, headers=headers)
+            response = self.session.post(f"{BACKEND_URL}/payments/checkout/session", json=checkout_data, headers=headers)
             
             if response.status_code == 200:
                 data = response.json()
@@ -1195,7 +1198,7 @@ class BackendTester:
         
         # Test payment status checking
         try:
-            response = self.session.get(f"{BACKEND_URL}/payments/status/test-payment-123", headers=headers)
+            response = self.session.get(f"{BACKEND_URL}/payments/checkout/status/test-session-123", headers=headers)
             
             if response.status_code in [200, 404]:  # 404 is OK for non-existent payment
                 self.log_test("Payment Status Check", True, "Payment status checking endpoint working")
