@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import Layout from './components/Layout';
+import MobileLayout from './components/mobile/MobileLayout';
 import Home from './pages/Home';
 import Destinations from './pages/Destinations';
 import DestinationDetail from './pages/DestinationDetail';
@@ -18,6 +19,7 @@ import PrivacySettings from './pages/PrivacySettings';
 import ScrollToTop from './components/ScrollToTop';
 import CookieConsent from './components/CookieConsent';
 import { Toaster } from './components/ui/sonner';
+import { useDeviceDetection } from './hooks/usePWA';
 import './App.css';
 
 function App() {
