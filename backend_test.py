@@ -1257,12 +1257,14 @@ class BackendTester:
                     self.log_test("Swedish Translations", True, f"Swedish translations working, {translation_count} translations")
                     
                     # Check for Swedish-specific content
-                    if 'currency_symbol' in data and data['currency_symbol'] == 'kr':
+                    if 'currency_info' in data and 'symbol' in data['currency_info'] and data['currency_info']['symbol'] == 'kr':
+                        self.log_test("Swedish Currency", True, "Swedish currency symbol properly configured")
+                    elif 'currency_symbol' in data and data['currency_symbol'] == 'kr':
                         self.log_test("Swedish Currency", True, "Swedish currency symbol properly configured")
                     elif 'currency' in data and 'kr' in str(data['currency']).lower():
                         self.log_test("Swedish Currency", True, "Swedish currency symbol properly configured")
                     else:
-                        self.log_test("Swedish Currency", False, f"Swedish currency symbol not found or incorrect: {data}")
+                        self.log_test("Swedish Currency", False, f"Swedish currency symbol not found or incorrect")
                 else:
                     self.log_test("Swedish Translations", False, f"Swedish translations empty or wrong format: {data}")
             else:
