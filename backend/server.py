@@ -2719,6 +2719,163 @@ async def get_popular_searches():
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to get popular searches: {str(e)}")
 
+# ===== PAYMENT SYSTEM ROUTES =====
+
+@api_router.get("/payments/packages")
+async def get_payment_packages():
+    """Get available golf payment packages"""
+    try:
+        packages = payment_service.get_available_packages()
+        return {
+            "packages": [package.model_dump() for package in packages],
+            "currency_info": {
+                "primary": "SEK",
+                "supported": ["SEK", "EUR", "USD"],
+                "exchange_note": "Prices shown in Swedish Krona (SEK)"
+            }
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get packages: {str(e)}")
+
+@api_router.post("/payments/checkout/session")
+async def create_payment_session(
+    package_id: str = Form(...),
+    origin_url: str = Form(...),
+    quantity: int = Form(1),
+    booking_id: Optional[str] = Form(None),
+    current_user: dict = Depends(get_current_user)
+):
+    """Create Stripe checkout session for golf package payment"""
+    
+    try:
+        # Validate quantity
+        if quantity < 1 or quantity > 10:
+            raise HTTPException(status_code=400, detail="Invalid quantity (1-10 allowed)")
+        
+        # Create checkout session
+        session = await payment_service.create_checkout_session(
+            package_id=package_id,
+            origin_url=origin_url,
+            user_id=current_user["id"],
+            user_email=current_user["email"],
+            booking_id=booking_id,
+            quantity=quantity,
+            metadata={
+                "user_name": current_user.get("full_name", ""),
+                "platform": "golf_guy_platform"
+            }
+        )
+        
+        return session
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Payment session creation failed: {str(e)}")
+
+@api_router.get("/payments/checkout/status/{session_id}")
+async def get_payment_status(
+    session_id: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Get payment session status and update local records"""
+    
+    try:
+        # Verify user can access this session
+        db = await get_database()
+        transaction = await db.payment_transactions.find_one(
+            {"session_id": session_id},
+            {"_id": 0}
+        )
+        
+        if not transaction:
+            raise HTTPException(status_code=404, detail="Payment session not found")
+        
+        # Check permission (user can only check their own payments unless admin)
+        if (transaction.get('user_id') != current_user["id"] and 
+            not current_user.get("is_admin", False)):
+            raise HTTPException(status_code=403, detail="Access denied")
+        
+        # Get latest status from Stripe
+        status = await payment_service.get_payment_status(session_id)
+        
+        return {
+            "session_id": session_id,
+            "payment_status": status.payment_status,
+            "amount": status.amount_total,
+            "currency": status.currency,
+            "transaction_id": transaction["id"],
+            "package_info": {
+                "package_id": transaction.get("package_type"),
+                "package_name": transaction.get("metadata", {}).get("package_name", "")
+            }
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get payment status: {str(e)}")
+
+@api_router.post("/webhook/stripe")
+async def stripe_webhook(request: Request):
+    """Handle Stripe webhook events"""
+    
+    try:
+        # Get webhook body and signature
+        webhook_body = await request.body()
+        signature = request.headers.get("Stripe-Signature", "")
+        
+        if not signature:
+            raise HTTPException(status_code=400, detail="Missing Stripe signature")
+        
+        # Process webhook
+        result = await payment_service.handle_stripe_webhook(webhook_body, signature)
+        
+        logger.info(f"Webhook processed successfully: {result}")
+        return {"received": True}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Webhook processing error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Webhook processing failed")
+
+@api_router.get("/payments/my-transactions")
+async def get_my_transactions(
+    status: Optional[str] = Query(None, description="Filter by payment status"),
+    current_user: dict = Depends(get_current_user)
+):
+    """Get user's payment transactions"""
+    
+    try:
+        transactions = await payment_service.get_user_transactions(
+            user_id=current_user["id"],
+            status=status
+        )
+        
+        # Log transaction access
+        await audit_logger.log_action(
+            action_type=AuditActionType.DATA_READ,
+            user_id=current_user["id"],
+            user_email=current_user["email"],
+            resource_type="payment_transactions",
+            resource_id=current_user["id"],
+            metadata={"status_filter": status},
+            legal_basis="Contract performance"
+        )
+        
+        return {
+            "transactions": transactions,
+            "total_count": len(transactions),
+            "summary": {
+                "total_paid": sum(t.get("amount", 0) for t in transactions if t.get("payment_status") == "paid"),
+                "pending_payments": len([t for t in transactions if t.get("payment_status") == "pending"])
+            }
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get transactions: {str(e)}")
+
 
 # Include the router in the main app
 app.include_router(api_router)
