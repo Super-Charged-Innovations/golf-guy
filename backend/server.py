@@ -2588,6 +2588,136 @@ async def cancel_booking(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to cancel booking: {str(e)}")
 
+# ===== ADVANCED SEARCH & FILTERING ROUTES =====
+
+@api_router.get("/search/destinations")
+async def search_destinations(
+    q: Optional[str] = Query(None, description="Search query"),
+    countries: Optional[str] = Query(None, description="Comma-separated countries"),
+    price_min: Optional[int] = Query(None, description="Minimum price"),
+    price_max: Optional[int] = Query(None, description="Maximum price"),
+    check_in: Optional[str] = Query(None, description="Check-in date (YYYY-MM-DD)"),
+    check_out: Optional[str] = Query(None, description="Check-out date (YYYY-MM-DD)"),
+    players: int = Query(1, description="Number of players"),
+    accommodation: Optional[str] = Query(None, description="Comma-separated accommodation types"),
+    course_difficulty: Optional[str] = Query(None, description="Comma-separated difficulty levels"),
+    course_type: Optional[str] = Query(None, description="Comma-separated course types"),
+    amenities: Optional[str] = Query(None, description="Comma-separated amenities"),
+    featured_only: bool = Query(False, description="Featured destinations only"),
+    sort_by: str = Query('relevance', description="Sort criteria"),
+    page: int = Query(1, description="Page number"),
+    limit: int = Query(20, description="Results per page"),
+    lat: Optional[float] = Query(None, description="Latitude for location search"),
+    lng: Optional[float] = Query(None, description="Longitude for location search"),
+    radius_km: Optional[int] = Query(None, description="Search radius in kilometers"),
+    current_user: dict = Depends(get_current_user)
+):
+    """Advanced destination search with filtering and AI insights"""
+    
+    try:
+        # Parse date parameters
+        check_in_date = None
+        check_out_date = None
+        
+        if check_in:
+            try:
+                check_in_date = datetime.fromisoformat(check_in).date()
+            except:
+                raise HTTPException(status_code=400, detail="Invalid check_in date format")
+        
+        if check_out:
+            try:
+                check_out_date = datetime.fromisoformat(check_out).date()
+            except:
+                raise HTTPException(status_code=400, detail="Invalid check_out date format")
+        
+        # Parse list parameters
+        countries_list = countries.split(',') if countries else []
+        accommodation_list = accommodation.split(',') if accommodation else []
+        difficulty_list = course_difficulty.split(',') if course_difficulty else []
+        course_type_list = course_type.split(',') if course_type else []
+        amenities_list = amenities.split(',') if amenities else []
+        
+        # Create search request
+        search_request = SearchRequest(
+            query=q,
+            countries=countries_list,
+            price_min=price_min,
+            price_max=price_max,
+            check_in=check_in_date,
+            check_out=check_out_date,
+            players=players,
+            accommodation=accommodation_list,
+            course_difficulty=difficulty_list,
+            course_type=course_type_list,
+            amenities=amenities_list,
+            featured_only=featured_only,
+            sort_by=sort_by,
+            page=page,
+            limit=limit,
+            lat=lat,
+            lng=lng,
+            radius_km=radius_km
+        )
+        
+        # Get user profile for personalized results
+        user_profile = None
+        if current_user:
+            profile_data = await db.user_profiles.find_one(
+                {"user_id": current_user["id"]}, 
+                {"_id": 0}
+            )
+            if profile_data:
+                user_profile = profile_data
+        
+        # Execute search
+        results = await search_service.search_destinations(search_request, user_profile)
+        
+        # Log search action
+        await audit_logger.log_action(
+            action_type=AuditActionType.DATA_READ,
+            user_id=current_user["id"],
+            user_email=current_user["email"],
+            resource_type="destination_search",
+            metadata={
+                "query": q,
+                "filters": search_request._get_applied_filters() if hasattr(search_request, '_get_applied_filters') else {},
+                "result_count": results.get('total_count', 0)
+            },
+            legal_basis="Legitimate interest"
+        )
+        
+        return results
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
+
+@api_router.get("/search/filters")
+async def get_search_filters():
+    """Get available filter options with statistics"""
+    
+    try:
+        filter_data = await search_service.get_search_filters_data()
+        return filter_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get filter data: {str(e)}")
+
+@api_router.get("/search/popular")
+async def get_popular_searches():
+    """Get popular search terms and trending destinations"""
+    
+    try:
+        popular_data = await search_service.get_popular_searches()
+        return {
+            "popular_searches": popular_data,
+            "trending_destinations": await search_service.get_trending_destinations(),
+            "generated_at": datetime.now(timezone.utc).isoformat()
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get popular searches: {str(e)}")
+
 
 # Include the router in the main app
 app.include_router(api_router)
