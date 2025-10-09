@@ -17,6 +17,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 export default function Home() {
+  const { isMobile } = useDeviceDetection();
   const [heroSlides, setHeroSlides] = useState([]);
   const [featuredDestinations, setFeaturedDestinations] = useState([]);
   const [featuredArticles, setFeaturedArticles] = useState([]);
@@ -24,6 +25,11 @@ export default function Home() {
   const [testimonials, setTestimonials] = useState([]);
   const [instagram, setInstagram] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // If mobile device, use mobile-optimized component
+  if (isMobile) {
+    return <MobileHome />;
+  }
 
   useEffect(() => {
     loadHomeData();
