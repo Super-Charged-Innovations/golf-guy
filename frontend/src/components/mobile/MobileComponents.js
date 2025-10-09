@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDeviceDetection, usePWA } from '../../hooks/usePWA';
 import { Button } from '../ui/button';
 import { Card } from '../ui/card';
