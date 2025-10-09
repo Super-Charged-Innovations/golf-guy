@@ -25,10 +25,15 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 const MobileHome = () => {
-  const navigate = useNavigate();
-  const { user } = useAuth();
   const { isMobile } = useDeviceDetection();
   
+  // Early return BEFORE any other hooks
+  if (!isMobile) {
+    return null; // Desktop version handled by regular Home component
+  }
+
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [featuredDestinations, setFeaturedDestinations] = useState([]);
   const [popularSearches, setPopularSearches] = useState([]);
