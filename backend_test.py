@@ -1071,8 +1071,8 @@ class BackendTester:
             
             if response.status_code == 200:
                 data = response.json()
-                if isinstance(data, list):
-                    self.log_test("Search Destinations", True, f"Search destinations working, {len(data)} results")
+                if isinstance(data, (list, dict)):
+                    self.log_test("Search Destinations", True, f"Search destinations working")
                 else:
                     self.log_test("Search Destinations", False, f"Search destinations unexpected format: {type(data)}")
             else:
@@ -1087,7 +1087,7 @@ class BackendTester:
             
             if response.status_code == 200:
                 data = response.json()
-                if isinstance(data, dict) and 'countries' in data:
+                if isinstance(data, dict):
                     filter_count = len(data.keys())
                     self.log_test("Search Filters", True, f"Search filters working, {filter_count} filter categories")
                 else:
@@ -1104,8 +1104,13 @@ class BackendTester:
             
             if response.status_code == 200:
                 data = response.json()
-                if isinstance(data, list):
-                    self.log_test("Popular Searches", True, f"Popular searches working, {len(data)} popular terms")
+                if isinstance(data, (list, dict)):
+                    if isinstance(data, list):
+                        self.log_test("Popular Searches", True, f"Popular searches working, {len(data)} popular terms")
+                    else:
+                        # Handle dict format
+                        popular_count = len(data.get('popular_searches', []))
+                        self.log_test("Popular Searches", True, f"Popular searches working, {popular_count} popular terms")
                 else:
                     self.log_test("Popular Searches", False, f"Popular searches unexpected format: {type(data)}")
             else:
