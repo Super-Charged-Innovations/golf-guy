@@ -107,40 +107,36 @@ const PWAInstaller = () => {
   if (isIOS && !isInstalled) {
     return (
       <div className="fixed bottom-4 left-4 right-4 z-50">
-        <Card className="bg-blue-600 text-white border-0 shadow-2xl">
-          <div className="p-4">
-            <div className="flex items-start gap-3">
-              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                <Download className="w-6 h-6" />
-              </div>
-              
-              <div className="flex-1 min-w-0">
-                <h3 className="font-bold text-lg mb-1">Install Golf Guy App</h3>
-                <p className="text-blue-100 text-sm mb-3">
-                  Tap the Share button <span className="bg-white/20 px-2 py-1 rounded text-xs">📤</span> and select "Add to Home Screen" 
-                </p>
-                
-                <div className="flex gap-2">
-                  <Button
-                    onClick={handleDismiss}
-                    variant="ghost"
-                    className="text-white hover:bg-white/10"
-                    size="sm"
-                  >
-                    Got it
-                  </Button>
-                </div>
-              </div>
-              
-              <button
-                onClick={handleDismiss}
-                className="text-blue-200 hover:text-white"
-              >
-                <X className="w-5 h-5" />
-              </button>
+        <div className="bg-blue-600 text-white border-0 shadow-2xl rounded-xl p-4">
+          <div className="flex items-start gap-3">
+            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+              <Download className="w-6 h-6" />
             </div>
+            
+            <div className="flex-1 min-w-0">
+              <h3 className="font-bold text-lg mb-1">Install Golf Guy App</h3>
+              <p className="text-blue-100 text-sm mb-3">
+                Tap the Share button <span className="bg-white/20 px-2 py-1 rounded text-xs">📤</span> and select "Add to Home Screen" 
+              </p>
+              
+              <div className="flex gap-2">
+                <button
+                  onClick={handleDismiss}
+                  className="text-white hover:bg-white/10 px-4 py-2 rounded-lg text-sm"
+                >
+                  Got it
+                </button>
+              </div>
+            </div>
+            
+            <button
+              onClick={handleDismiss}
+              className="text-blue-200 hover:text-white"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
-        </Card>
+        </div>
       </div>
     );
   }
