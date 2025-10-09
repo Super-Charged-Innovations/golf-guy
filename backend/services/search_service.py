@@ -542,6 +542,35 @@ class SearchService:
                 "description": "Scenic golf with cultural experiences"
             }
         ]
+    
+    async def get_trending_destinations(self) -> List[Dict]:
+        """Get trending golf destinations"""
+        
+        try:
+            db = await get_database()
+            
+            # Get recently added or updated destinations
+            recent_destinations = await db.destinations.find(
+                {"published": True},
+                {"_id": 0}
+            ).sort("updated_at", -1).limit(10).to_list(None)
+            
+            trending = []
+            for dest in recent_destinations:
+                trending.append({
+                    "id": dest["id"],
+                    "name": dest["name"],
+                    "country": dest["country"],
+                    "price_from": dest.get("price_from", 0),
+                    "image": dest.get("images", [""])[0] if dest.get("images") else "",
+                    "trend_score": 85  # Mock trend score
+                })
+            
+            return trending
+            
+        except Exception as e:
+            logger.error(f"Error getting trending destinations: {str(e)}")
+            return []
 
 # Global search service instance
 search_service = SearchService()
