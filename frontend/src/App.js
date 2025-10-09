@@ -18,6 +18,7 @@ import ClientDashboard from './pages/ClientDashboard';
 import PrivacySettings from './pages/PrivacySettings';
 import ScrollToTop from './components/ScrollToTop';
 import CookieConsent from './components/CookieConsent';
+import PWAInstaller from './components/PWAInstaller';
 import { Toaster } from './components/ui/sonner';
 import { useDeviceDetection } from './hooks/usePWA';
 import './App.css';
