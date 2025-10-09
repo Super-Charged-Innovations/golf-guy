@@ -1404,7 +1404,13 @@ class BackendTester:
                 return
             
             # Step 3: Check booking availability (simulated)
-            availability_response = self.session.get(f"{BACKEND_URL}/bookings/availability", headers=headers)
+            availability_data = {
+                "destination_id": "test-destination-123",
+                "check_in_date": "2024-06-15",
+                "check_out_date": "2024-06-20",
+                "guests": 2
+            }
+            availability_response = self.session.post(f"{BACKEND_URL}/bookings/check-availability", json=availability_data, headers=headers)
             
             # This might return 401 or 404, which is acceptable for this workflow test
             if availability_response.status_code in [200, 401, 404]:
