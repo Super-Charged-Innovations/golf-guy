@@ -8,9 +8,9 @@ import {
 } from './MobileComponents';
 
 const MobileLayout = () => {
+  const { isMobile } = useDeviceDetection();
   const location = useLocation();
   const navigate = useNavigate();
-  const { isMobile } = useDeviceDetection();
 
   // Only show mobile layout on mobile devices
   if (!isMobile) {
