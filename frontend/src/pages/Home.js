@@ -26,14 +26,14 @@ export default function Home() {
   const [instagram, setInstagram] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    loadHomeData();
+  }, []);
+
   // If mobile device, use mobile-optimized component
   if (isMobile) {
     return <MobileHome />;
   }
-
-  useEffect(() => {
-    loadHomeData();
-  }, []);
 
   const loadHomeData = async () => {
     try {
