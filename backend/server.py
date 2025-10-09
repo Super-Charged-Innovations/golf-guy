@@ -2877,6 +2877,55 @@ async def get_my_transactions(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to get transactions: {str(e)}")
 
+# ===== INTERNATIONALIZATION ROUTES =====
+
+@api_router.get("/i18n/translations/{language}")
+async def get_translations(language: str = "en"):
+    """Get all translations for specified language"""
+    
+    try:
+        lang = Language.SWEDISH if language == "sv" else Language.ENGLISH
+        translations = translation_service.get_all_translations(lang)
+        
+        return {
+            "language": language,
+            "translations": translations,
+            "supported_languages": ["en", "sv"],
+            "currency_info": {
+                "primary": "SEK",
+                "symbol": "kr" if language == "sv" else "SEK"
+            }
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get translations: {str(e)}")
+
+@api_router.get("/i18n/countries")
+async def get_localized_countries(language: str = "en"):
+    """Get localized country names"""
+    
+    try:
+        lang = Language.SWEDISH if language == "sv" else Language.ENGLISH
+        
+        # Get countries from destinations
+        db = await get_database()
+        countries = await db.destinations.distinct("country")
+        
+        localized_countries = []
+        for country in countries:
+            localized_name = translation_service.get_country_name(country, lang)
+            localized_countries.append({
+                "code": country.lower().replace(" ", "_"),
+                "name": localized_name,
+                "original": country
+            })
+        
+        return {
+            "language": language,
+            "countries": sorted(localized_countries, key=lambda x: x["name"])
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get countries: {str(e)}")
+
 
 # Include the router in the main app
 app.include_router(api_router)
