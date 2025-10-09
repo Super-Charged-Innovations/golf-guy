@@ -33,15 +33,6 @@ const MobileHome = () => {
   const [popularSearches, setPopularSearches] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadHomeData();
-  }, []);
-  
-  // Early return AFTER all hooks
-  if (!isMobile) {
-    return null; // Desktop version handled by regular Home component
-  }
-
   const loadHomeData = async () => {
     try {
       // Load featured destinations
@@ -58,6 +49,15 @@ const MobileHome = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadHomeData();
+  }, []);
+  
+  // Early return AFTER all hooks
+  if (!isMobile) {
+    return null; // Desktop version handled by regular Home component
+  }
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
