@@ -26,12 +26,6 @@ const API = `${BACKEND_URL}/api`;
 
 const MobileHome = () => {
   const { isMobile } = useDeviceDetection();
-  
-  // Early return BEFORE any other hooks
-  if (!isMobile) {
-    return null; // Desktop version handled by regular Home component
-  }
-
   const navigate = useNavigate();
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
@@ -42,6 +36,11 @@ const MobileHome = () => {
   useEffect(() => {
     loadHomeData();
   }, []);
+  
+  // Early return AFTER all hooks
+  if (!isMobile) {
+    return null; // Desktop version handled by regular Home component
+  }
 
   const loadHomeData = async () => {
     try {
