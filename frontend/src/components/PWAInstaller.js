@@ -149,54 +149,49 @@ const PWAInstaller = () => {
   if (showInstallPrompt || deferredPrompt) {
     return (
       <div className="fixed bottom-20 md:bottom-4 left-4 right-4 z-50">
-        <Card className="bg-emerald-600 text-white border-0 shadow-2xl">
-          <div className="p-4">
-            <div className="flex items-start gap-3">
-              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                <Download className="w-6 h-6" />
-              </div>
-              
-              <div className="flex-1 min-w-0">
-                <h3 className="font-bold text-lg mb-1">Install Golf Guy App</h3>
-                <p className="text-emerald-100 text-sm mb-3">
-                  Get faster access, work offline, and enjoy a native app experience!
-                </p>
-                
-                <div className="flex flex-wrap gap-2 mb-3 text-xs">
-                  <span className="bg-white/20 px-2 py-1 rounded">⚡ Faster loading</span>
-                  <span className="bg-white/20 px-2 py-1 rounded">📱 App icon</span>
-                  <span className="bg-white/20 px-2 py-1 rounded">🔄 Offline access</span>
-                </div>
-                
-                <div className="flex gap-2">
-                  <Button
-                    onClick={handleInstall}
-                    className="bg-white text-emerald-600 hover:bg-gray-100 font-medium"
-                    size="sm"
-                  >
-                    <Smartphone className="w-4 h-4 mr-2" />
-                    Install Now
-                  </Button>
-                  <Button
-                    onClick={handleDismiss}
-                    variant="ghost"
-                    className="text-white hover:bg-white/10"
-                    size="sm"
-                  >
-                    Later
-                  </Button>
-                </div>
-              </div>
-              
-              <button
-                onClick={handleDismiss}
-                className="text-emerald-200 hover:text-white"
-              >
-                <X className="w-5 h-5" />
-              </button>
+        <div className="bg-emerald-600 text-white border-0 shadow-2xl rounded-xl p-4">
+          <div className="flex items-start gap-3">
+            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+              <Download className="w-6 h-6" />
             </div>
+            
+            <div className="flex-1 min-w-0">
+              <h3 className="font-bold text-lg mb-1">Install Golf Guy App</h3>
+              <p className="text-emerald-100 text-sm mb-3">
+                Get faster access, work offline, and enjoy a native app experience!
+              </p>
+              
+              <div className="flex flex-wrap gap-2 mb-3 text-xs">
+                <span className="bg-white/20 px-2 py-1 rounded">⚡ Faster loading</span>
+                <span className="bg-white/20 px-2 py-1 rounded">📱 App icon</span>
+                <span className="bg-white/20 px-2 py-1 rounded">🔄 Offline access</span>
+              </div>
+              
+              <div className="flex gap-2">
+                <button
+                  onClick={handleInstall}
+                  className="bg-white text-emerald-600 hover:bg-gray-100 font-medium px-4 py-2 rounded-lg text-sm flex items-center"
+                >
+                  <Smartphone className="w-4 h-4 mr-2" />
+                  Install Now
+                </button>
+                <button
+                  onClick={handleDismiss}
+                  className="text-white hover:bg-white/10 px-4 py-2 rounded-lg text-sm"
+                >
+                  Later
+                </button>
+              </div>
+            </div>
+            
+            <button
+              onClick={handleDismiss}
+              className="text-emerald-200 hover:text-white"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
-        </Card>
+        </div>
       </div>
     );
   }
