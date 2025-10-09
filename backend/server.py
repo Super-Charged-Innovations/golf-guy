@@ -2431,6 +2431,7 @@ from models.booking_models import (
     BookingCreate, BookingUpdate, AvailabilityRequest, AvailabilityResponse,
     Booking, BookingStatus, PaymentStatus
 )
+from services.search_service import search_service, SearchRequest
 
 @api_router.post("/bookings/check-availability", response_model=AvailabilityResponse)
 async def check_availability(
