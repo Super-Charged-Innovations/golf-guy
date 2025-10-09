@@ -79,10 +79,6 @@ const MobileHome = () => {
     console.log('Favorite destination:', destinationId, isFavorite);
   };
 
-  if (!isMobile) {
-    return null; // Desktop version handled by regular Home component
-  }
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
