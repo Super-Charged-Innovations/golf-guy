@@ -16,6 +16,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import ProfileKYC from './pages/ProfileKYC';
 import ClientDashboard from './pages/ClientDashboard';
 import PrivacySettings from './pages/PrivacySettings';
+import CategoryDestinations from './pages/CategoryDestinations';
 import ScrollToTop from './components/ScrollToTop';
 import CookieConsent from './components/CookieConsent';
 import PWAInstaller from './components/PWAInstaller';
