@@ -35,7 +35,7 @@ export const Layout = () => {
                   className="h-12 w-12 object-contain transition-all duration-300 group-hover:brightness-110"
                 />
               </div>
-              <span className="font-serif italic text-2xl font-semibold bg-gradient-to-r from-emerald-600 to-emerald-800 bg-clip-text text-transparent">
+              <span className="text-2xl font-semibold bg-gradient-to-r from-emerald-600 to-emerald-800 bg-clip-text text-transparent" style={{ fontFamily: "'Dancing Script', cursive" }}>
                 DGolf - Din nästa Golfresa
               </span>
             </Link>
