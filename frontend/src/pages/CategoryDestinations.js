@@ -87,6 +87,41 @@ const COUNTRY_CONFIG = {
     flag: "🇺🇸",
     description: "Championship golf courses from coast to coast with diverse landscapes",
     color: "from-red-500 to-blue-600"
+  },
+  cyprus: {
+    name: "Cyprus",
+    swedish_name: "Cypern",
+    flag: "🇨🇾",
+    description: "Mediterranean golf with year-round sunshine and island hospitality",
+    color: "from-orange-500 to-green-600"
+  },
+  czechia: {
+    name: "Czechia",
+    swedish_name: "Tjeckien",
+    flag: "🇨🇿",
+    description: "Combine golf with historic Prague and Czech culture",
+    color: "from-blue-500 to-red-500"
+  },
+  morocco: {
+    name: "Morocco",
+    swedish_name: "Marocko",
+    flag: "🇲🇦",
+    description: "Exotic golf experiences with Moroccan hospitality and desert landscapes",
+    color: "from-red-500 to-green-600"
+  },
+  bulgaria: {
+    name: "Bulgaria",
+    swedish_name: "Bulgarien",
+    flag: "🇧🇬",
+    description: "Affordable golf with Black Sea coastal beauty and mountain views",
+    color: "from-white via-green-500 to-red-500"
+  },
+  norway: {
+    name: "Norway",
+    swedish_name: "Norge",
+    flag: "🇳🇴",
+    description: "Unique Nordic golf with midnight sun experiences and fjord views",
+    color: "from-red-500 to-blue-600"
   }
 };
 
