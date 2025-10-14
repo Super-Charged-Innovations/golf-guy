@@ -35,7 +35,15 @@ export default function Login() {
 
     if (result.success) {
       toast.success('Welcome back!');
-      navigate(from, { replace: true });
+      
+      // Redirect based on user role
+      // Check if user data is available in the result
+      const userData = result.user;
+      if (userData?.is_admin) {
+        navigate('/admin', { replace: true });
+      } else {
+        navigate('/dashboard', { replace: true });
+      }
     } else {
       toast.error(result.error);
     }
