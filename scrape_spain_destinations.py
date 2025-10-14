@@ -7,8 +7,16 @@ import os
 from dotenv import load_dotenv
 from datetime import datetime
 import uuid
+import re
 
 load_dotenv('backend/.env')
+
+def generate_slug(name):
+    """Generate a URL-friendly slug from the resort name"""
+    slug = name.lower()
+    slug = re.sub(r'[^\w\s-]', '', slug)
+    slug = re.sub(r'[-\s]+', '-', slug)
+    return slug.strip('-')
 
 # List of Spanish resorts to scrape (excluding the 6 we already have)
 RESORTS_TO_SCRAPE = [
