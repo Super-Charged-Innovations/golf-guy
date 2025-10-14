@@ -199,12 +199,12 @@ function DestinationCard({ dest, index }) {
   return (
     <div
       ref={ref}
-      className={`transition-all duration-700 ${
+      className={`transition-all duration-500 ${
         isVisible 
           ? 'opacity-100 translate-y-0' 
           : 'opacity-0 translate-y-8'
       }`}
-      style={{ transitionDelay: `${index * 100}ms` }}
+      style={{ transitionDelay: `${Math.min(index, 10) * 50}ms` }}
     >
       <Card 
         className="card-hover group overflow-hidden border-2 border-emerald-accent h-full" 
