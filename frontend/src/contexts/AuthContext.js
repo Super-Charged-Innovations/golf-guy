@@ -94,12 +94,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    setToken(null);
-    setUser(null);
+    // Clear all auth-related localStorage first
     localStorage.removeItem('auth_token');
-    // Remove demo tokens as well
     localStorage.removeItem('demo_admin');
     localStorage.removeItem('demo_client');
+    
+    // Then update state
+    setUser(null);
+    setToken(null);
+    setLoading(false);
   };
 
   const value = {
