@@ -1,13 +1,10 @@
 """
-Scrape Spanish golf destinations from dgolf.se and populate database
+Populate Spanish golf destinations from curated data into database
 """
 import asyncio
-import requests
-from bs4 import BeautifulSoup
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 from dotenv import load_dotenv
-import json
 from datetime import datetime
 import uuid
 
