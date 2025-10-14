@@ -2927,6 +2927,61 @@ async def get_localized_countries(language: str = "en"):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to get countries: {str(e)}")
 
+# ===== CONTENT POPULATION ROUTES (Admin Only) =====
+
+@api_router.post("/admin/populate/dgolf-destinations")
+async def populate_dgolf_destinations(
+    current_user: dict = Depends(get_current_user)
+):
+    """Populate destinations with dgolf.se content (Admin only)"""
+    
+    if not current_user.get("is_admin", False):
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    try:
+        # Populate destinations from dgolf.se data
+        stats = await dgolf_populator.populate_destinations()
+        
+        # Log admin action
+        await audit_logger.log_action(
+            action_type=AuditActionType.ADMIN_ACCESS,
+            user_id=current_user["id"],
+            user_email=current_user["email"],
+            resource_type="content_population",
+            metadata={
+                "action": "populate_dgolf_destinations",
+                "created": stats["created"],
+                "updated": stats["updated"],
+                "errors": stats["errors"]
+            },
+            legal_basis="Legitimate interest - Content management"
+        )
+        
+        return {
+            "message": "D Golf destinations populated successfully",
+            "stats": stats,
+            "summary": f"Created {stats['created']} new destinations, updated {stats['updated']} existing destinations"
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Population failed: {str(e)}")
+
+@api_router.get("/admin/populate/preview")
+async def preview_dgolf_data(
+    current_user: dict = Depends(get_current_user)
+):
+    """Preview dgolf.se data before population (Admin only)"""
+    
+    if not current_user.get("is_admin", False):
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    return {
+        "message": "D Golf data preview",
+        "countries": list(dgolf_populator.dgolf_destinations.keys()),
+        "total_destinations": sum(len(dests) for dests in dgolf_populator.dgolf_destinations.values()),
+        "sample_destination": dgolf_populator.dgolf_destinations["spain"][0] if dgolf_populator.dgolf_destinations.get("spain") else None
+    }
+
 
 # Include the router in the main app
 app.include_router(api_router)
