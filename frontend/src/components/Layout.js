@@ -197,9 +197,9 @@ export const Layout = () => {
             </div>
 
             <div className="mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
-              <p>&copy; {new Date().getFullYear()} Golf Guy. All rights reserved.</p>
+              <p>&copy; {new Date().getFullYear()} DGolf. Alla rättigheter förbehållna.</p>
               <p className="mt-2 text-xs">
-                Golf travel specialists since 2010. Creating unforgettable golf experiences worldwide.
+                Golfresspecialister sedan 2010. Din nästa golfresa börjar här.
               </p>
             </div>
           </div>
