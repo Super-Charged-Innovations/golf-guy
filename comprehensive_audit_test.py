@@ -11,7 +11,7 @@ import time
 from datetime import datetime
 
 # Configuration
-BACKEND_URL = "https://golf-ai-advisor.preview.emergentagent.com/api"
+BACKEND_URL = "https://golfguy-platform.preview.emergentagent.com/api"
 TEST_USER_EMAIL = f"audituser_{uuid.uuid4().hex[:8]}@golfaudit.com"
 TEST_USER_PASSWORD = "AuditSecure123!"
 TEST_USER_NAME = "Golf Audit User"
@@ -86,7 +86,7 @@ class ComprehensiveAuditor:
         
         # CORS Configuration
         try:
-            headers = {'Origin': 'https://golf-ai-advisor.preview.emergentagent.com'}
+            headers = {'Origin': 'https://golfguy-platform.preview.emergentagent.com'}
             response = self.session.options(f"{BACKEND_URL}/auth/login", headers=headers)
             if response.status_code in [200, 204]:
                 self.log_test("PHASE1", "CORS Configuration", True, "CORS preflight working")

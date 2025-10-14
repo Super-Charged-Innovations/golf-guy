@@ -11,7 +11,7 @@ import os
 from datetime import datetime
 
 # Configuration
-BACKEND_URL = "https://golf-ai-advisor.preview.emergentagent.com/api"
+BACKEND_URL = "https://golfguy-platform.preview.emergentagent.com/api"
 
 class Phase4ArchitectureTester:
     def __init__(self):
