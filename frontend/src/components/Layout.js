@@ -25,15 +25,18 @@ export const Layout = () => {
             {/* Logo */}
             <Link 
               to="/" 
-              className="flex items-center space-x-2 group transition-transform duration-300 hover:scale-105" 
+              className="flex items-center space-x-3 group transition-transform duration-300 hover:scale-105" 
               data-testid="logo-link"
             >
               <div className="relative">
-                <Plane className="h-8 w-8 text-emerald-600 transition-all duration-300 group-hover:text-emerald-700" />
-                <div className="absolute inset-0 bg-emerald-400 blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
+                <img 
+                  src="https://customer-assets.emergentagent.com/job_golfguy-platform/artifacts/lyponq0h_image.png" 
+                  alt="DGolf Logo" 
+                  className="h-12 w-12 object-contain transition-all duration-300 group-hover:brightness-110"
+                />
               </div>
-              <span className="font-playfair text-2xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-800 bg-clip-text text-transparent">
-                Golf Guy
+              <span className="font-serif italic text-2xl font-semibold bg-gradient-to-r from-emerald-600 to-emerald-800 bg-clip-text text-transparent">
+                DGolf - Din nästa Golfresa
               </span>
             </Link>
 
