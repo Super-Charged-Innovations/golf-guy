@@ -79,9 +79,26 @@ export default function Destinations() {
           <h1 className="font-playfair text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 text-gray-900 animate-fade-in-up animate-delay-100">
             Golf Destinations
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto animate-fade-in-up animate-delay-200">
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto animate-fade-in-up animate-delay-200 mb-6">
             Explore our curated collection of the world's finest golf destinations
           </p>
+          
+          {/* Category View Toggle */}
+          <div className="flex justify-center gap-4">
+            <Button 
+              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+              onClick={() => window.location.href = '/destinations/categories'}
+            >
+              <MapPin className="mr-2 w-4 h-4" />
+              View by Country
+            </Button>
+            <Button 
+              variant="outline"
+              className="border-emerald-600 text-emerald-600 hover:bg-emerald-50"
+            >
+              List View
+            </Button>
+          </div>
         </div>
       </section>
 
