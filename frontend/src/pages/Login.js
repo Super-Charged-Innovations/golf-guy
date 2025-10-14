@@ -31,24 +31,33 @@ export default function Login() {
     e.preventDefault();
     setLoading(true);
 
-    const result = await login(formData.email, formData.password);
+    try {
+      const result = await login(formData.email, formData.password);
 
-    if (result.success) {
-      toast.success('Welcome back!');
-      
-      // Redirect based on user role
-      // Check if user data is available in the result
-      const userData = result.user;
-      if (userData?.is_admin) {
-        navigate('/admin', { replace: true });
+      if (result.success) {
+        toast.success('Welcome back!');
+        
+        // Redirect based on user role
+        const userData = result.user;
+        console.log('Login successful, user data:', userData);
+        
+        if (userData?.is_admin) {
+          console.log('Redirecting admin to /admin');
+          navigate('/admin', { replace: true });
+        } else {
+          console.log('Redirecting user to /dashboard');
+          navigate('/dashboard', { replace: true });
+        }
       } else {
-        navigate('/dashboard', { replace: true });
+        console.error('Login failed:', result.error);
+        toast.error(result.error || 'Login failed');
       }
-    } else {
-      toast.error(result.error);
+    } catch (error) {
+      console.error('Login exception:', error);
+      toast.error('An error occurred during login');
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
