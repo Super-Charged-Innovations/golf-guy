@@ -42,8 +42,8 @@ function App() {
           {/* Main Routes with responsive layout */}
           <Route path="/" element={<ResponsiveLayout />}>
             <Route index element={<Home />} />
-            <Route path="destinations" element={<Destinations />} />
-            <Route path="destinations/categories" element={<CategoryDestinations />} />
+            <Route path="destinations" element={<CategoryDestinations />} />
+            <Route path="destinations/list" element={<Destinations />} />
             <Route path="destinations/:slug" element={<DestinationDetail />} />
             <Route path="articles" element={<Articles />} />
             <Route path="articles/:slug" element={<ArticleDetail />} />
