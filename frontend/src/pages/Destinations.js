@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
@@ -13,6 +13,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 export default function Destinations() {
+  const [searchParams] = useSearchParams();
   const [destinations, setDestinations] = useState([]);
   const [filteredDestinations, setFilteredDestinations] = useState([]);
   const [countries, setCountries] = useState([]);
@@ -22,6 +23,14 @@ export default function Destinations() {
   useEffect(() => {
     loadDestinations();
   }, []);
+
+  useEffect(() => {
+    // Check for country parameter in URL
+    const countryParam = searchParams.get('country');
+    if (countryParam) {
+      setSelectedCountry(countryParam);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     filterDestinations();
