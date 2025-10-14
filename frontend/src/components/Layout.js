@@ -140,13 +140,17 @@ export const Layout = () => {
               {/* About */}
               <div>
                 <div className="flex items-center space-x-2 mb-4 group">
-                  <Plane className="h-6 w-6 text-emerald-600 transition-transform duration-300 group-hover:rotate-12" />
-                  <span className="font-playfair text-xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-800 bg-clip-text text-transparent">
-                    Golf Guy
+                  <img 
+                    src="https://customer-assets.emergentagent.com/job_golfguy-platform/artifacts/lyponq0h_image.png" 
+                    alt="DGolf Logo" 
+                    className="h-10 w-10 object-contain"
+                  />
+                  <span className="text-xl font-semibold bg-gradient-to-r from-emerald-600 to-emerald-800 bg-clip-text text-transparent" style={{ fontFamily: "'Dancing Script', cursive" }}>
+                    DGolf
                   </span>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Creating unforgettable golf experiences since 2010. Your trusted partner for golf travel worldwide.
+                  Din partner till din nästa golfresa. Upptäck exklusiva golfresor sedan 2010.
                 </p>
               </div>
 
