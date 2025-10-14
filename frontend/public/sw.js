@@ -1,7 +1,7 @@
-// Golf Guy PWA Service Worker v2.0
+// Golf Guy PWA Service Worker v2.1
 // Enhanced for browser compatibility (Vivaldi, Samsung Internet, Chrome, Safari)
 
-const CACHE_NAME = 'golf-guy-v2.0.0';
+const CACHE_NAME = 'golf-guy-v2.1.0';
 const OFFLINE_URL = '/offline.html';
 
 // Critical assets for PWA functionality
