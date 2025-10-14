@@ -19,37 +19,36 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('auth_token'));
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Check if user is already logged in
-    if (token) {
-      fetchCurrentUser();
-    } else {
-      setLoading(false);
-    }
-  }, [token]);
-
-  const fetchCurrentUser = async () => {
+  const fetchCurrentUser = async (authToken) => {
     try {
       const response = await axios.get(`${API}/auth/me`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${authToken}` }
       });
       setUser(response.data);
     } catch (error) {
       console.error('Failed to fetch user:', error);
       
-      // If token is invalid (401/403), clear it and don't redirect
+      // If token is invalid (401/403), clear it
       if (error.response?.status === 401 || error.response?.status === 403) {
         localStorage.removeItem('auth_token');
         setToken(null);
         setUser(null);
-      } else {
-        // For other errors, just logout
-        logout();
       }
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    // Check if user is already logged in
+    if (token) {
+      fetchCurrentUser(token);
+    } else {
+      setUser(null);
+      setLoading(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
 
   const register = async (email, password, fullName) => {
     try {
