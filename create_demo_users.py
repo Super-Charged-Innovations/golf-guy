@@ -58,7 +58,7 @@ async def create_demo_users():
         user_doc = {
             "id": str(uuid.uuid4()),
             "email": user_data["email"],
-            "password": hashed_password,
+            "hashed_password": hashed_password,  # Use hashed_password field name
             "name": user_data["name"],
             "role": user_data["role"],
             "tier": user_data["tier"],
