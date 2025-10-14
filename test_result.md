@@ -564,3 +564,18 @@ Complete comprehensive codebase audit focusing on security, compliance, architec
       - working: true
         agent: "testing"
         comment: "COMPREHENSIVE DGOLF.SE INTEGRATION TESTING COMPLETED - PRODUCTION READY: 🎯 DESTINATION PORTFOLIO: 31 authentic destinations confirmed across 11 countries (Spain: 6, Portugal: 4, Scotland: 3, France: 3, Ireland: 3, England: 2, Italy: 2, Mauritius: 2, Turkey: 2, Cyprus: 2, USA: 2) ✅ 🏆 PREMIUM RESORTS: Villa Padierna Palace Hotel, Monte Rei Golf & Country Club, Pebble Beach Golf Links all integrated with authentic content ✅ 🏌️ RYDER CUP VENUES: PGA Catalunya Resort (2031 host), Marco Simone Golf & Country Club (2023 host) confirmed ✅ 📊 CATEGORY SYSTEM: 12 country categories with flag-colored cards, accurate resort counts, featured badges (24 featured destinations total) ✅ 🔍 SEARCH & FILTERING: Country filtering functional, all 31 destinations displayed in list view, price ranges in SEK currency ✅ 📱 MOBILE PWA: 5-item bottom navigation, responsive design across all breakpoints, service worker active, PWA manifest loaded ✅ 🎨 CONTENT QUALITY: Authentic dgolf.se content with Swedish pricing (SEK), European golf focus, premium resort descriptions ✅ 🚀 USER JOURNEY: Complete discovery flow working - home page → category destinations → country filtering → destination details ✅ 💡 FINAL ASSESSMENT: Golf Guy Platform is fully production-ready with complete dgolf.se integration matching 'alla-destinationer' structure"
+
+  - task: "Demo User Login Functionality"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Fixed User model schema to include full_name, is_active, and is_admin fields. Created two demo users: admin@dgolf.se (Admin User, is_admin=true) and user@dgolf.se (Standard User, is_admin=false). Ready for testing."
+      - working: true
+        agent: "testing"
+        comment: "DEMO USER LOGIN TESTING COMPLETED - ALL TESTS PASSED: ✅ Admin Login: Successfully logged in with admin@dgolf.se / Admin123! ✅ Admin User Fields: access_token received, full_name='Admin User', is_admin=true, email correct, user ID present ✅ Standard User Login: Successfully logged in with user@dgolf.se / User123! ✅ Standard User Fields: access_token received, full_name='Standard User', is_admin=false, email correct, user ID present ✅ Invalid Credentials: Wrong password properly rejected with 401 status ✅ Authenticated Endpoint (Admin): /auth/me returns all required fields (id, email, full_name, is_admin) with correct values ✅ Authenticated Endpoint (Standard User): /auth/me returns all required fields with correct values ✅ KeyError 'full_name' issue RESOLVED - all user objects now include full_name field ✅ Test Results: 19/19 tests passed (100% success rate) - Demo user login functionality fully operational"
