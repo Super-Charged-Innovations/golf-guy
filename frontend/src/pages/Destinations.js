@@ -38,12 +38,32 @@ export default function Destinations() {
 
   const loadDestinations = async () => {
     try {
-      const response = await axios.get(`${API}/destinations?published=true`);
+      // Check if we have a country parameter to optimize the query
+      const countryParam = searchParams.get('country');
+      
+      const url = countryParam 
+        ? `${API}/destinations?country=${countryParam}&published=true`
+        : `${API}/destinations?published=true`;
+      
+      const response = await axios.get(url);
       setDestinations(response.data);
       
-      // Extract unique countries
-      const uniqueCountries = [...new Set(response.data.map(d => d.country))];
-      setCountries(uniqueCountries);
+      if (countryParam) {
+        // If filtering by country, set it immediately
+        setSelectedCountry(countryParam);
+        setFilteredDestinations(response.data);
+      }
+      
+      // Extract unique countries for dropdown (only needed for all destinations)
+      if (!countryParam) {
+        const uniqueCountries = [...new Set(response.data.map(d => d.country))];
+        setCountries(uniqueCountries);
+      } else {
+        // Still need to fetch country list for dropdown
+        const allResponse = await axios.get(`${API}/destinations?published=true`);
+        const uniqueCountries = [...new Set(allResponse.data.map(d => d.country))];
+        setCountries(uniqueCountries);
+      }
     } catch (error) {
       console.error('Error loading destinations:', error);
     } finally {
