@@ -23,16 +23,14 @@ async def create_demo_users():
         {
             "email": "admin@dgolf.se",
             "password": "Admin123!",
-            "name": "Admin User",
-            "role": "admin",
-            "tier": 3
+            "full_name": "Admin User",
+            "is_admin": True
         },
         {
             "email": "user@dgolf.se",
             "password": "User123!",
-            "name": "Standard User",
-            "role": "client",
-            "tier": 1
+            "full_name": "Standard User",
+            "is_admin": False
         }
     ]
     
