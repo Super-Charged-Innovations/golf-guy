@@ -11,7 +11,8 @@ root.render(
 );
 
 // Register service worker for PWA functionality with enhanced browser support
-if ('serviceWorker' in navigator) {
+// Only in production to prevent caching issues during development
+if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js', {
       scope: '/',
@@ -67,6 +68,8 @@ if ('serviceWorker' in navigator) {
       }, 5000);
     }
   });
+} else if (process.env.NODE_ENV !== 'production') {
+  console.log('PWA: Service Worker disabled in development mode');
 }
 
 // Enhanced PWA install prompt for specific browsers
