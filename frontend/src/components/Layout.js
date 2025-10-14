@@ -77,17 +77,22 @@ export const Layout = () => {
                 </>
               ) : (
                 <>
-                  <Link to="/profile">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-300"
-                      data-testid="profile-link"
-                    >
-                      My Profile
-                    </Button>
-                  </Link>
-                  {isAdmin && !isAdminPage && (
+                  {/* Show My Profile only for non-admin users */}
+                  {!isAdmin && (
+                    <Link to="/profile">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-300"
+                        data-testid="profile-link"
+                      >
+                        My Profile
+                      </Button>
+                    </Link>
+                  )}
+                  
+                  {/* Admin button - goes directly to admin dashboard */}
+                  {isAdmin && (
                     <Link to="/admin">
                       <Button 
                         variant="outline" 
@@ -96,20 +101,32 @@ export const Layout = () => {
                         data-testid="admin-dashboard-link"
                       >
                         <UserCog className="h-4 w-4 mr-2" />
-                        Admin
+                        Admin Dashboard
                       </Button>
                     </Link>
                   )}
-                  <Link to="/dashboard">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="hidden sm:inline-flex text-gray-700 hover:text-emerald-600 hover:bg-emerald-50 transition-all duration-300 font-medium"
-                      data-testid="dashboard-link"
-                    >
+                  
+                  {/* User name button - for non-admin only */}
+                  {!isAdmin && (
+                    <Link to="/dashboard">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="hidden sm:inline-flex text-gray-700 hover:text-emerald-600 hover:bg-emerald-50 transition-all duration-300 font-medium"
+                        data-testid="dashboard-link"
+                      >
+                        {user?.full_name}
+                      </Button>
+                    </Link>
+                  )}
+                  
+                  {/* Show admin name for admin users */}
+                  {isAdmin && (
+                    <span className="hidden sm:inline-flex text-sm text-gray-600 font-medium px-2">
                       {user?.full_name}
-                    </Button>
-                  </Link>
+                    </span>
+                  )}
+                  
                   <Button 
                     variant="ghost" 
                     size="sm" 
