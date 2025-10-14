@@ -126,7 +126,7 @@ const CategoryDestinations = () => {
   };
 
   const handleExploreCountry = (country) => {
-    navigate(`/destinations?country=${country}`);
+    navigate(`/destinations/list?country=${country}`);
   };
 
   if (loading) {
