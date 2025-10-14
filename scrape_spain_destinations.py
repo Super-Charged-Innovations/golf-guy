@@ -341,6 +341,7 @@ async def populate_spanish_resorts():
         destination = {
             "id": str(uuid.uuid4()),
             "name": resort_info["name"],
+            "slug": generate_slug(resort_info["name"]),
             "location": resort_info["location"],
             "country": resort_info["country"],
             "description": resort_info["description"],
