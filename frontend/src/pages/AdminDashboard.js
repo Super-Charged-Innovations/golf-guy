@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
@@ -31,6 +32,7 @@ const API = `${BACKEND_URL}/api`;
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
+  const { user, isAdmin, loading: authLoading } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
   const [destinations, setDestinations] = useState([]);
   const [articles, setArticles] = useState([]);
@@ -61,13 +63,18 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    const isAdmin = localStorage.getItem('demo_admin') === 'true';
-    if (!isAdmin) {
+    // Wait for auth to load
+    if (authLoading) return;
+    
+    // Check if user is authenticated and is admin
+    if (!user || !isAdmin) {
+      toast.error('Admin access required');
       navigate('/');
       return;
     }
+    
     loadAdminData();
-  }, [navigate]);
+  }, [user, isAdmin, authLoading, navigate]);
 
   const loadAdminData = async () => {
     try {
