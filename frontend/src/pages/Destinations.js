@@ -22,7 +22,7 @@ export default function Destinations() {
 
   useEffect(() => {
     loadDestinations();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     // Check for country parameter in URL
