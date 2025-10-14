@@ -226,12 +226,12 @@ Complete comprehensive codebase audit focusing on security, compliance, architec
 
 ## test_plan:
   current_focus:
-    - "PWA Mobile Experience Testing - COMPLETED"
-    - "Mobile UI Components Testing - COMPLETED"
+    - "DGOLF.SE Integration Testing - COMPLETED"
+    - "Complete Destination Portfolio Testing - COMPLETED"
   stuck_tasks:
     - "Phase 4 Rate Limiting Middleware - not integrated into main server"
   test_all: false
-  test_priority: "pwa_mobile_testing_completed"
+  test_priority: "dgolf_integration_completed"
 
 ## agent_communication:
   - agent: "main"
