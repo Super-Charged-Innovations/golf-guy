@@ -47,8 +47,7 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       setLoading(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
+  }, [token, fetchCurrentUser]);
 
   const register = async (email, password, fullName) => {
     try {
