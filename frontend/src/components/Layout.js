@@ -51,7 +51,7 @@ export const Layout = () => {
             )}
 
             {/* Auth Buttons */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-shrink-0">
               {!isAuthenticated ? (
                 <>
                   <Link to="/login">
@@ -61,8 +61,8 @@ export const Layout = () => {
                       className="hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-300"
                       data-testid="login-button"
                     >
-                      <LogIn className="h-4 w-4 mr-2" />
-                      Sign In
+                      <LogIn className="h-4 w-4 mr-1" />
+                      <span className="hidden lg:inline">Sign In</span>
                     </Button>
                   </Link>
                   <Link to="/register">
@@ -83,7 +83,7 @@ export const Layout = () => {
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-300"
+                        className="hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-300 hidden lg:inline-flex"
                         data-testid="profile-link"
                       >
                         My Profile
@@ -105,26 +105,10 @@ export const Layout = () => {
                     </Link>
                   )}
                   
-                  {/* User name button - for non-admin only */}
-                  {!isAdmin && (
-                    <Link to="/dashboard">
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="hidden sm:inline-flex text-gray-700 hover:text-emerald-600 hover:bg-emerald-50 transition-all duration-300 font-medium"
-                        data-testid="dashboard-link"
-                      >
-                        {user?.full_name}
-                      </Button>
-                    </Link>
-                  )}
-                  
-                  {/* Show admin name for admin users */}
-                  {isAdmin && (
-                    <span className="hidden sm:inline-flex text-sm text-gray-600 font-medium px-2">
-                      {user?.full_name}
-                    </span>
-                  )}
+                  {/* User name - simplified */}
+                  <span className="hidden lg:inline-flex text-sm text-gray-700 font-medium px-2 whitespace-nowrap">
+                    {user?.full_name}
+                  </span>
                   
                   <Button 
                     variant="ghost" 
