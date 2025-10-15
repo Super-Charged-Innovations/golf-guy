@@ -250,8 +250,8 @@ const CategoryDestinations = () => {
                         alt={countryConfig.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       />
-                      {/* Dark overlay for text visibility */}
-                      <div className={`absolute inset-0 bg-gradient-to-br ${countryConfig.color} opacity-80`}></div>
+                      {/* Dark overlay for text visibility - no gradient color */}
+                      <div className="absolute inset-0 bg-black/40"></div>
                     </div>
                     
                     {/* Flag and Country Name */}
