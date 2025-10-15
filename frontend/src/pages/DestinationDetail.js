@@ -194,16 +194,19 @@ export default function DestinationDetail() {
                   </div>
                 </div>
 
-                <Link to="/contact" state={{ destination: destination.name }}>
-                  <Button className="w-full bg-primary hover:bg-primary/90 mb-3" size="lg" data-testid="inquiry-button">
-                    Start Inquiry
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
+                <Button 
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 mb-3" 
+                  size="lg" 
+                  data-testid="inquiry-button"
+                  onClick={() => setShowInquiryDialog(true)}
+                >
+                  Start Inquiry
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
 
-                <a href="tel:+46812345678">
+                <a href="tel:0760196485">
                   <Button variant="outline" className="w-full" size="lg" data-testid="call-button">
-                    Call +46 8 123 456 78
+                    Call 0760-196485
                   </Button>
                 </a>
 
