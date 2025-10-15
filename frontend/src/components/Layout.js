@@ -117,8 +117,8 @@ export const Layout = () => {
                     className="hover:bg-red-50 hover:text-red-700 transition-all duration-300"
                     data-testid="logout-button"
                   >
-                    <LogOut className="h-4 w-4 mr-2" />
-                    Logout
+                    <LogOut className="h-4 w-4" />
+                    <span className="hidden lg:inline ml-1">Logout</span>
                   </Button>
                 </>
               )}
