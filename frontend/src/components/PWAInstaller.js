@@ -192,21 +192,7 @@ const PWAInstaller = () => {
     );
   }
 
-  // Debug info (only in development)
-  if (process.env.NODE_ENV === 'development') {
-    return (
-      <div className="fixed top-20 right-4 z-50">
-        <div className="bg-gray-800 text-white text-xs p-2 max-w-xs rounded">
-          <div>PWA Debug:</div>
-          <div>Prompt: {deferredPrompt ? 'Ready' : 'Not available'}</div>
-          <div>Installed: {isInstalled ? 'Yes' : 'No'}</div>
-          <div>iOS: {isIOS ? 'Yes' : 'No'}</div>
-          <div>Width: {typeof window !== 'undefined' ? window.innerWidth : 0}px</div>
-        </div>
-      </div>
-    );
-  }
-
+  // Remove debug info display
   return null;
 };
 
