@@ -137,8 +137,11 @@ const CategoryDestinations = () => {
 
   const loadDestinationsByCountry = async () => {
     try {
-      const response = await axios.get(`${API}/destinations`);
+      const response = await axios.get(`${API}/destinations?published=true`);
       const destinations = response.data || [];
+      
+      console.log('Total destinations loaded:', destinations.length);
+      console.log('Countries found:', [...new Set(destinations.map(d => d.country))]);
       
       // Group destinations by country
       const grouped = destinations.reduce((acc, dest) => {
@@ -150,6 +153,7 @@ const CategoryDestinations = () => {
         return acc;
       }, {});
 
+      console.log('Grouped by country:', Object.keys(grouped));
       setDestinationsByCountry(grouped);
       setTotalDestinations(destinations.length);
       
