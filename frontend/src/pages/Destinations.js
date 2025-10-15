@@ -94,7 +94,7 @@ export default function Destinations() {
   return (
     <div>
       {/* Hero Header */}
-      <section className="relative bg-gradient-to-br from-emerald-50 via-emerald-100/30 to-white py-16 md:py-24 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-emerald-50 via-emerald-100/30 to-white py-8 md:py-12 overflow-hidden">
         {/* Animated background accent */}
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-10 right-10 w-64 h-64 bg-emerald-400 rounded-full blur-3xl animate-pulse"></div>
