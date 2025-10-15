@@ -32,7 +32,7 @@ const API = `${BACKEND_URL}/api`;
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
-  const { user, isAdmin, loading: authLoading } = useAuth();
+  const { user, token, isAdmin, loading: authLoading } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
   const [destinations, setDestinations] = useState([]);
   const [articles, setArticles] = useState([]);
