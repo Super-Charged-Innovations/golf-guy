@@ -19,6 +19,17 @@ export default function DestinationDetail() {
   const { slug } = useParams();
   const [destination, setDestination] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showInquiryDialog, setShowInquiryDialog] = useState(false);
+  const [inquiryForm, setInquiryForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    dates: '',
+    group_size: '',
+    budget: '',
+    message: ''
+  });
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     loadDestination();
@@ -32,6 +43,48 @@ export default function DestinationDetail() {
       console.error('Error loading destination:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleInquiryChange = (e) => {
+    const { name, value } = e.target;
+    setInquiryForm(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleInquirySubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!inquiryForm.name || !inquiryForm.email) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await axios.post(`${API}/inquiries`, {
+        ...inquiryForm,
+        destination_id: destination.id,
+        destination_name: destination.name
+      });
+      
+      toast.success('Inquiry sent successfully! We\'ll get back to you soon.');
+      
+      // Reset form and close dialog
+      setInquiryForm({
+        name: '',
+        email: '',
+        phone: '',
+        dates: '',
+        group_size: '',
+        budget: '',
+        message: ''
+      });
+      setShowInquiryDialog(false);
+    } catch (error) {
+      console.error('Error submitting inquiry:', error);
+      toast.error('Failed to send inquiry. Please try again.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
