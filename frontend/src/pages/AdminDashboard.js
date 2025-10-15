@@ -67,14 +67,17 @@ export default function AdminDashboard() {
     if (authLoading) return;
     
     // Check if user is authenticated and is admin
-    if (!user || !isAdmin) {
-      toast.error('Admin access required');
-      navigate('/');
+    if (!user || !isAdmin || !token) {
+      if (!authLoading && (!user || !isAdmin)) {
+        toast.error('Admin access required');
+        navigate('/');
+      }
       return;
     }
     
     loadAdminData();
-  }, [user, isAdmin, authLoading, navigate]);
+    // eslint-disable-next-line
+  }, [user, isAdmin, token, authLoading, navigate]);
 
   const loadAdminData = async () => {
     if (!token) {
