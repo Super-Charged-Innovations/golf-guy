@@ -242,21 +242,32 @@ const CategoryDestinations = () => {
                   className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 bg-white overflow-hidden"
                   onClick={() => handleExploreCountry(countryConfig.name)}
                 >
-                  <div className={`h-32 bg-gradient-to-br ${countryConfig.color} relative overflow-hidden`}>
+                  <div className="h-32 relative overflow-hidden">
+                    {/* Background Golf Course Image */}
+                    <div className="absolute inset-0">
+                      <img 
+                        src={destinations[0]?.image || destinations[0]?.images?.[0] || "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?w=600"}
+                        alt={countryConfig.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      />
+                      {/* Dark overlay for text visibility */}
+                      <div className={`absolute inset-0 bg-gradient-to-br ${countryConfig.color} opacity-80`}></div>
+                    </div>
+                    
                     {/* Flag and Country Name */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-center text-white">
-                        <div className="text-6xl mb-2 filter drop-shadow-lg">
+                      <div className="text-center text-white relative z-10">
+                        <div className="text-6xl mb-2 filter drop-shadow-2xl">
                           {countryConfig.flag}
                         </div>
-                        <h3 className="text-2xl font-bold tracking-wide">
+                        <h3 className="text-2xl font-bold tracking-wide drop-shadow-lg">
                           {countryConfig.name}
                         </h3>
                       </div>
                     </div>
                     
-                    {/* Geometric Pattern Overlay */}
-                    <div className="absolute inset-0 opacity-20">
+                    {/* Decorative Circles */}
+                    <div className="absolute inset-0 opacity-10">
                       <div className="absolute top-4 right-4 w-20 h-20 border-2 border-white rounded-full" />
                       <div className="absolute bottom-4 left-4 w-16 h-16 border-2 border-white rounded-full" />
                     </div>
