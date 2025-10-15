@@ -150,14 +150,14 @@ export const Layout = () => {
                   </span>
                 </div>
                 <p className="text-sm text-emerald-100 leading-relaxed">
-                  Vår mission är att du som kund ska få bästa möjliga upplevelse på din golfresa och med över 40 års samlad erfarenhet är du i trygga händer som kund hos DGolf
+                  Our mission is to ensure you as a customer have the best possible experience on your golf trip, and with over 40 years of combined experience, you are in safe hands as a customer with DGolf
                 </p>
               </div>
 
               {/* Instagram */}
               <div className="lg:col-span-1">
-                <h4 className="font-semibold mb-4 text-white">@dgolfswe på Instagram</h4>
-                <p className="text-sm text-emerald-100 mb-4">Senaste inläggen från dgolfswe</p>
+                <h4 className="font-semibold mb-4 text-white">@dgolfswe on Instagram</h4>
+                <p className="text-sm text-emerald-100 mb-4">Latest posts from dgolfswe</p>
                 <div className="grid grid-cols-3 gap-2">
                   <div className="aspect-square rounded-lg overflow-hidden bg-emerald-700">
                     <img src="https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?w=200" alt="Golf course" className="w-full h-full object-cover" />
@@ -173,38 +173,38 @@ export const Layout = () => {
 
               {/* Our Partnerships */}
               <div className="lg:col-span-1">
-                <h4 className="font-semibold mb-4 text-white">Våra samarbeten</h4>
+                <h4 className="font-semibold mb-4 text-white">Our Partnerships</h4>
                 <div className="space-y-4">
                   <div className="bg-white/10 rounded-lg p-3 backdrop-blur-sm">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-2xl">❤️</span>
-                      <p className="font-medium text-sm">Ronald McDonald Hus i Lund</p>
+                      <p className="font-medium text-sm">Ronald McDonald House Lund</p>
                     </div>
-                    <p className="text-xs text-emerald-100">Stödjer familjer med sjuka barn</p>
+                    <p className="text-xs text-emerald-100">Supporting families with sick children</p>
                   </div>
                   <div className="bg-white/10 rounded-lg p-3 backdrop-blur-sm">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-2xl">💙</span>
-                      <p className="font-medium text-sm">Barncancerfonden Södra</p>
+                      <p className="font-medium text-sm">Children's Cancer Foundation South</p>
                     </div>
-                    <p className="text-xs text-emerald-100">Kampen mot barncancer</p>
+                    <p className="text-xs text-emerald-100">The fight against childhood cancer</p>
                   </div>
                 </div>
               </div>
 
               {/* Quick Links */}
               <div className="lg:col-span-1">
-                <h4 className="font-semibold mb-4 text-white">Snabblänkar</h4>
+                <h4 className="font-semibold mb-4 text-white">Quick Links</h4>
                 <ul className="space-y-2 text-sm">
-                  <li><Link to="/destinations" className="text-emerald-100 hover:text-white transition-colors">Alla destinationer</Link></li>
-                  <li><Link to="/about" className="text-emerald-100 hover:text-white transition-colors">Resegaranti</Link></li>
-                  <li><Link to="/about" className="text-emerald-100 hover:text-white transition-colors">Om DGolf</Link></li>
+                  <li><Link to="/destinations" className="text-emerald-100 hover:text-white transition-colors">All Destinations</Link></li>
+                  <li><Link to="/about" className="text-emerald-100 hover:text-white transition-colors">Travel Guarantee</Link></li>
+                  <li><Link to="/about" className="text-emerald-100 hover:text-white transition-colors">About DGolf</Link></li>
                 </ul>
               </div>
 
               {/* Contact & Newsletter */}
               <div className="lg:col-span-1">
-                <h4 className="font-semibold mb-4 text-white">Kontakt</h4>
+                <h4 className="font-semibold mb-4 text-white">Contact</h4>
                 <ul className="space-y-3 text-sm mb-6">
                   <li className="flex items-center gap-2">
                     <Phone className="h-4 w-4 text-emerald-300" />
@@ -216,24 +216,24 @@ export const Layout = () => {
                   </li>
                 </ul>
                 
-                <h4 className="font-semibold mb-3 text-white text-sm">Nyhetsbrev</h4>
-                <p className="text-xs text-emerald-100 mb-3">Få de senaste erbjudandena och nyheter direkt i din inkorg.</p>
+                <h4 className="font-semibold mb-3 text-white text-sm">Newsletter</h4>
+                <p className="text-xs text-emerald-100 mb-3">Get the latest offers and news directly to your inbox.</p>
                 <form className="space-y-2">
                   <input 
                     type="text" 
-                    placeholder="Ditt namn" 
+                    placeholder="Your name" 
                     className="w-full px-3 py-2 rounded-md bg-white/10 border border-emerald-600 text-white placeholder-emerald-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400"
                   />
                   <input 
                     type="email" 
-                    placeholder="Din e-postadress" 
+                    placeholder="Your email address" 
                     className="w-full px-3 py-2 rounded-md bg-white/10 border border-emerald-600 text-white placeholder-emerald-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400"
                   />
                   <button 
                     type="submit" 
                     className="w-full px-4 py-2 bg-amber-500 hover:bg-amber-600 text-emerald-900 font-semibold rounded-md transition-colors text-sm"
                   >
-                    Prenumerera
+                    Subscribe
                   </button>
                 </form>
               </div>
@@ -241,10 +241,10 @@ export const Layout = () => {
 
             {/* Bottom Bar */}
             <div className="mt-8 pt-6 border-t border-emerald-700 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-emerald-100">
-              <p>&copy; 2022-{new Date().getFullYear()} DGolf. Alla rättigheter förbehållna.</p>
+              <p>&copy; 2022-{new Date().getFullYear()} DGolf. All rights reserved.</p>
               <div className="flex gap-4">
-                <Link to="/privacy" className="hover:text-white transition-colors">Integritetspolicy</Link>
-                <Link to="/terms" className="hover:text-white transition-colors">Användarvillkor</Link>
+                <Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+                <Link to="/terms" className="hover:text-white transition-colors">Terms of Use</Link>
                 <Link to="/cookies" className="hover:text-white transition-colors">Cookies</Link>
               </div>
             </div>
