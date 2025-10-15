@@ -125,8 +125,14 @@ export default function Home() {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="left-4" data-testid="hero-prev-button" />
-          <CarouselNext className="right-4" data-testid="hero-next-button" />
+          <CarouselPrevious 
+            className="left-4 bg-white hover:bg-white/90 border-2 border-amber-500 text-gray-800 hover:border-amber-600 shadow-lg transition-all duration-300" 
+            data-testid="hero-prev-button" 
+          />
+          <CarouselNext 
+            className="right-4 bg-white hover:bg-white/90 border-2 border-amber-500 text-gray-800 hover:border-amber-600 shadow-lg transition-all duration-300" 
+            data-testid="hero-next-button" 
+          />
         </Carousel>
       </section>
 
