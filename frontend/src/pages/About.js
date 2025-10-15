@@ -93,68 +93,68 @@ export default function About() {
         </div>
       </section>
 
-      {/* Why Choose Us */}
-      <section className="py-16 md:py-24 bg-secondary/30">
+      {/* Why Choose DGolf */}
+      <section className="py-16 md:py-20 bg-secondary/30">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="font-playfair text-3xl sm:text-4xl font-bold text-center mb-12">Why Choose Golf Guy</h2>
+          <h2 className="font-playfair text-3xl sm:text-4xl font-bold text-center mb-12">Why Choose DGolf</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="p-6 text-center">
+            <Card className="p-6 text-center hover:shadow-xl transition-shadow">
               <div className="flex justify-center mb-4">
-                <Shield className="h-12 w-12 text-primary" />
+                <Award className="h-12 w-12 text-emerald-600" />
               </div>
-              <h3 className="font-semibold text-xl mb-3">Travel Protection</h3>
+              <h3 className="font-semibold text-xl mb-3">Unmatched Experience</h3>
               <p className="text-muted-foreground">
-                All trips protected by Eastern DGolf insurance and guarantee for complete peace of mind
+                We have played over 350 courses and visited 150+ facilities worldwide, giving us first-hand knowledge to guide you perfectly
               </p>
             </Card>
 
-            <Card className="p-6 text-center">
+            <Card className="p-6 text-center hover:shadow-xl transition-shadow">
               <div className="flex justify-center mb-4">
-                <Award className="h-12 w-12 text-primary" />
+                <Users className="h-12 w-12 text-emerald-600" />
               </div>
-              <h3 className="font-semibold text-xl mb-3">Expert Knowledge</h3>
+              <h3 className="font-semibold text-xl mb-3">Fully Customizable</h3>
               <p className="text-muted-foreground">
-                15+ years of experience creating golf holidays with deep destination knowledge
+                Flexible trip lengths, golf-only packages, or complete experiences with transfers, dining, wine tastings, and more
               </p>
             </Card>
 
-            <Card className="p-6 text-center">
+            <Card className="p-6 text-center hover:shadow-xl transition-shadow">
               <div className="flex justify-center mb-4">
-                <Users className="h-12 w-12 text-primary" />
+                <Shield className="h-12 w-12 text-emerald-600" />
               </div>
-              <h3 className="font-semibold text-xl mb-3">10,000+ Happy Golfers</h3>
+              <h3 className="font-semibold text-xl mb-3">Trusted Expertise</h3>
               <p className="text-muted-foreground">
-                Join thousands of satisfied travelers who've trusted us with their golf vacations
+                We've seen countless products on the market and can credibly advise you on finding the right fit for you and your travel companions
               </p>
             </Card>
 
-            <Card className="p-6 text-center">
+            <Card className="p-6 text-center hover:shadow-xl transition-shadow">
               <div className="flex justify-center mb-4">
-                <Plane className="h-12 w-12 text-primary" />
+                <Plane className="h-12 w-12 text-emerald-600" />
               </div>
-              <h3 className="font-semibold text-xl mb-3">Tailored Packages</h3>
+              <h3 className="font-semibold text-xl mb-3">With or Without Flights</h3>
               <p className="text-muted-foreground">
-                Custom itineraries designed around your preferences, budget, and playing ability
+                We arrange your journey both with and without flights at competitive prices, whatever suits your needs best
               </p>
             </Card>
 
-            <Card className="p-6 text-center">
+            <Card className="p-6 text-center hover:shadow-xl transition-shadow">
               <div className="flex justify-center mb-4">
-                <Heart className="h-12 w-12 text-primary" />
+                <Shield className="h-12 w-12 text-emerald-600" />
               </div>
-              <h3 className="font-semibold text-xl mb-3">Personal Service</h3>
+              <h3 className="font-semibold text-xl mb-3">Travel Guarantee Partnership</h3>
               <p className="text-muted-foreground">
-                Dedicated travel specialists available throughout your journey for support
+                Partnership with Eastongolf ensures travel guarantees and handles all administration for your peace of mind
               </p>
             </Card>
 
-            <Card className="p-6 text-center">
+            <Card className="p-6 text-center hover:shadow-xl transition-shadow">
               <div className="flex justify-center mb-4">
-                <Award className="h-12 w-12 text-primary" />
+                <Heart className="h-12 w-12 text-emerald-600" />
               </div>
-              <h3 className="font-semibold text-xl mb-3">Best Price Guarantee</h3>
+              <h3 className="font-semibold text-xl mb-3">24/7 Support</h3>
               <p className="text-muted-foreground">
-                Direct partnerships with courses and resorts ensure competitive rates
+                Dedicated support available throughout your journey, ensuring everything runs smoothly from start to finish
               </p>
             </Card>
           </div>
