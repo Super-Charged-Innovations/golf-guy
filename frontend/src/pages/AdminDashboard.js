@@ -128,7 +128,9 @@ export default function AdminDashboard() {
     if (!window.confirm('Are you sure you want to delete this destination?')) return;
     
     try {
-      await axios.delete(`${API}/destinations/${id}`);
+      await axios.delete(`${API}/destinations/${id}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       toast.success('Destination deleted');
       loadAdminData();
     } catch (error) {
@@ -140,7 +142,9 @@ export default function AdminDashboard() {
     if (!window.confirm('Are you sure you want to delete this article?')) return;
     
     try {
-      await axios.delete(`${API}/articles/${id}`);
+      await axios.delete(`${API}/articles/${id}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       toast.success('Article deleted');
       loadAdminData();
     } catch (error) {
