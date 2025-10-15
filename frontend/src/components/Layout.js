@@ -20,29 +20,29 @@ export const Layout = () => {
     <div className="min-h-screen flex flex-col">
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b border-emerald-100 bg-white/90 backdrop-blur-md supports-[backdrop-filter]:bg-white/80 shadow-sm transition-all duration-300">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between gap-4">
             {/* Logo */}
             <Link 
               to="/" 
-              className="flex items-center space-x-3 group transition-transform duration-300 hover:scale-105" 
+              className="flex items-center space-x-2 group transition-transform duration-300 hover:scale-105 flex-shrink-0" 
               data-testid="logo-link"
             >
               <div className="relative">
                 <img 
                   src="https://customer-assets.emergentagent.com/job_golfguy-platform/artifacts/lyponq0h_image.png" 
                   alt="DGolf Logo" 
-                  className="h-12 w-12 object-contain transition-all duration-300 group-hover:brightness-110"
+                  className="h-10 w-10 object-contain transition-all duration-300 group-hover:brightness-110"
                 />
               </div>
-              <span className="text-2xl font-semibold bg-gradient-to-r from-emerald-600 to-emerald-800 bg-clip-text text-transparent" style={{ fontFamily: "'Dancing Script', cursive" }}>
-                DGolf - Din nästa Golfresa
+              <span className="text-xl font-semibold bg-gradient-to-r from-emerald-600 to-emerald-800 bg-clip-text text-transparent whitespace-nowrap" style={{ fontFamily: "'Dancing Script', cursive" }}>
+                DGolf
               </span>
             </Link>
 
             {/* Navigation */}
             {!isAdminPage && (
-              <nav className="hidden md:flex items-center space-x-8">
+              <nav className="hidden md:flex items-center space-x-6 flex-grow justify-center">
                 <NavLink to="/destinations" label="Destinations" testId="nav-destinations" />
                 <NavLink to="/articles" label="Travel Reports" testId="nav-articles" />
                 <NavLink to="/about" label="About" testId="nav-about" />
