@@ -73,10 +73,15 @@ export default function Destinations() {
   };
 
   const filterDestinations = () => {
+    console.log('Filtering with selectedCountry:', selectedCountry);
+    console.log('Available countries in destinations:', [...new Set(destinations.map(d => d.country))]);
+    
     if (selectedCountry === 'all') {
       setFilteredDestinations(destinations);
     } else {
-      setFilteredDestinations(destinations.filter(d => d.country === selectedCountry));
+      const filtered = destinations.filter(d => d.country === selectedCountry);
+      console.log('Filtered destinations:', filtered.length, 'for country:', selectedCountry);
+      setFilteredDestinations(filtered);
     }
   };
 
