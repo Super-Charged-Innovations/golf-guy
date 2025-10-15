@@ -76,20 +76,19 @@ export const RecommendationsButton = () => {
 
   return (
     <>
-      {/* Floating button with notification badge */}
+      {/* Floating button with notification badge and animated gradient */}
       <div className="relative inline-block">
         <Button
           onClick={handleOpenRecommendations}
-          variant="outline"
-          className="gap-2 relative"
+          className="gap-2 relative bg-gradient-to-r from-emerald-600 via-emerald-700 to-emerald-800 hover:from-emerald-700 hover:via-emerald-800 hover:to-emerald-900 text-white border-none shadow-lg hover:shadow-xl transition-all duration-300 animate-gradient-x"
           data-testid="recommendations-button"
         >
-          <Sparkles className="h-4 w-4 text-emerald-600" />
-          <span className="hidden sm:inline">AI Picks</span>
+          <Sparkles className="h-4 w-4 animate-pulse" />
+          <span className="hidden sm:inline font-semibold">AI Picks</span>
         </Button>
         
         {hasUnread && (
-          <div className="absolute -top-1 -right-1 h-3 w-3 bg-emerald-500 rounded-full animate-pulse" 
+          <div className="absolute -top-1 -right-1 h-3 w-3 bg-amber-400 rounded-full animate-pulse ring-2 ring-white" 
                data-testid="notification-badge" />
         )}
       </div>
