@@ -77,12 +77,24 @@ export default function AdminDashboard() {
   }, [user, isAdmin, authLoading, navigate]);
 
   const loadAdminData = async () => {
+    if (!token) {
+      console.error('No auth token available');
+      toast.error('Authentication required');
+      return;
+    }
+
     try {
+      const authHeaders = {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      };
+
       const [destRes, articlesRes, inquiriesRes, testimonialsRes] = await Promise.all([
-        axios.get(`${API}/destinations`),
-        axios.get(`${API}/articles`),
-        axios.get(`${API}/inquiries`),
-        axios.get(`${API}/testimonials`)
+        axios.get(`${API}/destinations`, authHeaders),
+        axios.get(`${API}/articles`, authHeaders),
+        axios.get(`${API}/inquiries`, authHeaders),
+        axios.get(`${API}/testimonials`, authHeaders)
       ]);
 
       setDestinations(destRes.data);
@@ -98,7 +110,12 @@ export default function AdminDashboard() {
       });
     } catch (error) {
       console.error('Error loading admin data:', error);
-      toast.error('Failed to load admin data');
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        toast.error('Session expired. Please login again.');
+        navigate('/login');
+      } else {
+        toast.error('Failed to load admin data');
+      }
     } finally {
       setLoading(false);
     }
