@@ -208,10 +208,10 @@ function DestinationCard({ dest, index }) {
       style={{ transitionDelay: `${Math.min(index, 10) * 50}ms` }}
     >
       <Card 
-        className="card-hover group overflow-hidden border-2 border-emerald-accent h-full" 
+        className="card-hover group overflow-hidden border-2 border-emerald-accent h-full flex flex-col" 
         data-testid="destination-card"
       >
-        <Link to={`/destinations/${dest.slug}`}>
+        <Link to={`/destinations/${dest.slug}`} className="flex flex-col h-full">
           <div className="relative overflow-hidden">
             <AspectRatio ratio={4/3}>
               <img 
@@ -240,7 +240,7 @@ function DestinationCard({ dest, index }) {
               ></div>
             </div>
           </div>
-          <div className="p-6">
+          <div className="p-6 flex flex-col flex-grow">
             <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
               <MapPin className="h-4 w-4 text-emerald-600 group-hover:animate-pulse" />
               <span>{dest.country}</span>
@@ -266,7 +266,10 @@ function DestinationCard({ dest, index }) {
               </div>
             )}
 
-            <div className="flex items-center justify-between pt-4 border-t border-emerald-100">
+            {/* Spacer to push pricing and button to bottom */}
+            <div className="flex-grow"></div>
+
+            <div className="flex items-center justify-between pt-4 border-t border-emerald-100 mt-auto">
               <div>
                 <p className="text-xs text-muted-foreground">From</p>
                 <p className="font-semibold text-emerald-700 text-lg">
