@@ -235,6 +235,142 @@ export default function DestinationDetail() {
           </Link>
         </div>
       </section>
+
+      {/* Inquiry Dialog */}
+      <Dialog open={showInquiryDialog} onOpenChange={setShowInquiryDialog}>
+        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="font-playfair text-2xl">Inquire About {destination.name}</DialogTitle>
+            <p className="text-sm text-muted-foreground">Fill out the form below and we'll get back to you shortly</p>
+          </DialogHeader>
+
+          <form onSubmit={handleInquirySubmit} className="space-y-5 py-4">
+            {/* Name and Email */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="inquiry-name">Name *</Label>
+                <Input
+                  id="inquiry-name"
+                  name="name"
+                  value={inquiryForm.name}
+                  onChange={handleInquiryChange}
+                  required
+                  placeholder="Your full name"
+                />
+              </div>
+              <div>
+                <Label htmlFor="inquiry-email">Email *</Label>
+                <Input
+                  id="inquiry-email"
+                  name="email"
+                  type="email"
+                  value={inquiryForm.email}
+                  onChange={handleInquiryChange}
+                  required
+                  placeholder="your@email.com"
+                />
+              </div>
+            </div>
+
+            {/* Phone */}
+            <div>
+              <Label htmlFor="inquiry-phone">Phone</Label>
+              <Input
+                id="inquiry-phone"
+                name="phone"
+                value={inquiryForm.phone}
+                onChange={handleInquiryChange}
+                placeholder="+46..."
+              />
+            </div>
+
+            {/* Travel Details */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <Label htmlFor="inquiry-dates">Travel Dates</Label>
+                <Input
+                  id="inquiry-dates"
+                  name="dates"
+                  value={inquiryForm.dates}
+                  onChange={handleInquiryChange}
+                  placeholder="e.g., March 2025"
+                />
+              </div>
+              <div>
+                <Label htmlFor="inquiry-group">Group Size</Label>
+                <Input
+                  id="inquiry-group"
+                  name="group_size"
+                  type="number"
+                  value={inquiryForm.group_size}
+                  onChange={handleInquiryChange}
+                  placeholder="Number of golfers"
+                />
+              </div>
+              <div>
+                <Label htmlFor="inquiry-budget">Budget (SEK)</Label>
+                <Input
+                  id="inquiry-budget"
+                  name="budget"
+                  value={inquiryForm.budget}
+                  onChange={handleInquiryChange}
+                  placeholder="e.g., 15000-20000"
+                />
+              </div>
+            </div>
+
+            {/* Message */}
+            <div>
+              <Label htmlFor="inquiry-message">Message</Label>
+              <Textarea
+                id="inquiry-message"
+                name="message"
+                value={inquiryForm.message}
+                onChange={handleInquiryChange}
+                rows={4}
+                placeholder="Tell us more about your ideal golf trip to this destination..."
+              />
+            </div>
+
+            {/* Destination Info Display */}
+            <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
+              <p className="text-sm font-medium text-emerald-900">Selected Destination:</p>
+              <p className="text-lg font-semibold text-emerald-700">{destination.name}</p>
+              <p className="text-xs text-emerald-600">{destination.country} • {destination.region}</p>
+            </div>
+
+            {/* Submit Button */}
+            <div className="flex gap-3 pt-4">
+              <Button 
+                type="button"
+                variant="outline"
+                onClick={() => setShowInquiryDialog(false)}
+                className="flex-1"
+                disabled={submitting}
+              >
+                Cancel
+              </Button>
+              <Button 
+                type="submit" 
+                className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+                disabled={submitting}
+              >
+                {submitting ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    Send Inquiry
+                    <Send className="ml-2 h-4 w-4" />
+                  </>
+                )}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
