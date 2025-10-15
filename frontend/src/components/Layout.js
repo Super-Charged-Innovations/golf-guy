@@ -100,8 +100,7 @@ export const Layout = () => {
                         className="border-emerald-200 hover:bg-emerald-50 hover:border-emerald-400 hover:text-emerald-700 transition-all duration-300"
                         data-testid="admin-dashboard-link"
                       >
-                        <UserCog className="h-4 w-4 mr-2" />
-                        Admin Dashboard
+                        Dashboard
                       </Button>
                     </Link>
                   )}
