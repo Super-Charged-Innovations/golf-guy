@@ -16,42 +16,6 @@ import axios from 'axios';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-// Flag rendering component to ensure proper emoji display
-const CountryFlag = ({ countryCode, size = "6xl" }) => {
-  // Convert country code to regional indicator symbols
-  const getFlagEmoji = (code) => {
-    const codePoints = code
-      .toUpperCase()
-      .split('')
-      .map(char => 127397 + char.charCodeAt());
-    return String.fromCodePoint(...codePoints);
-  };
-  
-  const flagMap = {
-    'ES': '🇪🇸', // Spain
-    'PT': '🇵🇹', // Portugal
-    'GB-SCT': '🏴󠁧󠁢󠁳󠁣󠁴󠁿', // Scotland
-    'FR': '🇫🇷', // France
-    'IE': '🇮🇪', // Ireland
-    'GB-ENG': '🏴󠁧󠁢󠁥󠁮󠁧󠁿', // England
-    'IT': '🇮🇹', // Italy
-    'MU': '🇲🇺', // Mauritius
-    'TR': '🇹🇷', // Turkey
-    'US': '🇺🇸', // USA
-    'CY': '🇨🇾', // Cyprus
-    'CZ': '🇨🇿', // Czechia
-    'MA': '🇲🇦', // Morocco
-    'BG': '🇧🇬', // Bulgaria
-    'NO': '🇳🇴', // Norway
-  };
-  
-  return (
-    <span className={`text-${size} inline-block`} style={{ fontFamily: '"Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif' }}>
-      {flagMap[countryCode] || getFlagEmoji(countryCode)}
-    </span>
-  );
-};
-
 // Country data matching dgolf.se structure
 const COUNTRY_CONFIG = {
   spain: {
