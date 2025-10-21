@@ -311,11 +311,6 @@ export default function Home() {
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
-            <a href="tel:+46812345678">
-              <Button size="lg" variant="outline" data-testid="cta-phone-button">
-                Call +46 8 123 456 78
-              </Button>
-            </a>
           </div>
         </div>
       </section>
