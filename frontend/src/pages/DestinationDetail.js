@@ -204,12 +204,6 @@ export default function DestinationDetail() {
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
 
-                <a href="tel:0760196485">
-                  <Button variant="outline" className="w-full" size="lg" data-testid="call-button">
-                    Call 0760-196485
-                  </Button>
-                </a>
-
                 <div className="mt-6 pt-6 border-t">
                   <p className="text-sm text-muted-foreground text-center">
                     Protected by travel insurance
