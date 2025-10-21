@@ -265,7 +265,7 @@ const CategoryDestinations = () => {
             .map(([countryKey, destinations]) => {
               const countryConfig = COUNTRY_CONFIG[countryKey] || {
                 name: countryKey.charAt(0).toUpperCase() + countryKey.slice(1),
-                flag: "🌍",
+                flagCode: "🌍",
                 description: `Golf destinations in ${countryKey}`,
                 color: "from-gray-500 to-gray-700"
               };
@@ -293,8 +293,8 @@ const CategoryDestinations = () => {
                     {/* Flag and Country Name */}
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="text-center text-white relative z-10">
-                        <div className="text-6xl mb-2 filter drop-shadow-2xl">
-                          {countryConfig.flag}
+                        <div className="mb-2 filter drop-shadow-2xl">
+                          <CountryFlag countryCode={countryConfig.flagCode} size="6xl" />
                         </div>
                         <h3 className="text-2xl font-bold tracking-wide drop-shadow-lg">
                           {countryConfig.name}
