@@ -2986,10 +2986,35 @@ async def preview_dgolf_data(
 # Include the router in the main app
 app.include_router(api_router)
 
+# Dynamic CORS configuration to support Vercel preview deployments
+def get_allowed_origins():
+    """Get list of allowed origins, including dynamic Vercel domains"""
+    base_origins = os.environ.get('CORS_ORIGINS', '*').split(',')
+    return base_origins
+
+@app.middleware("http")
+async def cors_middleware(request: Request, call_next):
+    """Custom CORS middleware to handle Vercel preview deployments"""
+    origin = request.headers.get("origin")
+    
+    # Allow specific origins from env
+    allowed_origins = get_allowed_origins()
+    
+    # Also allow any .vercel.app subdomain
+    if origin and (origin in allowed_origins or origin.endswith('.vercel.app')):
+        response = await call_next(request)
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        response.headers["Access-Control-Allow-Methods"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "*"
+        return response
+    
+    return await call_next(request)
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_origins=get_allowed_origins(),
     allow_methods=["*"],
     allow_headers=["*"],
 )
