@@ -219,34 +219,21 @@ export default function Contact() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <Label htmlFor="phone">Phone</Label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        data-testid="phone-input"
-                        placeholder="+46..."
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="destination">Destination</Label>
-                      <Select 
-                        value={formData.destination_id} 
-                        onValueChange={handleDestinationChange}
-                      >
-                        <SelectTrigger data-testid="destination-select">
-                          <SelectValue placeholder="Select a destination" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {destinations.map(dest => (
-                            <SelectItem key={dest.id} value={dest.id}>{dest.name}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+                  <div>
+                    <Label htmlFor="destination">Destination</Label>
+                    <Select 
+                      value={formData.destination_id} 
+                      onValueChange={handleDestinationChange}
+                    >
+                      <SelectTrigger data-testid="destination-select">
+                        <SelectValue placeholder="Select a destination" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {destinations.map(dest => (
+                          <SelectItem key={dest.id} value={dest.id}>{dest.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
