@@ -266,18 +266,6 @@ export default function DestinationDetail() {
               </div>
             </div>
 
-            {/* Phone */}
-            <div>
-              <Label htmlFor="inquiry-phone">Phone</Label>
-              <Input
-                id="inquiry-phone"
-                name="phone"
-                value={inquiryForm.phone}
-                onChange={handleInquiryChange}
-                placeholder="+46..."
-              />
-            </div>
-
             {/* Travel Details */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
