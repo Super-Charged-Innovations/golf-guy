@@ -229,12 +229,17 @@ const CategoryDestinations = () => {
             .map(([countryKey, destinations]) => {
               const countryConfig = COUNTRY_CONFIG[countryKey] || {
                 name: countryKey.charAt(0).toUpperCase() + countryKey.slice(1),
-                flagCode: "🌍",
+                fallbackImage: "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?w=800&auto=format&fit=crop",
                 description: `Golf destinations in ${countryKey}`,
                 color: "from-gray-500 to-gray-700"
               };
               
               const featuredDestinations = destinations.filter(d => d.featured);
+              
+              // Get the best image to display
+              const displayImage = destinations[0]?.image || 
+                                   destinations[0]?.images?.[0] || 
+                                   countryConfig.fallbackImage;
               
               return (
                 <Card 
@@ -242,34 +247,38 @@ const CategoryDestinations = () => {
                   className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 bg-white overflow-hidden"
                   onClick={() => handleExploreCountry(countryConfig.name)}
                 >
-                  <div className="h-32 relative overflow-hidden">
+                  <div className="h-48 relative overflow-hidden">
                     {/* Background Golf Course Image */}
                     <div className="absolute inset-0">
                       <img 
-                        src={destinations[0]?.image || destinations[0]?.images?.[0] || "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?w=600"}
-                        alt={countryConfig.name}
+                        src={displayImage}
+                        alt={`${countryConfig.name} Golf Course`}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        onError={(e) => {
+                          // Fallback if image fails to load
+                          e.target.src = countryConfig.fallbackImage;
+                        }}
                       />
-                      {/* Dark overlay for text visibility - no gradient color */}
-                      <div className="absolute inset-0 bg-black/40"></div>
+                      {/* Gradient overlay for text visibility */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/20"></div>
                     </div>
                     
-                    {/* Flag and Country Name */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-center text-white relative z-10">
-                        <div className="mb-2 filter drop-shadow-2xl">
-                          <CountryFlag countryCode={countryConfig.flagCode} size="6xl" />
-                        </div>
-                        <h3 className="text-2xl font-bold tracking-wide drop-shadow-lg">
+                    {/* Country Name */}
+                    <div className="absolute inset-0 flex items-end justify-start p-6">
+                      <div className="text-white relative z-10">
+                        <h3 className="text-3xl font-bold tracking-wide drop-shadow-lg">
                           {countryConfig.name}
                         </h3>
                       </div>
                     </div>
                     
-                    {/* Decorative Circles */}
-                    <div className="absolute inset-0 opacity-10">
-                      <div className="absolute top-4 right-4 w-20 h-20 border-2 border-white rounded-full" />
-                      <div className="absolute bottom-4 left-4 w-16 h-16 border-2 border-white rounded-full" />
+                    {/* Decorative Elements */}
+                    <div className="absolute top-4 right-4 z-10">
+                      <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
+                        <span className="text-white font-semibold text-sm">
+                          {destinations.length} {destinations.length === 1 ? 'Resort' : 'Resorts'}
+                        </span>
+                      </div>
                     </div>
                   </div>
                   
