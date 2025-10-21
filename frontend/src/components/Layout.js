@@ -207,10 +207,6 @@ export const Layout = () => {
                 <h4 className="font-semibold mb-4 text-white">Contact</h4>
                 <ul className="space-y-3 text-sm mb-6">
                   <li className="flex items-center gap-2">
-                    <Phone className="h-4 w-4 text-emerald-300" />
-                    <a href="tel:0760196485" className="text-emerald-100 hover:text-white transition-colors">0760-196485</a>
-                  </li>
-                  <li className="flex items-center gap-2">
                     <Mail className="h-4 w-4 text-emerald-300" />
                     <a href="mailto:info@dgolf.se" className="text-emerald-100 hover:text-white transition-colors">info@dgolf.se</a>
                   </li>
