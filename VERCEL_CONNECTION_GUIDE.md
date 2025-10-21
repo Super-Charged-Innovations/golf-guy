@@ -66,7 +66,7 @@
 **Variable Configuration:**
 ```
 Key: REACT_APP_BACKEND_URL
-Value: https://dgolf-platform.preview.emergentagent.com
+Value: https://golf-travel-app.preview.emergentagent.com
 
 Environments (check all 3):
 ☑ Production
@@ -119,7 +119,7 @@ In console, type:
 ```javascript
 console.log(process.env.REACT_APP_BACKEND_URL)
 ```
-Should output: `https://dgolf-platform.preview.emergentagent.com`
+Should output: `https://golf-travel-app.preview.emergentagent.com`
 
 ---
 
@@ -249,18 +249,18 @@ Framework: Create React App
 Root Directory: frontend
 Build: yarn build
 Output: build
-Env Var: REACT_APP_BACKEND_URL=https://dgolf-platform.preview.emergentagent.com
+Env Var: REACT_APP_BACKEND_URL=https://golf-travel-app.preview.emergentagent.com
 ```
 
 **Backend (Emergent):**
 ```
-URL: https://dgolf-platform.preview.emergentagent.com
+URL: https://golf-travel-app.preview.emergentagent.com
 CORS: Already configured for Vercel
 Status: Running
 ```
 
 **Your Sites:**
-- Emergent: https://dgolf-platform.preview.emergentagent.com (Full stack)
+- Emergent: https://golf-travel-app.preview.emergentagent.com (Full stack)
 - Vercel: https://dgolf.vercel.app (Frontend only, backend on Emergent)
 
 ---
@@ -271,7 +271,7 @@ Status: Running
 
 **1. Add Environment Variable:**
    - Vercel Dashboard → dgolf project → Settings → Environment Variables
-   - Add: `REACT_APP_BACKEND_URL` = `https://dgolf-platform.preview.emergentagent.com`
+   - Add: `REACT_APP_BACKEND_URL` = `https://golf-travel-app.preview.emergentagent.com`
    - Check all 3 environments
 
 **2. Redeploy:**
@@ -305,7 +305,7 @@ Status: Running
 **If You Need Help:**
 1. Check Vercel deployment logs (Deployments → Click deployment → Build Logs)
 2. Check browser console for frontend errors
-3. Test backend directly: https://dgolf-platform.preview.emergentagent.com/api/destinations
+3. Test backend directly: https://golf-travel-app.preview.emergentagent.com/api/destinations
 4. Contact Vercel support if build issues persist
 
 ---

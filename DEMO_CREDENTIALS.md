@@ -65,7 +65,7 @@ python create_demo_users.py
 
 ## Login Page URL
 - **Development:** `http://localhost:3000/login`
-- **Production:** `https://dgolf-platform.preview.emergentagent.com/login`
+- **Production:** `https://golf-travel-app.preview.emergentagent.com/login`
 
 ---
 

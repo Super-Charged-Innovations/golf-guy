@@ -1817,7 +1817,7 @@ async def update_setting(key: str, setting: SettingUpdate):
 # SEO - Sitemap
 @api_router.get("/sitemap.xml", response_class=PlainTextResponse)
 async def get_sitemap():
-    base_url = "https://dgolf-platform.preview.emergentagent.com"
+    base_url = "https://golf-travel-app.preview.emergentagent.com"
     
     # Static pages
     urls = [
@@ -1850,7 +1850,7 @@ async def get_sitemap():
 async def get_robots():
     return """User-agent: *
 Allow: /
-Sitemap: https://dgolf-platform.preview.emergentagent.com/api/sitemap.xml"""
+Sitemap: https://golf-travel-app.preview.emergentagent.com/api/sitemap.xml"""
 
 # Seed Data
 @api_router.post("/seed")

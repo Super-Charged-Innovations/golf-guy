@@ -716,7 +716,7 @@ Rewriting a working application to fit a specific platform is called "**vendor l
 **If you just want it working on Vercel (5 minutes):**
 1. Go to Vercel Dashboard
 2. Settings → Environment Variables
-3. Add `REACT_APP_BACKEND_URL` = `https://dgolf-platform.preview.emergentagent.com`
+3. Add `REACT_APP_BACKEND_URL` = `https://golf-travel-app.preview.emergentagent.com`
 4. Deployments → Redeploy
 5. **DONE!** Frontend on Vercel, backend on Emergent
 

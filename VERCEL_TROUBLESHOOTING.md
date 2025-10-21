@@ -20,7 +20,7 @@
 **Variable 1:**
 ```
 Name: REACT_APP_BACKEND_URL
-Value: https://dgolf-platform.preview.emergentagent.com
+Value: https://golf-travel-app.preview.emergentagent.com
 ```
 
 6. Click **Save**
@@ -46,7 +46,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "https://dgolf-platform.preview.emergentagent.com",
+        "https://golf-travel-app.preview.emergentagent.com",
         "https://dgolf.vercel.app",  # ADD THIS LINE
         "https://*.vercel.app",  # ADD THIS LINE (allows all Vercel preview deployments)
     ],
@@ -69,7 +69,7 @@ After redeployment, check if env var is working:
 2. Open browser DevTools (F12)
 3. Go to Console tab
 4. Type: `console.log(process.env.REACT_APP_BACKEND_URL)`
-5. Should show: `https://dgolf-platform.preview.emergentagent.com`
+5. Should show: `https://golf-travel-app.preview.emergentagent.com`
 6. If it shows `undefined`, the env var wasn't added correctly
 
 ---
@@ -83,7 +83,7 @@ If you want to test immediately without waiting for Vercel:
 ```json
 {
   "env": {
-    "REACT_APP_BACKEND_URL": "https://dgolf-platform.preview.emergentagent.com"
+    "REACT_APP_BACKEND_URL": "https://golf-travel-app.preview.emergentagent.com"
   },
   "headers": [
     {
@@ -119,7 +119,7 @@ Then commit and push to trigger new deployment.
 ## Checklist to Fix
 
 - [ ] Add `REACT_APP_BACKEND_URL` environment variable in Vercel
-- [ ] Value should be: `https://dgolf-platform.preview.emergentagent.com`
+- [ ] Value should be: `https://golf-travel-app.preview.emergentagent.com`
 - [ ] Redeploy from Vercel dashboard
 - [ ] Update backend CORS to allow `https://dgolf.vercel.app`
 - [ ] Test site after redeployment
@@ -167,7 +167,7 @@ Then commit and push to trigger new deployment.
 
 **Check if backend is accessible:**
 ```bash
-curl https://dgolf-platform.preview.emergentagent.com/api/hero
+curl https://golf-travel-app.preview.emergentagent.com/api/hero
 ```
 
 Should return JSON with hero slides.

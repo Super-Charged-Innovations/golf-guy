@@ -1243,7 +1243,7 @@ Requirements:
 **Allowed Origins:**
 ```python
 CORS_ORIGINS = [
-  "https://dgolf-platform.preview.emergentagent.com",
+  "https://golf-travel-app.preview.emergentagent.com",
   "https://localhost:3000",
   "http://localhost:3000",
   "https://dgolf.vercel.app",
@@ -1917,7 +1917,7 @@ Authorization: Bearer {token}
 ### Infrastructure
 - **Platform:** Kubernetes cluster
 - **Environment:** Development/Staging
-- **URL:** https://dgolf-platform.preview.emergentagent.com
+- **URL:** https://golf-travel-app.preview.emergentagent.com
 - **SSL:** Automatic HTTPS
 
 ### Services
@@ -1951,7 +1951,7 @@ Connection: MONGO_URL from environment
 
 **Frontend (.env):**
 ```
-REACT_APP_BACKEND_URL=https://dgolf-platform.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://golf-travel-app.preview.emergentagent.com
 ```
 
 **Backend (.env):**
@@ -1959,7 +1959,7 @@ REACT_APP_BACKEND_URL=https://dgolf-platform.preview.emergentagent.com
 MONGO_URL=mongodb://localhost:27017
 DB_NAME=golf_guy_platform
 JWT_SECRET_KEY={secret}
-CORS_ORIGINS=https://dgolf-platform.preview.emergentagent.com,https://dgolf.vercel.app
+CORS_ORIGINS=https://golf-travel-app.preview.emergentagent.com,https://dgolf.vercel.app
 ENVIRONMENT=development
 ```
 
@@ -1992,7 +1992,7 @@ tail -f /var/log/supervisor/backend.out.log
 
 **Environment Variables:**
 ```
-REACT_APP_BACKEND_URL=https://dgolf-platform.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://golf-travel-app.preview.emergentagent.com
 ```
 
 **Deployment URL:** https://dgolf.vercel.app
@@ -2788,7 +2788,7 @@ beautifulsoup4==4.12.2
 - Instagram: @dgolfswe
 
 **Websites:**
-- Production (Emergent): https://dgolf-platform.preview.emergentagent.com
+- Production (Emergent): https://golf-travel-app.preview.emergentagent.com
 - Production (Vercel): https://dgolf.vercel.app
 - Original Reference: https://dgolf.se
 

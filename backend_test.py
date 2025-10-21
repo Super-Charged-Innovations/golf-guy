@@ -12,7 +12,7 @@ from datetime import datetime
 import uuid
 
 # Configuration
-BACKEND_URL = "https://dgolf-platform.preview.emergentagent.com/api"
+BACKEND_URL = "https://golf-travel-app.preview.emergentagent.com/api"
 TEST_USER_EMAIL = f"testuser_{uuid.uuid4().hex[:8]}@golftest.com"
 TEST_USER_PASSWORD = "SecureTestPass123!"
 TEST_USER_NAME = "Golf Test User"
@@ -58,7 +58,7 @@ class BackendTester:
         
         # Test allowed origin
         headers = {
-            'Origin': 'https://dgolf-platform.preview.emergentagent.com',
+            'Origin': 'https://golf-travel-app.preview.emergentagent.com',
             'Access-Control-Request-Method': 'POST',
             'Access-Control-Request-Headers': 'Content-Type,Authorization'
         }
@@ -1175,8 +1175,8 @@ class BackendTester:
         checkout_data = {
             "package_id": "premium-golf-package",
             "destination_id": "spain-costa-del-sol",
-            "success_url": "https://dgolf-platform.preview.emergentagent.com/payment/success",
-            "cancel_url": "https://dgolf-platform.preview.emergentagent.com/payment/cancel"
+            "success_url": "https://golf-travel-app.preview.emergentagent.com/payment/success",
+            "cancel_url": "https://golf-travel-app.preview.emergentagent.com/payment/cancel"
         }
         
         try:

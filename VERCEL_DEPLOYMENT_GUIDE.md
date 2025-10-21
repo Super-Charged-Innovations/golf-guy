@@ -147,7 +147,7 @@ Since Vercel doesn't support FastAPI well, deploy your backend to one of these:
    Click "+ Add More" and add:
    ```
    Key: REACT_APP_BACKEND_URL
-   Value: https://dgolf-platform.preview.emergentagent.com
+   Value: https://golf-travel-app.preview.emergentagent.com
    ```
    (Use your actual backend URL)
 
@@ -170,7 +170,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "https://your-vercel-app.vercel.app",  # Add your Vercel domain
-        "https://dgolf-platform.preview.emergentagent.com"
+        "https://golf-travel-app.preview.emergentagent.com"
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -233,7 +233,7 @@ app.add_middleware(
    - Build Command: `yarn build`
    - Output Directory: `build`
    - Environment Variable: 
-     - `REACT_APP_BACKEND_URL` = `https://dgolf-platform.preview.emergentagent.com`
+     - `REACT_APP_BACKEND_URL` = `https://golf-travel-app.preview.emergentagent.com`
 
 4. **Deploy!**
 

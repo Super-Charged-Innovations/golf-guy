@@ -9,7 +9,7 @@ import json
 from datetime import datetime
 
 # Configuration
-BACKEND_URL = "https://dgolf-platform.preview.emergentagent.com/api"
+BACKEND_URL = "https://golf-travel-app.preview.emergentagent.com/api"
 
 # Demo user credentials
 ADMIN_USER = {
