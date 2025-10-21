@@ -120,15 +120,6 @@ export default function Contact() {
                 <h2 className="font-playfair text-2xl font-bold mb-6">Contact Information</h2>
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
-                    <Phone className="h-5 w-5 text-emerald-600 mt-1" />
-                    <div>
-                      <p className="font-medium">Phone</p>
-                      <a href="tel:+46760196485" className="text-muted-foreground hover:text-emerald-600 transition-colors">
-                        0760-196485 (Martin)
-                      </a>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
                     <Mail className="h-5 w-5 text-emerald-600 mt-1" />
                     <div>
                       <p className="font-medium">Email</p>
