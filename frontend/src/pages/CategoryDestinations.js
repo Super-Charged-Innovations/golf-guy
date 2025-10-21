@@ -16,110 +16,146 @@ import axios from 'axios';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
+// Flag rendering component to ensure proper emoji display
+const CountryFlag = ({ countryCode, size = "6xl" }) => {
+  // Convert country code to regional indicator symbols
+  const getFlagEmoji = (code) => {
+    const codePoints = code
+      .toUpperCase()
+      .split('')
+      .map(char => 127397 + char.charCodeAt());
+    return String.fromCodePoint(...codePoints);
+  };
+  
+  const flagMap = {
+    'ES': '🇪🇸', // Spain
+    'PT': '🇵🇹', // Portugal
+    'GB-SCT': '🏴󠁧󠁢󠁳󠁣󠁴󠁿', // Scotland
+    'FR': '🇫🇷', // France
+    'IE': '🇮🇪', // Ireland
+    'GB-ENG': '🏴󠁧󠁢󠁥󠁮󠁧󠁿', // England
+    'IT': '🇮🇹', // Italy
+    'MU': '🇲🇺', // Mauritius
+    'TR': '🇹🇷', // Turkey
+    'US': '🇺🇸', // USA
+    'CY': '🇨🇾', // Cyprus
+    'CZ': '🇨🇿', // Czechia
+    'MA': '🇲🇦', // Morocco
+    'BG': '🇧🇬', // Bulgaria
+    'NO': '🇳🇴', // Norway
+  };
+  
+  return (
+    <span className={`text-${size} inline-block`} style={{ fontFamily: '"Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif' }}>
+      {flagMap[countryCode] || getFlagEmoji(countryCode)}
+    </span>
+  );
+};
+
 // Country data matching dgolf.se structure
 const COUNTRY_CONFIG = {
   spain: {
     name: "Spain",
     swedish_name: "Spanien", 
-    flag: "🇪🇸",
+    flagCode: "ES",
     description: "Experience fantastic golf courses year-round with warm climate and beautiful landscapes",
     color: "from-red-500 to-yellow-500"
   },
   portugal: {
     name: "Portugal",
     swedish_name: "Portugal",
-    flag: "🇵🇹", 
+    flagCode: "PT", 
     description: "Combine beautiful coast with world-class golf courses and Portuguese hospitality",
     color: "from-green-600 to-red-500"
   },
   scotland: {
     name: "Scotland", 
     swedish_name: "Skottland",
-    flag: "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+    flagCode: "GB-SCT",
     description: "The birthplace of golf, home to St Andrews and world's most legendary links courses",
     color: "from-blue-600 to-blue-800"
   },
   france: {
     name: "France",
     swedish_name: "Frankrike",
-    flag: "🇫🇷",
+    flagCode: "FR",
     description: "Historic golf courses in Provence with traditional French architecture", 
     color: "from-blue-500 to-red-500"
   },
   ireland: {
     name: "Ireland",
     swedish_name: "Irland", 
-    flag: "🇮🇪",
+    flagCode: "IE",
     description: "Scenic golf with cultural experiences and legendary Irish hospitality",
     color: "from-green-600 to-green-800"
   },
   england: {
     name: "England",
     swedish_name: "England",
-    flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+    flagCode: "GB-ENG",
     description: "Championship golf courses with rich history and traditional British culture",
     color: "from-red-600 to-blue-600"
   },
   italy: {
     name: "Italy",
     swedish_name: "Italien",
-    flag: "🇮🇹", 
+    flagCode: "IT", 
     description: "Mediterranean golf with Italian cuisine and stunning landscapes",
     color: "from-green-500 to-red-500"
   },
   mauritius: {
     name: "Mauritius",
     swedish_name: "Mauritius",
-    flag: "🇲🇺",
+    flagCode: "MU",
     description: "Tropical paradise golf with luxury resorts and pristine beaches",
     color: "from-cyan-500 to-blue-600"
   },
   turkey: {
     name: "Turkey", 
     swedish_name: "Turkiet",
-    flag: "🇹🇷",
+    flagCode: "TR",
     description: "All-inclusive golf resorts with exceptional value and Mediterranean charm",
     color: "from-red-500 to-yellow-500"
   },
   usa: {
     name: "USA",
     swedish_name: "USA", 
-    flag: "🇺🇸",
+    flagCode: "US",
     description: "Championship golf courses from coast to coast with diverse landscapes",
     color: "from-red-500 to-blue-600"
   },
   cyprus: {
     name: "Cyprus",
     swedish_name: "Cypern",
-    flag: "🇨🇾",
+    flagCode: "CY",
     description: "Mediterranean golf with year-round sunshine and island hospitality",
     color: "from-orange-500 to-green-600"
   },
   czechia: {
     name: "Czechia",
     swedish_name: "Tjeckien",
-    flag: "🇨🇿",
+    flagCode: "CZ",
     description: "Combine golf with historic Prague and Czech culture",
     color: "from-blue-500 to-red-500"
   },
   morocco: {
     name: "Morocco",
     swedish_name: "Marocko",
-    flag: "🇲🇦",
+    flagCode: "MA",
     description: "Exotic golf experiences with Moroccan hospitality and desert landscapes",
     color: "from-red-500 to-green-600"
   },
   bulgaria: {
     name: "Bulgaria",
     swedish_name: "Bulgarien",
-    flag: "🇧🇬",
+    flagCode: "BG",
     description: "Affordable golf with Black Sea coastal beauty and mountain views",
     color: "from-white via-green-500 to-red-500"
   },
   norway: {
     name: "Norway",
     swedish_name: "Norge",
-    flag: "🇳🇴",
+    flagCode: "NO",
     description: "Unique Nordic golf with midnight sun experiences and fjord views",
     color: "from-red-500 to-blue-600"
   }
