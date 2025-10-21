@@ -21,105 +21,105 @@ const COUNTRY_CONFIG = {
   spain: {
     name: "Spain",
     swedish_name: "Spanien", 
-    flagCode: "ES",
+    fallbackImage: "https://images.unsplash.com/photo-1591154669695-5f2a8d20c089?w=800&auto=format&fit=crop",
     description: "Experience fantastic golf courses year-round with warm climate and beautiful landscapes",
     color: "from-red-500 to-yellow-500"
   },
   portugal: {
     name: "Portugal",
     swedish_name: "Portugal",
-    flagCode: "PT", 
+    fallbackImage: "https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=800&auto=format&fit=crop",
     description: "Combine beautiful coast with world-class golf courses and Portuguese hospitality",
     color: "from-green-600 to-red-500"
   },
   scotland: {
     name: "Scotland", 
     swedish_name: "Skottland",
-    flagCode: "GB-SCT",
+    fallbackImage: "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?w=800&auto=format&fit=crop",
     description: "The birthplace of golf, home to St Andrews and world's most legendary links courses",
     color: "from-blue-600 to-blue-800"
   },
   france: {
     name: "France",
     swedish_name: "Frankrike",
-    flagCode: "FR",
+    fallbackImage: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&auto=format&fit=crop",
     description: "Historic golf courses in Provence with traditional French architecture", 
     color: "from-blue-500 to-red-500"
   },
   ireland: {
     name: "Ireland",
     swedish_name: "Irland", 
-    flagCode: "IE",
+    fallbackImage: "https://images.unsplash.com/photo-1590012314607-cda9d9b699ae?w=800&auto=format&fit=crop",
     description: "Scenic golf with cultural experiences and legendary Irish hospitality",
     color: "from-green-600 to-green-800"
   },
   england: {
     name: "England",
     swedish_name: "England",
-    flagCode: "GB-ENG",
+    fallbackImage: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=800&auto=format&fit=crop",
     description: "Championship golf courses with rich history and traditional British culture",
     color: "from-red-600 to-blue-600"
   },
   italy: {
     name: "Italy",
     swedish_name: "Italien",
-    flagCode: "IT", 
+    fallbackImage: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800&auto=format&fit=crop",
     description: "Mediterranean golf with Italian cuisine and stunning landscapes",
     color: "from-green-500 to-red-500"
   },
   mauritius: {
     name: "Mauritius",
     swedish_name: "Mauritius",
-    flagCode: "MU",
+    fallbackImage: "https://images.unsplash.com/photo-1589197331493-c4bdbaaa7f44?w=800&auto=format&fit=crop",
     description: "Tropical paradise golf with luxury resorts and pristine beaches",
     color: "from-cyan-500 to-blue-600"
   },
   turkey: {
     name: "Turkey", 
     swedish_name: "Turkiet",
-    flagCode: "TR",
+    fallbackImage: "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=800&auto=format&fit=crop",
     description: "All-inclusive golf resorts with exceptional value and Mediterranean charm",
     color: "from-red-500 to-yellow-500"
   },
   usa: {
     name: "USA",
     swedish_name: "USA", 
-    flagCode: "US",
+    fallbackImage: "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?w=800&auto=format&fit=crop",
     description: "Championship golf courses from coast to coast with diverse landscapes",
     color: "from-red-500 to-blue-600"
   },
   cyprus: {
     name: "Cyprus",
     swedish_name: "Cypern",
-    flagCode: "CY",
+    fallbackImage: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&auto=format&fit=crop",
     description: "Mediterranean golf with year-round sunshine and island hospitality",
     color: "from-orange-500 to-green-600"
   },
   czechia: {
     name: "Czechia",
     swedish_name: "Tjeckien",
-    flagCode: "CZ",
+    fallbackImage: "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?w=800&auto=format&fit=crop",
     description: "Combine golf with historic Prague and Czech culture",
     color: "from-blue-500 to-red-500"
   },
   morocco: {
     name: "Morocco",
     swedish_name: "Marocko",
-    flagCode: "MA",
+    fallbackImage: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&auto=format&fit=crop",
     description: "Exotic golf experiences with Moroccan hospitality and desert landscapes",
     color: "from-red-500 to-green-600"
   },
   bulgaria: {
     name: "Bulgaria",
     swedish_name: "Bulgarien",
-    flagCode: "BG",
+    fallbackImage: "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?w=800&auto=format&fit=crop",
     description: "Affordable golf with Black Sea coastal beauty and mountain views",
     color: "from-white via-green-500 to-red-500"
   },
   norway: {
     name: "Norway",
     swedish_name: "Norge",
-    flagCode: "NO",
+    fallbackImage: "https://images.unsplash.com/photo-1590012314607-cda9d9b699ae?w=800&auto=format&fit=crop",
     description: "Unique Nordic golf with midnight sun experiences and fjord views",
     color: "from-red-500 to-blue-600"
   }
