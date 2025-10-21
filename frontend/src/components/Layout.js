@@ -2,7 +2,7 @@ import React from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from './ui/button';
-import { MapPin, Mail, Phone, Plane, LogIn, UserCog, LogOut } from 'lucide-react';
+import { MapPin, Mail, Plane, LogIn, UserCog, LogOut } from 'lucide-react';
 
 export const Layout = () => {
   const navigate = useNavigate();
